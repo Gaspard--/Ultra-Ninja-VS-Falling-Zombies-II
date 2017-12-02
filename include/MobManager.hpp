@@ -2,6 +2,7 @@
 # define MOBMANAGER_HPP_
 
 #include <vector>
+#include <algorithm>
 #include "Human.hpp"
 #include "Zombie.hpp"
 
@@ -10,6 +11,8 @@ class MobManager
 public:
   MobManager() = default;
   ~MobManager() = default;
+
+  void mutation();
 
 private:
   std::vector<Human> humans;
