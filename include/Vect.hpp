@@ -3,7 +3,7 @@
 
 # include <type_traits>
 # include <math.h>
-# include "util.hpp"
+# include "Util.hpp"
 
 template <unsigned int dim, class T>
 class Vect

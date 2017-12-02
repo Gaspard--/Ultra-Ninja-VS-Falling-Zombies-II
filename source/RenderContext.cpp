@@ -1,4 +1,4 @@
-#include "render_context.hpp"
+#include "RenderContext.hpp"
 
 void RenderContext::bind()
 {

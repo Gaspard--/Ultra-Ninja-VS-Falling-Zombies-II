@@ -1,4 +1,4 @@
-#include "render_texture.hpp"
+#include "RenderTexture.hpp"
 
 RenderTexture::RenderTexture(Vect<2u, unsigned int> const size)
   : framebuffer(),
