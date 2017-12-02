@@ -1,262 +1,198 @@
-#ifndef VECT_HPP_
-# define VECT_HPP_
+#ifndef VECT_HPP
+# define VECT_HPP
 
+# include <utility>
 # include <type_traits>
 # include <math.h>
-# include "Util.hpp"
 
-template <unsigned int dim, class T>
+template <std::size_t dim, class T>
 class Vect
 {
 private:
   T data[dim];
 
+  template<class V, std::size_t... indices>
+  constexpr Vect(V const &other, std::index_sequence<indices...>)
+    : Vect(other[indices]...)
+  {
+  }
+
+  template<std::size_t... indices>
+  constexpr Vect(std::index_sequence<indices...>)
+    : Vect(((void)indices, T{})...)
+  {
+  }
+
+
+  template<class Func, std::size_t... indices>
+  static auto applyOp(Func &&func, std::index_sequence<indices...>)
+  {
+    return Vect{func(indices)...};
+  }
+
 public:
-  template<class Op, class P, class... U, typename std::enable_if<sizeof...(U) < dim>::type * = nullptr>
-  constexpr Vect(Function<T, P, Op> function, U... indices)
-    : Vect(function, dim - sizeof...(indices) - 1, indices...)
-  {}
 
-  template<class Op, class P, class... U, typename std::enable_if<sizeof...(U) == dim>::type * = nullptr>
-  constexpr Vect(Function<T, P, Op> function, U... indices)
-    : Vect(function.apply(indices)...)
-  {}
+  template<class Func>
+  static Vect<dim, T> applyOp(Func &&func)
+  {
+    return applyOp(func, std::make_index_sequence<dim>{});
+  }
 
   template<class V>
-  constexpr Vect(V const (&other)[dim])
-    : Vect(other, dim - 1u)
-  {}
+  constexpr Vect(V const &other)
+    : Vect(other, std::make_index_sequence<dim>{})
+  {
+  }
 
-  template<class V, class... U, typename std::enable_if<sizeof...(U) < dim - 1>::type * = nullptr>
-  constexpr Vect(V const (&other)[dim], unsigned int i, U... indices)
-    : Vect(other, dim - sizeof...(indices) - 2u, i, indices...)
-  {}
-
-  template<class V, class... U, typename std::enable_if<sizeof...(U) == dim>::type * = nullptr>
-  constexpr Vect(V const (&other)[dim], U... indices)
-    : Vect(static_cast<T>(other[indices])...)
-  {}
-
-  template<class V>
-  constexpr Vect(Vect<dim, V> const &other)
-    : Vect(other, dim - 1u)
-  {}
-
-  template<class V, class... U, typename std::enable_if<sizeof...(U) < dim - 1>::type * = nullptr>
-  constexpr Vect(Vect<dim, V> const &other, unsigned int i, U... indices)
-    : Vect(other, dim - sizeof...(indices) - 2u, i, indices...)
-  {}
-
-  template<class V, class... U, typename std::enable_if<sizeof...(U) == dim>::type * = nullptr>
-  constexpr Vect(Vect<dim, V> const &other, U... indices)
-    : Vect(static_cast<T>(other[indices])...)
-  {}
-
-  template<class... U, typename std::enable_if<sizeof...(U) < dim - 1>::type * = nullptr>
-  constexpr Vect(Vect<dim - 1, T> const &other, T added, U... indices)
-    : Vect(other, added, indices..., dim - sizeof...(indices) - 2)
-  {}
-
-  template<class... U, typename std::enable_if<sizeof...(U) == dim - 1>::type * = nullptr>
-  constexpr Vect(Vect<dim - 1, T> const &other, T added, U... indices)
-    : Vect(other.data[indices]..., added)
-  {}
+  constexpr Vect()
+  : Vect(std::make_index_sequence<dim>{})
+  {
+  }
 
   template<class... U, typename std::enable_if<sizeof...(U) == dim>::type * = nullptr>
-  constexpr Vect(U... ts) : data{static_cast<T>(ts)...}
-  {}
+  constexpr Vect(U &&... ts) : data{std::forward<U>(ts)...}
+  {
+  }
+
+  constexpr T *begin()
+  {
+    return data;
+  }
+
+  constexpr T *end()
+  {
+    return data + dim;
+  }
+
+  constexpr T const *begin() const
+  {
+    return data;
+  }
+
+  constexpr T const *end() const
+  {
+    return data + dim;
+  }
 
   template<class Operation>
   void applyOnSelf(Operation op)
   {
-    unsigned int i(0);
-
-    while (i < dim)
-      {
-	data[i] = op(i);
-	i = i + 1;
-      }
+    for (std::size_t i(0); i < dim; ++i)
+      data[i] = op(i);
   }
 
-  T &operator[](unsigned int index)
+  constexpr T &operator[](std::size_t index)
   {
     return (data[index]);
   }
 
-  constexpr T const &operator[](unsigned int index) const
+  constexpr T const &operator[](std::size_t index) const
   {
     return (data[index]);
   }
 
-  Vect<dim, T>& operator+=(Vect<dim, T> const &other)
-  {
-    this->applyOnSelf([this, other](unsigned int i){return this->data[i] + other[i];});
-    return (*this);
+#define VECT_OPERATOR_DEF(OP)						\
+  template<class U>							\
+  constexpr Vect<dim, T>& operator OP##=(Vect<dim, U> const &other)	\
+  {									\
+    for (std::size_t i(0u); i != dim; ++i)				\
+      data[i] OP##= other[i];						\
+    return (*this);							\
+  };									\
+									\
+  template<class U>							\
+  constexpr auto operator OP(Vect<dim, U> const &other) const		\
+  {									\
+    Vect<dim, decltype(data[0] OP other[0])> result{*this};		\
+									\
+    result OP##= other;							\
+    return result;							\
+  };									\
+  									\
+  template<class U>							\
+  constexpr Vect<dim, T>& operator OP##=(U const &other)		\
+  {									\
+    for (auto &elem : *this)						\
+      elem OP##= other;							\
+    return (*this);							\
+  };									\
+									\
+  template<class U>							\
+  constexpr auto operator OP(U const &other) const			\
+  {									\
+    Vect<dim, decltype(data[0] OP other)> result{*this};		\
+									\
+    result OP##= other;							\
+    return result;							\
   }
 
-  Vect<dim, T>& operator-=(Vect<dim, T> const &other)
-  {
-    this->applyOnSelf([this, other](unsigned int i){return this->data[i] - other[i];});
-    return (*this);
-  }
-
-  Vect<dim, T>& operator*=(Vect<dim, T> const &other)
-  {
-    this->applyOnSelf([this, other](unsigned int i){return this->data[i] * other[i];});
-    return (*this);
-  }
-
-  Vect<dim, T>& operator/=(T const &other)
-  {
-    this->applyOnSelf([this, other](unsigned int i){return this->data[i] / other;});
-    return (*this);
-  }
-
-  Vect<dim, T>& operator*=(T const &other)
-  {
-    this->applyOnSelf([this, other](unsigned int i){return this->data[i] * other;});
-    return (*this);
-  }
-
-
-  Vect<dim, T>& operator^=(Vect<dim, T> const &other)
-  {
-    this->applyOnSelf([this, other](unsigned int i) {return this->data[i] ^ other[i];});
-    return (*this);
-  }
+  VECT_OPERATOR_DEF(+);
+  VECT_OPERATOR_DEF(-);
+  VECT_OPERATOR_DEF(*);
+  VECT_OPERATOR_DEF(/);
+  VECT_OPERATOR_DEF(%);
+  VECT_OPERATOR_DEF(^);
+  VECT_OPERATOR_DEF(|);
+  VECT_OPERATOR_DEF(&);
 
   // TODO optimize ?
-  bool operator==(Vect<dim, T> const& other) const
+  constexpr bool equals(Vect<dim, T> const& other) const
   {
-    for (unsigned int i = 0; i < dim; i++)
-      {
-	if (data[i] != other.data[i])
-	  return false;
-      }
-    return true;
-  }
+    std::size_t i(0);
 
-  bool operator!=(Vect<dim, T> const& other) const
-  {
-    return !operator==(other);
-  }
-
-  // constexpr Vect<dim, bool> operator==(Vect<dim, T> const &other) const
-  // {
-  //   return Supplier<T, Vect<dim, bool>([this, other](unsigned int i){
-  // 	return other[i] == (*this)[i];
-  //     })>();
-  // }
-
-  // constexpr Vect<dim, bool> operator!=(Vect<dim, T> const &other) const
-  // {
-  //   return Vect<dim, bool>([this, other](unsigned int i){
-  // 	return other[i] != (*this)[i];
-  //     });
-  // }
-
-  template<class Op>
-  constexpr static Vect<dim, T> applyOp(Op const op)
-  {
-    return Vect<dim, T>(Function<T, unsigned int, Op>(op));
-  }
-
-  template<class Op>
-  constexpr Vect<dim, T> map(Op const op) const
-  {
-    return applyOp([op, this](unsigned int i) {
-	return (op(data[i]));
-      });
-  }
-
-  template<class Op, class U>
-  constexpr Vect<dim, T> applyOpPerComponent(Op op, const Vect<dim, U>& other) const
-  {
-    return applyOp([this, other, op](unsigned int i) {
-	return op((*this)[i], other[i]);
-      });
-  }
-
-  template<class U>
-  constexpr Vect<dim, T> operator+(Vect<dim, U> const &other) const
-  {
-    return Vect<dim, T>::applyOpPerComponent([](T a, U b) {
-	return (a + b);
-      }, other);
-  }
-
-  constexpr Vect<dim, T> operator*(Vect<dim, T> const &other) const
-  {
-    return Vect<dim, T>::applyOp([this, other](unsigned int i){
-	return (*this)[i] * other[i];
-      });
-  }
-
-  constexpr Vect<dim, T> operator*(T const &other) const
-  {
-    return Vect<dim, T>::applyOp([this, other](unsigned int i){
-	return (*this)[i] * other;
-      });
-  }
-
-  constexpr Vect<dim, T> operator/(Vect<dim, T> const &other) const
-  {
-    return Vect<dim, T>::applyOp([this, other](unsigned int i){
-	return (*this)[i] / other[i];
-      });
-  }
-
-  constexpr Vect<dim, T> operator/(T const &other) const
-  {
-    return Vect<dim, T>::applyOp([this, other](unsigned int i){
-	return (*this)[i] / other;
-      });
-  }
-
-  constexpr Vect<dim, T> operator%(Vect<dim, T> const &other) const
-  {
-    return Vect<dim, T>::applyOp([this, other](unsigned int i){
-	return (*this)[i] % other[i];
-      });
-  }
-
-  constexpr Vect<dim, T> operator-(Vect<dim, T> const &other) const
-  {
-    return Vect<dim, T>::applyOp([this, other](unsigned int i){
-	return (*this)[i] - other[i];
-      });
-  }
-
-  constexpr Vect<dim, T> operator-(void) const
-  {
-    return map([](T t){return (-t);});
+    for (; i != dim && data[i] == other.data[i]; ++i);
+    return i == dim;
   }
 
 private:
+  template<class FUNC, std::size_t... indices>
+  constexpr Vect<dim, T> map_impl(FUNC &&func, std::index_sequence<indices...>) const
+  {
+    return {func(data[indices])...};
+  }
 
 
 public:
-  T sum(void) const
+  template<class FUNC>
+  constexpr Vect<dim, T> map(FUNC &&func) const
   {
-    unsigned int	i;
-    T			result;
+    return (map_impl(func, std::make_index_sequence<dim>{}));
+  }
 
-    result = 0u;
-    i = 0u;
-    while (i < dim)
-      {
-	result = result + data[i];
-	i = i + 1u;
-      }
+#define VECT_UNARY_OP_DEF(OP)				\
+  constexpr Vect<dim, T> operator OP(void) const	\
+  {							\
+    struct Mapper					\
+    {							\
+      T operator()(T const &t)				\
+      {							\
+	return OP t;					\
+      }							\
+    };							\
+    return map(Mapper{});				\
+  }							\
+
+  VECT_UNARY_OP_DEF(-);
+  VECT_UNARY_OP_DEF(+);
+  VECT_UNARY_OP_DEF(~);
+  VECT_UNARY_OP_DEF(!);
+
+public:
+  constexpr T sum(void) const
+  {
+    T result{0u};
+
+    for (auto const &t : *this)
+      result += t;
     return (result);
   }
 
-  T scalar(Vect<dim, T> const &other) const
+  constexpr T scalar(Vect<dim, T> const &other) const
   {
     return ((*this * other).sum());
   }
 
-  T length2() const
+  constexpr T length2() const
   {
     return ((*this * *this).sum());
   }
@@ -266,71 +202,39 @@ public:
     return length2() > 0 ? ((*this) / sqrt(length2())) : *this;
   }
 
-  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 0)>::type* = nullptr>
-  T x() const
+#define VECT_NAMED_COMPONENT(NAME, INDEX)				\
+  template<std::size_t _dim = dim, typename std::enable_if<(_dim > 0)>::type* = nullptr> \
+  T NAME() const							\
+  {									\
+    return (data[INDEX]);						\
+  }									\
+									\
+  template<std::size_t _dim = dim, typename std::enable_if<(_dim > 0)>::type* = nullptr> \
+  T &NAME()								\
+  {									\
+    return (data[INDEX]);						\
+  }									\
+
+  VECT_NAMED_COMPONENT(x, 0);
+  VECT_NAMED_COMPONENT(y, 1);
+  VECT_NAMED_COMPONENT(z, 2);
+  VECT_NAMED_COMPONENT(w, 3);
+
+  constexpr bool all() const
   {
-    return (data[0]);
-  }
+    std::size_t i(0);
 
-  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 1)>::type* = nullptr>
-  T y() const
-  {
-    return (data[1]);
-  }
-
-  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 2)>::type* = nullptr>
-  T z() const
-  {
-    return (data[2]);
-  }
-
-  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 3)>::type* = nullptr>
-  T w() const
-  {
-    return (data[3]);
-  }
-
-  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 0)>::type* = nullptr>
-  T &x()
-  {
-    return (data[0]);
-  }
-
-  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 1)>::type* = nullptr>
-  T &y()
-  {
-    return (data[1]);
-  }
-
-  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 2)>::type* = nullptr>
-  T &z()
-  {
-    return (data[2]);
-  }
-
-  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 3)>::type* = nullptr>
-  T &w()
-  {
-    return (data[3]);
-  }
-
-  T reduce()
-  {
-
-  }
-
-  bool all()
-  {
-    unsigned int i(0);
-
-    while (i < dim && data[i])
+    while (i != dim && data[i])
       i = i + 1;
     return (i == dim);
   }
 
-  typedef T (&tab)[dim];
+  constexpr operator decltype(data) & ()
+  {
+    return (data);
+  }
 
-  operator tab()
+  constexpr operator decltype(data) const & () const
   {
     return (data);
   }

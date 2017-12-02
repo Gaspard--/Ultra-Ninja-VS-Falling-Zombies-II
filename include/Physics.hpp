@@ -13,8 +13,8 @@ struct Entity;
 class Physics
 {
 public:
-  Physics(const Vect<2, int>& planetCenter, double radius, double mass)
-    : _planet{planetCenter, Vect<2, int>(0, 0), radius, mass, 0.0} {}
+  Physics(const Vect<2, double>& planetCenter, double radius, double mass)
+    : _planet{planetCenter, Vect<2, double>(0.0, 0.0), radius, mass, 0.0} {}
 
   bool haveCollision(const Fixture&, const Fixture&) const;
   bool move(Fixture&) const;
