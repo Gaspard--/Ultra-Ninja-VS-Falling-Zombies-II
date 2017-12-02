@@ -122,6 +122,11 @@ Vect<2u, float> Logic::getMouse(Display const &display) const
   return rotate(mousePos, camera * Vect<2u, float>{1.0f, -1.0f} / camera.length2());
 }
 
+MobManager const& Logic::getMobs() const
+{
+  return mobs;
+}
+
 void Logic::handleButton(GLFWwindow *, Button button)
 {
   if (button.button != GLFW_MOUSE_BUTTON_LEFT || button.action != GLFW_PRESS || gameOver)

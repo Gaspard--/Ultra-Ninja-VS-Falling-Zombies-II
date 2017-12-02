@@ -6,7 +6,7 @@
 class Player
 {
 public:
-  Player();
+  Player(Entity entity);
   ~Player();
 
   Entity entity;
