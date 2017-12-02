@@ -14,10 +14,10 @@ struct Entity
 
   void update();
 
-  Fixture      fixture;
-  bool                  isOnPlanet;
-  bool		        isUseless = false;
-  Renderable		renderable;
+  Fixture fixture;
+  bool isOnPlanet;
+  bool isUseless = false;
+  Renderable renderable;
 };
 
 #endif /* ENTITY_HPP */

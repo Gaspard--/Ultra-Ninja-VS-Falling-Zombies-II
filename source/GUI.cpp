@@ -14,7 +14,7 @@ GUI::Button::Button(const Rect& rect, const std::string str) : _rect(rect), _ina
   _state = State::INACTIVE;
 }
 
-bool    GUI::Button::isOverflew(const Vect<2, float>& mouse)
+bool GUI::Button::isOverflew(const Vect<2, float>& mouse)
 {
   if (mouse.x() >= _rect.pos.x() && mouse.x() <= _rect.pos.x() + _rect.size.x() &&
       mouse.y() >= _rect.pos.y() && mouse.y() <= _rect.pos.y() + _rect.size.y())
@@ -26,7 +26,7 @@ bool    GUI::Button::isOverflew(const Vect<2, float>& mouse)
   return (false);
 }
 
-void    GUI::Button::draw(Display& disp)
+void GUI::Button::draw(Display& disp)
 {
   if (_state == State::INACTIVE)
     _rect.color = _inactiveColor;
@@ -35,12 +35,12 @@ void    GUI::Button::draw(Display& disp)
   disp.displayRect(_rect);
 }
 
-void    GUI::addElem(const std::string& key, const Button& elem)
+void GUI::addElem(const std::string& key, const Button& elem)
 {
   _stack.insert({key, elem});
 }
 
-std::string     GUI::haveElemPressed(const Vect<2, float>& mouse, bool leftClick)
+std::string GUI::haveElemPressed(const Vect<2, float>& mouse, bool leftClick)
 {
   for (auto i = _stack.begin() ; i != _stack.end() ; ++i)
     if (i->second.isOverflew(mouse) && leftClick)
@@ -48,7 +48,7 @@ std::string     GUI::haveElemPressed(const Vect<2, float>& mouse, bool leftClick
   return ("");
 }
 
-void    GUI::drawElems(Display& disp)
+void GUI::drawElems(Display& disp)
 {
   for (auto i = _stack.begin() ; i != _stack.end() ; ++i)
     i->second.draw(disp);
