@@ -30,3 +30,18 @@
 *.exe
 *.out
 *.app
+
+# Build dirs
+debug/
+release/
+
+# Executable
+Ultra-Ninja-VS-Fallling-Zombies-II
+
+# Automaticly generated files
+include/GL/
+source/gl3w.c
+
+# Emacs backup files aand locks
+*~
+#*
