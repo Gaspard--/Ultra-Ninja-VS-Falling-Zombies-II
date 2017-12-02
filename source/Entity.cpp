@@ -1,6 +1,6 @@
 #include "Entity.hpp"
 
-Entity::Entity(Physics::Fixture f, bool b)
+Entity::Entity(Fixture f, bool b)
   : fixture(f), isOnPlanet(b)
 {
 }

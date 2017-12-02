@@ -2,6 +2,7 @@
 # define PHYSICS_HPP
 
 # include "Vect.hpp"
+# include "Fixture.hpp"
 # include <cmath>
 # include <vector>
 
@@ -15,15 +16,6 @@ class   Physics
 public:
   Physics(const Vect<2, int>& planetCenter, double radius, double mass)
     : _planet{planetCenter, Vect<2, int>(0, 0), radius, mass, 0.0} {}
-
-  struct                Fixture
-  {
-    Vect<2, double>     pos;
-    Vect<2, double>     speed;
-    double              radius;
-    double              mass;
-    double		bounciness{0.0};
-  };
 
   bool  haveCollision(const Fixture&, const Fixture&) const;
   bool  move(Fixture&) const;
