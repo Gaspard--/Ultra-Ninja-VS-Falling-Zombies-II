@@ -9,7 +9,11 @@ public:
   Human(Entity entity);
   ~Human();
 
+  void setInfected(bool infected);
+  bool const& getInfected() const;
+
 private:
+  bool infected;
 };
 
 #endif //!HUMAN_HPP_
