@@ -9,6 +9,7 @@
 #include "Rect.hpp"
 #include "Logic.hpp"
 #include "RenderTexture.hpp"
+#include "Camera.hpp"
 
 class Display
 {
@@ -18,6 +19,8 @@ private:
     GlfwContext();
     ~GlfwContext();
   } glfwContext;
+
+  Camera camera;
 
   std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> window;
   FreeTypeLib fontHandler;
@@ -32,21 +35,20 @@ private:
   Texture background;
   Texture bloodSpray[3];
   Texture mobSpray[3];
-  RenderTexture planetRenderTexture;
-  Vect<2u, float> camera;
-  Vect<2u, float> dim;
+  RenderTexture planetRenderTexture; 
   Vect<2u, float> size;
+  Vect<2u, float> dim;
+
 public:
   Display();
   ~Display();
-  
+
   GLFWwindow *getWindow() const;
 
   void displayText(std::string const &txt, unsigned int fontSize, Vect<2u, float> step, Vect<2u, float> textPos,  Vect<2u, float> rotation, Vect<3u, float> color);
 
   void displayRect(Rect const &);
 
-  void drawBlood(Vect<2u, float> rotation, Texture texture);
   void displayInterface(Logic const &logic);
 
   /**
@@ -56,17 +58,15 @@ public:
    * See Renderable for details on how renderables are rendered
    * This function is not suitable to render GUI
    */
-  void displayRenderable(Renderable const& renderable, Vect<2u, float> rotation = {1.0, 0.0});
-
-  void displayEntityWithSpeed(Entity const& e, Vect<2u, float> rotation);
+  void displayRenderable(Renderable const& renderable);
 
   void displayRenderableAsHUD(Renderable const& renderable);
-
-  Vect<2u, float> getCamera() const;
 
   Vect<2u, float> getDim() const;
 
   Vect<2u, float> getSize() const;
+
+  Camera const &getCamera() const;
 
   void render(Logic const &);
   bool isRunning() const;

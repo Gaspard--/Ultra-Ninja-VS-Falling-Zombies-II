@@ -10,13 +10,12 @@
 */
 struct Entity
 {
-  Entity(Fixture = {{0, 0}, {0, 0}, 0, 0, 0});
+  Entity(Fixture = {{0.0, 0.0}, {0.0, 0.0}, 0.0, 0.0, 0.0});
 
   void update();
 
   Fixture fixture;
   bool isUseless = false;
-  Renderable renderable;
 };
 
 #endif /* ENTITY_HPP */

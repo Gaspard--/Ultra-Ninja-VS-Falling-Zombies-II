@@ -8,7 +8,7 @@
 
 int main()
 {
-  std::srand(time(NULL));
+  std::srand(static_cast<unsigned int>(time(NULL)));
   try {
     Display display;
 

@@ -89,10 +89,6 @@ public:
   Texture &operator=(Texture);
   operator GLuint() const;
 };
-//typedef GLuint Vao;
-//typedef GLuint glBuffer;
-//typedef GLuint Framebuffer;
-//typedef GLuint Texture;
 
 namespace	my_opengl
 {

@@ -67,7 +67,7 @@ void SoundHandler::playMainMusic()
   mainMusic.play();
 }
 
-void SoundHandler::playSound(SoundList id, int volume)
+void SoundHandler::playSound(SoundList id, float volume)
 {
   sf::Sound* sound = new sf::Sound();
   sound->setBuffer(*_instance->getSoundBuffer(id));

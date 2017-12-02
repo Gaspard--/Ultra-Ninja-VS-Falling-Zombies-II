@@ -25,11 +25,11 @@ public:
     void draw(Display&);
 
   private:
-    Rect _rect;
-    Vect<4, float> _inactiveColor;
-    Vect<4, float> _overflewColor;
-    std::string _str;
-    State _state;
+    Rect rect;
+    Vect<4, float> inactiveColor;
+    Vect<4, float> overflewColor;
+    std::string str;
+    State state;
   };
 
   void addElem(const std::string& key, const Button& elem);
@@ -37,7 +37,7 @@ public:
   std::string haveElemPressed(const Vect<2, float>&, bool leftClick);
 
 private:
-  std::unordered_map<std::string, Button> _stack;
+  std::unordered_map<std::string, Button> stack;
 };
 
 #endif /* GUI_HPP */
