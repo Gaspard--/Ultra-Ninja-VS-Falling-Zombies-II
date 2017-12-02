@@ -53,7 +53,6 @@ include_directories(
   ${GLFW_INCLUDE_DIRS}
   ${HEADER_DIRECTORY}
   ${FREETYPE_INCLUDE_DIRS}
-  ${SFML_INCLUDE_DIRS}
 )
 
 add_executable(
