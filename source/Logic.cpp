@@ -126,7 +126,6 @@ void Logic::handleButton(GLFWwindow *, Button button)
 {
   if (button.button != GLFW_MOUSE_BUTTON_LEFT || button.action != GLFW_PRESS || gameOver)
     return ;
-  Player::playRandomPlayerActionSound();
 }
 
 Vect<2, double> Logic::getPlayerPos(void) const

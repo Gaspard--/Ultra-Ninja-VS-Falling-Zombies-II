@@ -7,7 +7,6 @@
 # include <memory>
 # include "Entity.hpp"
 # include "Input.hpp"
-# include "Player.hpp"
 
 class Display;
 
