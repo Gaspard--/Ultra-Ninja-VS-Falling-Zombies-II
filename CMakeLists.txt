@@ -17,7 +17,7 @@ else()
   set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_CXX_EXTENSIONS OFF)
-  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -W -fdiagnostics-color=always -Wall -Wcast-align -Wcast-qual -Wconversion -Wctor-dtor-privacy -Wdisabled-optimization -Wduplicated-branches -Wduplicated-cond -Wextra -Wformat=2 -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wno-sign-conversion -Wnoexcept -Wnull-dereference -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wrestrict -Wstrict-aliasing=1 -Wstrict-null-sentinel -Wstrict-overflow=5 -Wswitch-default -Wno-unknown-pragmas -Wuseless-cast")
+  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -W -fdiagnostics-color=always -Wall -Wcast-align -Wcast-qual -Wconversion -Wctor-dtor-privacy -Wdisabled-optimization -Wduplicated-branches -Wduplicated-cond -Wextra -Wformat=2 -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-include-dirs -Wno-sign-conversion -Wnoexcept -Wnull-dereference -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wrestrict -Wstrict-aliasing=1 -Wstrict-null-sentinel -Wstrict-overflow=5 -Wswitch-default -Wundef -Wno-unknown-pragmas -Wuseless-cast")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 endif(WIN32)
@@ -54,18 +54,18 @@ add_executable(
   ${HEADERS_FILE}
 )
 
-target_link_libraries(
-  ${PROJECT_NAME}
-  sfml-audio
-  freetype
-  )
-
 if (WIN32)
   target_link_libraries(${PROJECT_NAME}
                         C:/glfw-3.2.1.bin.WIN32/lib-vc2015/glfw3.lib
                         C:/freetype-windows-binaries-2.7.1/win32/freetype271.lib
                         C:/freetype-windows-binaries-2.7.1/win32/freetype271MT.lib
-                        C:/SFML-2.4.2/build/lib/Debug/sfml-audio-d-2.dll)
+                        C:/SFML-2.4.2/build/lib/Release/sfml-audio.lib
+  )
+else()
+  target_link_libraries(${PROJECT_NAME}
+                        sfml-audio
+                        freetype
+  )
 endif(WIN32)
 
 target_link_libraries(${PROJECT_NAME} ${OPENGL_gl_LIBRARIES})
