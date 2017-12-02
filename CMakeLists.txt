@@ -8,6 +8,8 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+
 set(HEADER_DIRECTORY "include")
 set(SOURCE_DIRECTORY "source")
 
@@ -38,6 +40,11 @@ if (WIN32)
 else()
   find_package(PkgConfig REQUIRED)
   find_package(Freetype REQUIRED)
+  find_package(SFML 2 REQUIRED audio)
+  if(SFML_FOUND)
+    include_directories(${SFML_INCLUDE_DIR})
+    target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+  endif()
   pkg_search_module(GLFW REQUIRED glfw3)
 endif(WIN32)
 
@@ -46,6 +53,7 @@ include_directories(
   ${GLFW_INCLUDE_DIRS}
   ${HEADER_DIRECTORY}
   ${FREETYPE_INCLUDE_DIRS}
+  ${SFML_INCLUDE_DIRS}
 )
 
 add_executable(
