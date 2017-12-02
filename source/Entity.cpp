@@ -1,7 +1,7 @@
 #include "Entity.hpp"
 
-Entity::Entity(Fixture f, bool b)
-  : fixture(f), isOnPlanet(b)
+Entity::Entity(Fixture f)
+  : fixture(f)
 {
 }
 
