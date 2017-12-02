@@ -28,16 +28,16 @@ public:
   void renderText(std::string text, A renderBuffer, unsigned int size, Vect<2u, float> step)
   {
     FT_Set_Pixel_Sizes(face, 0, size);
-    Vect<2u, float> pen(0, 0);
+    Vect<2u, float> pen(0.0f, 0.0f);
 
     for (auto it(text.begin()); it != text.end(); ++it)
       {
 	FT_GlyphSlot &slot(face->glyph);
-	FT_Load_Char(face, (FT_ULong)*it, FT_LOAD_RENDER);
-    	renderBuffer((pen + Vect<2u, float>{slot->bitmap_left, slot->bitmap_top}) * step / (float)size,
-		     Vect<2u, float>{slot->bitmap.pitch, slot->bitmap.rows} * step / (float)size,
+	FT_Load_Char(face, static_cast<FT_ULong>(*it), FT_LOAD_RENDER);
+    	renderBuffer((pen + Vect<2u, float>{slot->bitmap_left, slot->bitmap_top}) * step / static_cast<float>(size),
+		     Vect<2u, float>{slot->bitmap.pitch, slot->bitmap.rows} * step / static_cast<float>(size),
 		     slot->bitmap.buffer, {slot->bitmap.pitch, slot->bitmap.rows});
-	pen[0] += (face->glyph->advance.x >> 6u);
+	pen[0] += static_cast<float>(face->glyph->advance.x >> 6u);
       }
   }
 };

@@ -10,7 +10,7 @@
 */
 struct Entity
 {
-  Entity(Fixture = {{0, 0}, {0, 0}, 0, 0, 0}, bool b = false);
+  Entity(Fixture = {{0.0, 0.0}, {0.0, 0.0}, 0, 0, 0}, bool b = false);
 
   void update();
 

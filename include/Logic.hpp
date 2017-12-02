@@ -22,7 +22,7 @@ private:
   MobManager mobs;
   bool gameOver;
 
-  Vect<2u, float> mousePos;
+  Vect<2u, double> mousePos;
 
   void handleKey(GLFWwindow *window, Key key);
   void handleMouse(Display const &, GLFWwindow *window, Mouse mouse);
@@ -39,7 +39,7 @@ public:
   void incCombo();
 
   Vect<2, double> getPlayerPos(void) const;
-  Vect<2u, float> getMouse(Display const &) const;
+  Vect<2u, double> getMouse(Display const &) const;
   MobManager const& getMobs() const;
   unsigned int  getScore(void) const;
   std::string   getTime(void) const;

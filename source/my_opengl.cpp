@@ -48,7 +48,7 @@ void my_opengl::programError(GLuint const program)
   std::string log;
 
   glGetProgramiv(program, GL_INFO_LOG_LENGTH, &len);
-  log.reserve((unsigned int)len);
+  log.reserve(static_cast<unsigned int>(len));
   glGetProgramInfoLog(program, len, NULL, &log[0]);
   throw std::runtime_error("link failure: " + log);
 }
@@ -58,7 +58,7 @@ Shader my_opengl::createShader(GLenum const shadertype, GLchar const *src)
   Shader shader(shadertype);
   GLint status(0);
 
-  glShaderSource(shader, 1, &src, (const GLint *)0);
+  glShaderSource(shader, 1, &src, nullptr);
   glCompileShader(shader);
 
   glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
@@ -265,12 +265,12 @@ Texture::operator GLuint() const
 
 Texture my_opengl::loadTexture(std::string const &name)
 {
-  auto bytesToInt = [](unsigned char *bytes)
+  auto bytesToInt = [](char *bytes)
     {
-      return ((unsigned)bytes[3] << 24u)
-      | ((unsigned)bytes[2] << 16u)
-      | ((unsigned)bytes[1] << 8u)
-      | (unsigned)bytes[0];
+      return (static_cast<unsigned char>(bytes[3]) << 24u)
+      | (static_cast<unsigned char>(bytes[2]) << 16u)
+      | (static_cast<unsigned char>(bytes[1]) << 8u)
+      | static_cast<unsigned char>(bytes[0]);
     };
   std::ifstream file(name, std::ios::binary);
 
@@ -278,27 +278,27 @@ Texture my_opengl::loadTexture(std::string const &name)
     throw std::runtime_error("'" + name + "': failed to open");
   file.exceptions(std::ios::badbit);
 
-  unsigned char                 readBuf[4];
-  Vect<2u, unsigned int>        dim{0, 0};
+  char readBuf[4];
+  Vect<2u, unsigned int> dim{0, 0};
   try {
     file.seekg(10);
-    file.read((char *)readBuf, sizeof(readBuf));
+    file.read(readBuf, sizeof(readBuf));
     unsigned int offset(bytesToInt(readBuf));
 
     file.seekg(14);
-    file.read((char *)readBuf, sizeof(readBuf));
+    file.read(readBuf, sizeof(readBuf));
 
-    file.read((char *)readBuf, sizeof(readBuf));
+    file.read(readBuf, sizeof(readBuf));
     dim[0] = bytesToInt(readBuf);
 
-    file.read((char *)readBuf, sizeof(readBuf));
+    file.read(readBuf, sizeof(readBuf));
     dim[1] = bytesToInt(readBuf);
 
     file.seekg(offset);
 
-    std::unique_ptr<unsigned char[]> data(new unsigned char[dim[0] * dim[1] * sizeof(unsigned int)]);
+    std::unique_ptr<char[]> data(new char[dim[0] * dim[1] * sizeof(unsigned int)]);
 
-    file.read(reinterpret_cast<char *>(&data[0]), std::streamsize(dim[0] * dim[1] * sizeof(unsigned int)));
+    file.read(&data[0], std::streamsize(dim[0] * dim[1] * sizeof(unsigned int)));
 
     std::streamsize r(file.gcount());
 
@@ -306,7 +306,7 @@ Texture my_opengl::loadTexture(std::string const &name)
       {
 	std::stringstream s;
 
-	s << name << ": file seems truncated, " << r << std::string(" bytes read.");
+	s << name << ": file seems truncated, " << r << std::string(" bytes read. Expected ") << std::streamsize(dim[0] * dim[1] * sizeof(unsigned int));
 	throw std::runtime_error(s.str());
       }
     file.exceptions(std::ios::goodbit);
@@ -342,8 +342,8 @@ Texture my_opengl::loadTexture(std::string const &name)
     glTexImage2D(GL_TEXTURE_2D,
                  0,
                  GL_RGBA,
-                 (GLsizei)(dim[0]),
-                 (GLsizei)(dim[1]),
+                 static_cast<GLsizei>(dim[0]),
+                 static_cast<GLsizei>(dim[1]),
                  0,
                  GL_RGBA,
                  GL_UNSIGNED_BYTE,

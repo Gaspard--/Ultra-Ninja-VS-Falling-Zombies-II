@@ -19,13 +19,12 @@ void Logic::tick(void)
     {
       ++time;
     }
-
   multiplier += (1.0 / 600.0);
 }
 
 void    Logic::addToScore(int add)
 {
-  score += combo * add * (multiplier == 0 ? 1 : multiplier);
+  score += static_cast<int>(combo * add * (multiplier == 0 ? 1 : multiplier));
 }
 
 void    Logic::incCombo()
@@ -80,6 +79,8 @@ void Logic::handleEvent(Display const &display, Event const& event)
         case Event::BUTTON:
           handleButton(event.window, event.val.button);
           break;
+	default:
+	  break;
         }
     }
 }
@@ -90,6 +91,8 @@ void Logic::handleKey(GLFWwindow *window, Key key)
     {
     case GLFW_KEY_ESCAPE:
       glfwSetWindowShouldClose(window, true);
+      break;
+    default:
       break;
     }
 }
@@ -102,24 +105,20 @@ void Logic::checkEvents(Display const &display)
     }
 }
 
-static inline Vect<2u, float> rotate(Vect<2u, float> a, Vect<2u, float> b)
-{
-  return {a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]};
-}
-
 void Logic::handleMouse(Display const &display, GLFWwindow *, Mouse mouse)
 {
   Vect<2u, float> const size(display.getSize());
 
   mousePos = {mouse.x, mouse.y};
-  mousePos = (mousePos - Vect<2u, double>(size[0] - size[1], 0) * 0.5) / Vect<2u, double>(size[1] * 0.5, -size[1] * 0.5) + Vect<2u, double>(-1.0, 1.0);
+  mousePos -= Vect<2u, double>(size[0] - size[1], 0);
+  mousePos /= Vect<2u, double>(size[1], -size[1]);
+  mousePos += Vect<2u, double>(-1.0, 1.0);
 }
 
-Vect<2u, float> Logic::getMouse(Display const &display) const
+Vect<2u, double> Logic::getMouse(Display const &display) const
 {
-  Vect<2u, float> const camera(display.getCamera());
-
-  return rotate(mousePos, camera * Vect<2u, float>{1.0f, -1.0f} / camera.length2());
+  std::cout << display.getCamera().unapply(mousePos) << std::endl;
+  return display.getCamera().unapply(mousePos);
 }
 
 MobManager const& Logic::getMobs() const
