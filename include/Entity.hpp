@@ -10,14 +10,14 @@
 */
 struct Entity
 {
-  Entity(Physics::Fixture = {{0, 0}, {0, 0}, 0, 0, 0}, bool b = false);
+  Entity(Fixture = {{0, 0}, {0, 0}, 0, 0, 0}, bool b = false);
 
   void update();
 
-  Physics::Fixture      fixture;
-  bool                  isOnPlanet;
-  bool		        isUseless = false;
-  Renderable		renderable;
+  Fixture fixture;
+  bool isOnPlanet;
+  bool isUseless = false;
+  Renderable renderable;
 };
 
 #endif /* ENTITY_HPP */
