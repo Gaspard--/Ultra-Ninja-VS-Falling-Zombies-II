@@ -7,5 +7,5 @@ Entity::Entity(Fixture f, bool b)
 
 void Entity::update(void)
 {
-  renderable.destPos = fixture.pos;
+  // renderable.destPos = fixture.pos;
 }

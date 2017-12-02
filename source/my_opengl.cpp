@@ -279,7 +279,7 @@ Texture my_opengl::loadTexture(std::string const &name)
   file.exceptions(std::ios::badbit);
 
   char readBuf[4];
-  Vect<2u, unsigned int> dim{0, 0};
+  Vect<2u, unsigned int> dim{0u, 0u};
   try {
     file.seekg(10);
     file.read(readBuf, sizeof(readBuf));

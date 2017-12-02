@@ -4,7 +4,7 @@
 #include "SoundHandler.hpp"
 
 Logic::Logic()
-  : mousePos{0, 0}
+  : mousePos{0.0, 0.0}
 {
   time = 0;
   score = 0;
@@ -110,14 +110,13 @@ void Logic::handleMouse(Display const &display, GLFWwindow *, Mouse mouse)
   Vect<2u, float> const size(display.getSize());
 
   mousePos = {mouse.x, mouse.y};
-  mousePos -= Vect<2u, double>(size[0] - size[1], 0);
+  mousePos -= Vect<2u, double>(size[0] - size[1], 0.0);
   mousePos /= Vect<2u, double>(size[1], -size[1]);
   mousePos += Vect<2u, double>(-1.0, 1.0);
 }
 
 Vect<2u, double> Logic::getMouse(Display const &display) const
 {
-  std::cout << display.getCamera().unapply(mousePos) << std::endl;
   return display.getCamera().unapply(mousePos);
 }
 

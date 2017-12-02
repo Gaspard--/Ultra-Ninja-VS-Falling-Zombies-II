@@ -60,8 +60,6 @@ public:
    */
   void displayRenderable(Renderable const& renderable);
 
-  void displayEntityWithSpeed(Entity const& e, Vect<2u, float> rotation);
-
   void displayRenderableAsHUD(Renderable const& renderable);
 
   Vect<2u, float> getDim() const;

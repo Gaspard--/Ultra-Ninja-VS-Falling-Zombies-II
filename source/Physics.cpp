@@ -11,7 +11,7 @@ bool Physics::haveCollision(const Fixture& a, const Fixture& b) const
 bool Physics::move(Fixture& fixture) const
 {
   double distance;
-  Vect<2, double> vec(0, 0);
+  Vect<2, double> vec(0.0, 0.0);
 
   fixture.pos += fixture.speed;
   distance = sqrt((fixture.pos - _planet.pos).length2());

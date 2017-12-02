@@ -229,15 +229,15 @@ public:
     return (i == dim);
   }
 
-  constexpr operator decltype(data) & ()
-  {
-    return (data);
-  }
+  // constexpr operator decltype(data) & ()
+  // {
+  //   return (data);
+  // }
 
-  constexpr operator decltype(data) const & () const
-  {
-    return (data);
-  }
+  // constexpr operator decltype(data) const & () const
+  // {
+  //   return (data);
+  // }
 
   template<class L>
   static void forEach(Vect<dim, T> begin, Vect<dim, T> end, L l)

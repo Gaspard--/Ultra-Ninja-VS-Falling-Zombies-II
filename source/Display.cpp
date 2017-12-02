@@ -18,7 +18,7 @@ inline RenderContext contextFromFiles(std::string name)
     throw std::runtime_error("lol");
   vert << vertInput.rdbuf();
   frag << fragInput.rdbuf();
-  return {Vao(), my_opengl::createProgram<2>({GL_VERTEX_SHADER, GL_FRAGMENT_SHADER},
+  return {Vao(), my_opengl::createProgram<2>({static_cast<unsigned int>(GL_VERTEX_SHADER), static_cast<unsigned int>(GL_FRAGMENT_SHADER)},
                                              {vert.str(), frag.str()})};
 }
 
@@ -57,7 +57,8 @@ Display::GlfwContext::~GlfwContext()
 // }
 
 Display::Display()
-  : window([this]{
+  : camera{}
+  , window([this]{
       std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> window(glfwCreateWindow(1920, 1080, "ultra-ninja VS falling zombies II", nullptr, nullptr), &glfwDestroyWindow);
 
       if (!window)
@@ -78,17 +79,16 @@ Display::Display()
   , background(my_opengl::loadTexture("resources/BackgroundSpace.bmp"))
   , bloodSpray{my_opengl::loadTexture("resources/BloodSpray.bmp"), my_opengl::loadTexture("resources/BloodSpray2.bmp"), my_opengl::loadTexture("resources/BloodSpray3.bmp")}
   , mobSpray{my_opengl::loadTexture("resources/MobSpray.bmp"), my_opengl::loadTexture("resources/MobSpray2.bmp"), my_opengl::loadTexture("resources/MobSpray3.bmp")}
-  , planetRenderTexture({1024, 1024})
-  , camera{}
-  , size{0, 0}
-  , dim{0, 0}
+  , planetRenderTexture({1024u, 1024u})
+  , size{0.0f, 0.0f}
+  , dim{0.0f, 0.0f}
 {
   static auto setFrameBuffer =
     [this] (int width, int height)
     {
       glViewport(0, 0, width, height);
-      size = {width, height};
-      dim = {height / static_cast<double>(width), 1.0};
+      size = {static_cast<float>(width), static_cast<float>(height)};
+      dim = {static_cast<float>(height) / static_cast<float>(width), 1.0f};
     };
 
   glfwSetFramebufferSizeCallback(window.get(), [] (GLFWwindow *, int width, int height) {
@@ -153,8 +153,8 @@ void Display::displayText(std::string const &text, unsigned int fontSize, Vect<2
                            glTexImage2D(GL_TEXTURE_2D,
                                         0,
                                         GL_RED,
-                                        static_cast<GLsizei>(fontDim[0]),
-                                        static_cast<GLsizei>(fontDim[1]),
+                                        fontDim[0],
+                                        fontDim[1],
                                         0,
                                         GL_RED,
                                         GL_UNSIGNED_BYTE,
@@ -163,7 +163,7 @@ void Display::displayText(std::string const &text, unsigned int fontSize, Vect<2
 
                            for (unsigned int i(0); !(i & 4u); ++i)
                              {
-                               Vect<2u, float> corner{i & 1u, i >> 1u};
+                               Vect<2u, float> corner{static_cast<float>(i & 1u), static_cast<float>(i >> 1u)};
                                Vect<2u, float> destCorner(rotate(pen + textPos + corner * size, rotation));
 
                                data[i * 4 + 0] = corner[0];
@@ -205,13 +205,13 @@ void Display::displayInterface(Logic const &logic)
 {
   // displayText("Current Population",
   //             256, {0.05f, 0.05f}, {-0.017f * 18, -0.315f}, {sqrt(camera.length2()), 0}, {1.0f, 1.0f, 1.0f});
-  displayText("Combo   " + logic.getCombo(), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1, 0}, {1.0f, 1.0f, 1.0f});
-  displayText("Score   " + std::to_string(logic.getScore()), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1, 0}, {1.0f, 1.0f, 1.0f});
-  displayText("Time   " + logic.getTime(), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1, 0}, {1.0f, 1.0f, 1.0f});
+  displayText("Combo   " + logic.getCombo(), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayText("Score   " + std::to_string(logic.getScore()), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayText("Time   " + logic.getTime(), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   if (logic.getGameOver())
     {
-      displayText("Game Over", 256, {0.2f, 0.2f}, {-0.65f, 0.42f}, {1, 0}, {1.0f, 0.25f, 0.0f});
-      displayText("Press enter to retry", 256, {0.1f, 0.1f}, {-0.65f, -0.82f}, {1, 0}, {1.0f, 0.25f, 0.0f});
+      displayText("Game Over", 256, {0.2f, 0.2f}, {-0.65f, 0.42f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
+      displayText("Press enter to retry", 256, {0.1f, 0.1f}, {-0.65f, -0.82f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
     }
 }
 
@@ -222,7 +222,7 @@ void Display::displayRenderable(Renderable const& renderable)
 
   for (unsigned int j(0u); j != 4u; ++j)
     {
-      Vect<2u, float> const corner((j & 1u), (j >> 1u));
+      Vect<2u, float> const corner(static_cast<float>(j & 1u), static_cast<float>(j >> 1u));
       Vect<2u, float> const sourceCorner(renderable.sourcePos + corner * renderable.sourceSize);
       Vect<2u, float> const destCorner(renderable.destPos + (corner - Vect<2u, float>{0.5f, 0.0f} * renderable.destSize));
 
@@ -238,31 +238,6 @@ void Display::displayRenderable(Renderable const& renderable)
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void Display::displayEntityWithSpeed(Entity const& e, Vect<2u, float> rotation)
-{
-  Bind<RenderContext> bind(textureContext);
-  float buffer[4u * 4u];
-  Vect<2u, float> up(e.fixture.speed.normalized());
-
-  for (unsigned int j(0u); j != 4u; ++j)
-    {
-      Vect<2u, float> const corner((j & 1u), (j >> 1u));
-      Vect<2u, float> const sourceCorner(e.renderable.sourcePos + corner * e.renderable.sourceSize);
-      Vect<2u, float> const destCorner(rotate(e.renderable.destPos + (rotate((corner - Vect<2u, float>{0.5f, 0.5f})
-                                                                           * e.renderable.destSize, {up[1], -up[0]})), rotation));
-
-      std::copy(&sourceCorner[0u], &sourceCorner[2u], &buffer[j * 4u]);
-      std::copy(&destCorner[0u], &destCorner[2u], &buffer[j * 4u + 2u]);
-    }
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, e.renderable.texture);
-  glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-  my_opengl::setUniform(dim, "dim", textureContext.program);
-  my_opengl::setUniform(0u, "tex", textureContext.program);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
-  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
-
 void Display::displayRenderableAsHUD(Renderable const& renderable)
 {
   Bind<RenderContext> bind(textureContext);
@@ -271,7 +246,7 @@ void Display::displayRenderableAsHUD(Renderable const& renderable)
 
   for (unsigned int j(0u); j != 4u; ++j)
     {
-      Vect<2u, float> const corner((j & 1u), (j >> 1u));
+      Vect<2u, float> const corner(static_cast<float>(j & 1u), static_cast<float>(j >> 1u));
       Vect<2u, float> const sourceCorner(renderable.sourcePos + corner * renderable.sourceSize);
       Vect<2u, float> const destCorner(renderable.destPos + (corner - Vect<2u, float>{0.5f, 0.5f}));
 

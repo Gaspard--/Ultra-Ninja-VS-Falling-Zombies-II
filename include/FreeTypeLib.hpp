@@ -34,9 +34,9 @@ public:
       {
 	FT_GlyphSlot &slot(face->glyph);
 	FT_Load_Char(face, static_cast<FT_ULong>(*it), FT_LOAD_RENDER);
-    	renderBuffer((pen + Vect<2u, float>{slot->bitmap_left, slot->bitmap_top}) * step / static_cast<float>(size),
-		     Vect<2u, float>{slot->bitmap.pitch, slot->bitmap.rows} * step / static_cast<float>(size),
-		     slot->bitmap.buffer, {slot->bitmap.pitch, slot->bitmap.rows});
+    	renderBuffer((pen + Vect<2u, float>{static_cast<float>(slot->bitmap_left), static_cast<float>(slot->bitmap_top)}) * step / static_cast<float>(size),
+		     Vect<2u, float>{static_cast<float>(slot->bitmap.pitch), static_cast<float>(slot->bitmap.rows)} * step / static_cast<float>(size),
+		     slot->bitmap.buffer, {static_cast<int>(slot->bitmap.pitch), static_cast<int>(slot->bitmap.rows)});
 	pen[0] += static_cast<float>(face->glyph->advance.x >> 6u);
       }
   }

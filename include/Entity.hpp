@@ -17,7 +17,6 @@ struct Entity
   Fixture fixture;
   bool isOnPlanet;
   bool isUseless = false;
-  Renderable renderable;
 };
 
 #endif /* ENTITY_HPP */
