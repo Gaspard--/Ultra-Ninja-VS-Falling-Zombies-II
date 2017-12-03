@@ -5,7 +5,7 @@
 
 #include "Mob.hpp"
 #include "CityBlock.hpp"
-# include "Zombie.hpp"
+#include "Zombie.hpp"
 
 class Zombie;
 
@@ -26,8 +26,10 @@ public:
 
   void addHunter(Zombie&);
   void removeHunter(Zombie&);
+  float getAnimationFrame() const;
 
 private:
+  EntityAnimation anim;
   CityBlock &getHome();
   bool infected;
   CityBlock *homePtr;
