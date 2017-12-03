@@ -37,7 +37,7 @@ void CityMap::tick(/*Logic &logic*/)
 		int count = 0;
 		bool search = true;
 
-		while (search and count < 3)
+		while (search && count < 3)
 		  {
 		    switch(std::rand() % 6)
 		      {
@@ -62,6 +62,8 @@ void CityMap::tick(/*Logic &logic*/)
 			break;
 		      case 5:
 			search = cityMap[block.y][block.x + 1].upgrade(/*logic*/);
+			break;
+		      default:
 			break;
 		      }
 		  }
