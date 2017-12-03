@@ -16,6 +16,7 @@ public :
       SWORDRADIUS,
       BULLET,
       ZOMBIE,
+      HUMAN,
       PLAYER,
       TEST
     };

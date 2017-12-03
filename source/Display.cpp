@@ -336,6 +336,30 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
   displayInfo.combo = logic.getCombo();
+
+  displayInfo.renderables.clear();
+  auto const &manager(logic.getMobManager());
+
+  for (auto &zombie : manager.zombies)
+    {
+      displayInfo.renderables.emplace_back(Renderable{
+					     TextureHandler::getInstance().getTexture(TextureHandler::ZOMBIE),
+					       {0.0f, 0.0f},
+						 {0.5f, 1.0f},
+						   camera.apply(zombie.entity.fixture.pos),
+						     camera.zoom * static_cast<float>(zombie.entity.fixture.radius)
+						     });
+    }
+  for (auto &human : manager.humans)
+    {
+      displayInfo.renderables.push_back(Renderable{
+	  TextureHandler::getInstance().getTexture(TextureHandler::HUMAN),
+	    {0.0f, 0.0f},
+	      {0.5f, 1.0f},
+		camera.apply(human.entity.fixture.pos),
+		  camera.zoom * static_cast<float>(human.entity.fixture.radius)});
+    }
+    
 }
 
 bool Display::isRunning() const

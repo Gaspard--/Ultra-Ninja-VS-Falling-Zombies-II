@@ -9,15 +9,14 @@
 class MobManager
 {
 public:
+  std::vector<Human> humans;
+  std::vector<Zombie> zombies;
+
   MobManager() = default;
   ~MobManager() = default;
 
   void update(Physics const &physics);
   void mutation();
-
-private:
-  std::vector<Human> humans;
-  std::vector<Zombie> zombies;
 };
 
 #endif //!MOBMANAGER_HPP_

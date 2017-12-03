@@ -8,7 +8,7 @@ struct Camera
   template<class T>
   constexpr Vect<2u, float> apply(Vect<2u, T> pos) const
   {
-    return static_cast<Vect<2u, float>>(pos + offset) * zoom;
+    return Vect<2u, float>(pos + offset) * zoom;
   }
 
   template<class T>
