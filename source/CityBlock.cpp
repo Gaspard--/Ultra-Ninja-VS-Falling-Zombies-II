@@ -8,7 +8,7 @@ CityBlock::CityBlock()
 void CityBlock::tick(/*Logic &logic*/)
 {
   cooldown -= (cooldown != 0);
-  if (hab != habMax and !cooldown)
+  if (hab != habMax && !cooldown)
     {
       int newHab((hab + habMax / 2) % habMax);
 

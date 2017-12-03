@@ -40,7 +40,7 @@ int main()
     Logic logic;
     Input::setWindow(display.getWindow());
 
-    SoundHandler::getInstance().playMainMusic();
+	SoundHandler::getInstance().playMainMusic();
     while (display.isRunning())
       {
 	// handle events

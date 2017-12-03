@@ -37,7 +37,7 @@ void CityMap::tick(/*Logic &logic*/)
 		int count = 0;
 		bool search = true;
 
-		while (search and count < 3)
+		while (search && count < 3)
 		  {
 		    switch(std::rand() % 6)
 		      {

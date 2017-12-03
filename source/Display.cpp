@@ -7,6 +7,9 @@
 #include "Bind.hpp"
 #include "TextureHandler.hpp"
 
+#include <cstring>
+#include <cerrno>
+
 inline RenderContext contextFromFiles(std::string name)
 {
   std::stringstream vert;
@@ -15,7 +18,11 @@ inline RenderContext contextFromFiles(std::string name)
   std::ifstream fragInput("shaders/" + name + ".frag");
 
   if (!fragInput || !vertInput)
-    throw std::runtime_error("lol");
+  {
+	  std::cout << "shaders/" + name + ".vert" << std::endl;
+	  std::cout << "shaders/" + name + ".frag" << std::endl;
+	  throw std::runtime_error(strerror(errno));
+  }
   vert << vertInput.rdbuf();
   frag << fragInput.rdbuf();
   return {Vao(), my_opengl::createProgram<2>({static_cast<unsigned int>(GL_VERTEX_SHADER), static_cast<unsigned int>(GL_FRAGMENT_SHADER)},
@@ -71,7 +78,7 @@ Display::Display()
         throw std::runtime_error("opengl: Opengl 3.0 not supported");
       return window;
     }())
-  , fontHandler("resources/ObelixPro-Broken-cyr.ttf")
+  , fontHandler("./resources/ObelixPro-Broken-cyr.ttf")
   , textureContext(contextFromFiles("texture"))
   , textContext(contextFromFiles("text"))
   , planet(my_opengl::loadTexture("resources/PlanetRed.bmp"))
