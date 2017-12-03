@@ -33,15 +33,16 @@ private:
 
   Vect<2u, double> mousePos;
 
-  static constexpr std::chrono::microseconds const TICK_TIME{1000000 / 120};
+  static constexpr std::chrono::microseconds const getTickTime()
+  {
+    return std::chrono::microseconds(1000000 / 120);
+  };
   std::size_t updatesSinceLastFrame;
   decltype(Clock::now()) lastUpdate;
 
   void handleKey(GLFWwindow *window, Key key);
   void handleMouse(Display const &, GLFWwindow *window, Mouse mouse);
   void handleButton(GLFWwindow *window, Button button);
-
-  CityMap cityMap;
 
 public:
   Logic();

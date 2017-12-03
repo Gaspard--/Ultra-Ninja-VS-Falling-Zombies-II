@@ -16,7 +16,7 @@ CityMap::CityMap()
 	    block.type = BlockType::BORDER;
 	  else if (!x || (x == MAP_SIZE - 1))
 	    block.type = BlockType::BORDER;
-	  else if (!(y % 2))
+	  else if (y % 2)
 	    block.type = BlockType::ROAD;
 	  else
 	    {
@@ -29,19 +29,6 @@ CityMap::CityMap()
 	}
       y += 1;
     }
-  /*
-  for (auto &line : cityMap)
-    {
-      for (auto &block : line)
-	if (block.type == BlockType::BORDER)
-	  std::cout << 'X';
-	else if (block.type == BlockType::ROAD)
-	  std::cout << '.';
-	else if (block.type == BlockType::NONE)
-	  std::cout << 'O';
-      std::cout << std::endl;
-    }
-  */
 }
 
 void CityMap::tick(/*Logic &logic*/)
@@ -102,4 +89,25 @@ void CityMap::tick(/*Logic &logic*/)
 std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const &CityMap::getCityMap() const
 {
   return (cityMap);
+}
+
+void CityMap::printMap() const
+{
+  for (auto &line : cityMap)
+    {
+      for (auto &block : line)
+	if (block.type == BlockType::BORDER)
+	  std::cout << 'X';
+	else if (block.type == BlockType::ROAD)
+	  std::cout << '.';
+	else if (block.type == BlockType::NONE)
+	  std::cout << '0';
+	else if (block.type == BlockType::SHED)
+	  std::cout << '1';
+	else if (block.type == BlockType::HOUSE)
+	  std::cout << '2';
+	else if (block.type == BlockType::MANSION)
+	  std::cout << '3';
+      std::cout << std::endl;
+    }
 }

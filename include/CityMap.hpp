@@ -19,4 +19,5 @@ public:
 
   void tick(/*Logic &logic*/);
   std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const &getCityMap() const;
+  void printMap() const;
 };
