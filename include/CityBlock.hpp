@@ -17,9 +17,9 @@ class CityBlock
   int hab;
   int habMax;
   int cooldown;
-  BlockType type;
 
 public:
+  BlockType type;
   int x;
   int y;
 
@@ -29,5 +29,4 @@ public:
 public:
   void tick(/*Logic &logic*/);
   bool upgrade();
-  BlockType getType() const;
 };

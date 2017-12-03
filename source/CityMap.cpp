@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include "CityMap.hpp"
 
 CityMap::CityMap()
@@ -13,10 +12,36 @@ CityMap::CityMap()
 	{
 	  block.x = x;
 	  block.y = y;
+	  if (!y || (y == MAP_SIZE - 1))
+	    block.type = BlockType::BORDER;
+	  else if (!x || (x == MAP_SIZE - 1))
+	    block.type = BlockType::BORDER;
+	  else if (!(y % 2))
+	    block.type = BlockType::ROAD;
+	  else
+	    {
+	      if ((x - 1) % 4)
+		block.type = BlockType::NONE;
+	      else
+		block.type = BlockType::ROAD;
+	    }
 	  x += 1;
 	}
       y += 1;
     }
+  /*
+  for (auto &line : cityMap)
+    {
+      for (auto &block : line)
+	if (block.type == BlockType::BORDER)
+	  std::cout << 'X';
+	else if (block.type == BlockType::ROAD)
+	  std::cout << '.';
+	else if (block.type == BlockType::NONE)
+	  std::cout << 'O';
+      std::cout << std::endl;
+    }
+  */
 }
 
 void CityMap::tick(/*Logic &logic*/)
@@ -29,7 +54,7 @@ void CityMap::tick(/*Logic &logic*/)
     for (auto &block : line)
       {
 	block.tick(/*logic*/);
-	if (block.getType() != BlockType::ROAD)
+	if (block.type != BlockType::ROAD)
 	  {
 	    int newHouse = std::rand() % 100;
 

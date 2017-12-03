@@ -27,8 +27,8 @@ void Physics::fixMapCollision(Fixture& a, std::array<std::array<CityBlock, MAP_S
 			   {tilePos[0], tilePos[1] + cornerNeg[1]}};
 
   auto handleCollision = [&] (int i, auto func) {
-    if (cityMap[sides[i][1]][sides[i][0]].getType() != BlockType::NONE &&
-	cityMap[sides[i][1]][sides[i][0]].getType() != BlockType::ROAD &&
+    if (cityMap[sides[i][1]][sides[i][0]].type != BlockType::NONE &&
+	cityMap[sides[i][1]][sides[i][0]].type != BlockType::ROAD &&
 	haveCollision(points[i], a))
       {
 	func();
