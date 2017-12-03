@@ -1,7 +1,9 @@
 #include "Human.hpp"
 
-Human::Human(Entity entity)
-  : Mob(entity, 1), infected(false)
+Human::Human(Entity entity, CityBlock &home)
+  : Mob(entity, 1),
+    infected(false),
+    homePtr(&home)
 {
 }
 
@@ -17,4 +19,14 @@ void Human::setInfected(bool infected)
 bool const& Human::getInfected() const
 {
   return infected;
+}
+
+CityBlock const &Human::getHome() const
+{
+  return *homePtr;
+}
+
+CityBlock &Human::getHome()
+{
+  return *homePtr;
 }

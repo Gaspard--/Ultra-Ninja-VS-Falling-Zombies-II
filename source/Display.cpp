@@ -298,16 +298,15 @@ void Display::render()
   {
     Renderable test{
       TextureHandler::getInstance().getTexture(TextureHandler::PLAYER),
-	{0.0f, 0.0f},
-	  {1.0f, 1.0f},
-	    {0.0f, 0.0f},
-	      {1.0f, 1.0f}
+  	{0.0f, 0.0f},
+  	  {1.0f, 1.0f},
+  	    {0.0f, 0.0f},
+  	      {1.0f, 1.0f}
     };
     displayRenderable(test);
   }
   for (auto const &renderable : displayInfo.renderables)
     displayRenderable(renderable);
-  
   // displayPlanet(background, 4.0, camera.normalized());
   // displayPlanet(planetBackground, 1.54, camera);
   // displayPlanet(planetRenderTexture.texture, logic.getPlanetSize(), camera);

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "Human.hpp"
 #include "Zombie.hpp"
+#include "Vect.hpp"
 
 class MobManager
 {
@@ -16,7 +17,8 @@ public:
   ~MobManager() = default;
 
   void update(Physics const &physics);
-  void mutation();
+  void mobDeath();
+  void spawnZombie(Vect<2, double> pos);
 };
 
 #endif //!MOBMANAGER_HPP_

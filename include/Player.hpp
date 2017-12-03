@@ -2,6 +2,7 @@
 # define PLAYER_HPP_
 
 #include "Entity.hpp"
+#include "Zombie.hpp"
 
 class Player
 {
@@ -11,7 +12,6 @@ public:
 
   Entity entity;
 
-  void attack();
   void update();
 
 };
