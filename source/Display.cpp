@@ -101,6 +101,7 @@ Display::Display()
   glfwSetFramebufferSizeCallback(window.get(), [] (GLFWwindow *, int width, int height) {
       setFrameBuffer(width, height);
     });
+  setFrameBuffer(1920, 1080);
 
   {
     Bind<RenderContext> bind(textureContext);
