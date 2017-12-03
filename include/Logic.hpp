@@ -9,7 +9,7 @@
 # include <mutex>
 # include "Entity.hpp"
 # include "Input.hpp"
-# include "MobManager.hpp"
+# include "EntityManager.hpp"
 # include "CityMap.hpp"
 
 class Display;
@@ -27,7 +27,7 @@ private:
   double multiplier;
 
   Physics physics;
-  MobManager mobManager;
+  EntityManager entityManager;
   CityMap cityMap;
   bool gameOver;
   bool running;

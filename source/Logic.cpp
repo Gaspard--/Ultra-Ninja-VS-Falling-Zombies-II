@@ -16,7 +16,7 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  mobManager.spawnZombie({0.0, 0.0});
+  entityManager.mobManager.spawnZombie({0.0, 0.0});
 }
 
 void Logic::update()
@@ -24,7 +24,7 @@ void Logic::update()
   if (!gameOver)
     {
       ++time;
-      mobManager.update(physics);
+      entityManager.mobManager.update(physics);
       cityMap.tick();
       multiplier += (1.0 / 600.0);
     }
@@ -150,7 +150,7 @@ Vect<2u, double> Logic::getMouse(Display const &display) const
 
 MobManager const& Logic::getMobManager() const
 {
-  return mobManager;
+  return entityManager.mobManager;
 }
 
 void Logic::handleButton(GLFWwindow *, Button button)

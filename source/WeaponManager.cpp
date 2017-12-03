@@ -19,7 +19,7 @@ void WeaponManager::update()
   lifetimeCheck(explosions);
   for (auto it = bombs.begin(); it != bombs.end(); ++it)
     {
-      if (it->isExploding())
+      if (it->explodes)
 	{
 	  explosions.emplace_back(it->entity.fixture.pos, 0.5, 1);
 	  explosions.emplace_back(it->entity.fixture.pos, 0.25, 2);
