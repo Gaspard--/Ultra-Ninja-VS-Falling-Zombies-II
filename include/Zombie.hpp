@@ -4,6 +4,8 @@
 #include "Mob.hpp"
 #include "Human.hpp"
 
+class Human;
+
 class Zombie : public Mob
 {
 public:
@@ -14,9 +16,11 @@ public:
   void setLead(bool lead);
   bool const& getLead() const;
   void infectHuman(Human &villager) const;
+  void updateTarget(Human&);
 
 private:
   bool lead;
+  Human* target;
 };
 
 #endif //!ZOMBIE_HPP_

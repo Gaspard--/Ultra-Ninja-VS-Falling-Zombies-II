@@ -30,3 +30,22 @@ CityBlock &Human::getHome()
 {
   return *homePtr;
 }
+
+void	Human::addHunter(Zombie& z)
+{
+  for (auto h : this->hunters) {
+    if (h == &z)
+      return ;
+  }
+  this->hunters.push_back(&z);
+}
+
+void	Human::removeHunter(Zombie& z)
+{
+  for (auto h = this->hunters.begin() ; h != this->hunters.end() ; ++h) {
+    if (*h == &z) {
+      this->hunters.erase(h);
+      return ;
+    }
+  }
+}

@@ -8,5 +8,6 @@ struct DisplayInfo
   std::string time;
   unsigned int score;
   std::string combo;
+  unsigned int bomb;
   bool gameOver;
 };
