@@ -26,6 +26,20 @@ CityMap::CityMap()
 	      else
 		block.type = BlockType::ROAD;
 	    }
+	  if (x == (MAP_SIZE / 2) && y == (MAP_SIZE / 2) + 1)
+	    {
+	      int tmpx(x);
+	      int tmpy(y);
+
+	      tmpy -= 1;
+	      if (tmpy % 2)
+		tmpy -= 1;
+	      while ((tmpx - 2) % 4)
+		tmpx -= 1;
+	      cityMap[tmpy][tmpx].type = BlockType::SHED;
+	      cityMap[tmpy][tmpx + 1].type = BlockType::HOUSE;
+	      cityMap[tmpy][tmpx + 2].type = BlockType::SHED;
+	    }
 	  x += 1;
 	}
       y += 1;
@@ -37,7 +51,7 @@ void CityMap::tick(/*Logic &logic*/)
   cooldown -= (cooldown != 0);
   if (cooldown)
     return;
-  /*cooldown = HOUSE_SPAWN_CD;*/
+  cooldown = HOUSE_SPAWN_CD;
   for (auto &line : cityMap)
     for (auto &block : line)
       {

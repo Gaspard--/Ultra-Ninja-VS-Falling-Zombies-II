@@ -1,6 +1,6 @@
 #pragma once
 
-#define REPOP_HAB_CD 1000
+#define REPOP_HAB_CD 500
 
 enum class BlockType : char
   {

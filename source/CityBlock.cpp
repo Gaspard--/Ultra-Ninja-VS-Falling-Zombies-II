@@ -14,6 +14,7 @@ void CityBlock::tick(/*Logic &logic*/)
 
       // createCitizen(newHab - hab)
       hab = newHab;
+      cooldown = REPOP_HAB_CD;
     }
 }
 

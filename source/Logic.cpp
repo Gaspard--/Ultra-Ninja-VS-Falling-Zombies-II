@@ -172,7 +172,7 @@ void Logic::handleButton(GLFWwindow *, Button button)
 
 Vect<2, double> Logic::getPlayerPos(void) const
 {
-  return {0.0, 0.0}; // TODO: return player's pos
+  return {50.0, 50.0}; // TODO: return player's pos
 }
 
 bool Logic::getGameOver(void) const
