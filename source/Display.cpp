@@ -37,7 +37,7 @@ Display::GlfwContext::GlfwContext()
                        });
   if (!glfwInit())
     throw std::runtime_error("opengl: failed to initialize glfw");
-  
+
 }
 
 Display::GlfwContext::~GlfwContext()
@@ -321,8 +321,8 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(player.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
-	  {0.0f, 0.0f},
-	    {0.5f, 1.0f},
+	  {0.125 * player.getAnimationFrame(), 0.0f},
+	    {0.125f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(player.entity.fixture.radius),
 		(pos[1] + 1.1f) * 0.4f
