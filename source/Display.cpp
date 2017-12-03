@@ -37,7 +37,7 @@ Display::GlfwContext::GlfwContext()
                        });
   if (!glfwInit())
     throw std::runtime_error("opengl: failed to initialize glfw");
-  
+
 }
 
 Display::GlfwContext::~GlfwContext()
@@ -240,7 +240,7 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
 
 void Display::render()
 {
-  glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
+  glClearColor(0.0f, 0.5f, 0.2f, 0.0f);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -294,7 +294,7 @@ void Display::displayInterface()
 
 void Display::copyRenderData(Logic const &logic)
 {
-  camera.offset = (camera.offset * 0.5f - logic.getPlayerPos() * 0.5f) + Vect<2u, float>{dim[0] - dim[1], 0.0f};
+  camera.offset = (camera.offset * 0.5f - (logic.getPlayerPos() - Vect<2u, float>{(dim[1] - 1.0f / dim[0]), 0.0f})* 0.5f);
   displayInfo.time = logic.getTime();
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
@@ -303,7 +303,7 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.ulti = 60;
 
   displayInfo.renderables.clear();
-  auto const &manager(logic.getMobManager());
+  auto const &manager(logic.getEntityManager());
 
   for (auto &zombie : manager.zombies)
     {
@@ -334,8 +334,8 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(player.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
-	  {0.0f, 0.0f},
-	    {0.5f, 1.0f},
+	  {0.125 * player.getAnimationFrame(), 0.0f},
+	    {0.125f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(player.entity.fixture.radius),
 		(pos[1] + 1.1f) * 0.4f

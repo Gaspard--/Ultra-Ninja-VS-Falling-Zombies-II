@@ -40,5 +40,6 @@ void Zombie::updateTarget(Human& newTarget)
     if (this->target)
       this->target->removeHunter(*this);
     this->target = &newTarget;
+    this->target->addHunter(*this);
   }
 }

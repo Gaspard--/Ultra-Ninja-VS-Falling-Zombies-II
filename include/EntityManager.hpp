@@ -1,10 +1,39 @@
 #pragma once
 
-#include "MobManager.hpp"
-#include "WeaponManager.hpp"
+#include <vector>
+#include <algorithm>
 
-struct EntityManager
+#include "Weapon.hpp"
+#include "Slash.hpp"
+#include "Explosion.hpp"
+#include "Bomb.hpp"
+#include "Shuriken.hpp"
+#include "Player.hpp"
+#include "Human.hpp"
+#include "Zombie.hpp"
+#include "Vect.hpp"
+
+struct Logic;
+
+class EntityManager
 {
-  MobManager mobManager;
-  WeaponManager weaponManager;
+public:
+  std::vector<Player> players;
+  std::vector<Human> humans;
+  std::vector<Zombie> zombies;
+  std::vector<Slash> slashes;
+  std::vector<Bomb> bombs;
+  std::vector<Explosion> explosions;
+  std::vector<Shuriken> shurikens;
+
+  EntityManager() = default;
+  ~EntityManager() = default;
+
+  void updateWeapons(Physics const &physics);
+  void update(Physics const &physics, Logic const &logic);
+  void mobDeath();
+  void spawnZombie(Vect<2, double> const& pos);
+  void spawnPlayer(Vect<2, double> const& pos);
+  Player& getPlayer();
+  Player const& getPlayer() const;
 };

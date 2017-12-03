@@ -2,6 +2,8 @@
 
 #define REPOP_HAB_CD 500
 
+class CityMap;
+
 enum class BlockType : char
   {
     NONE = 0,
@@ -27,6 +29,8 @@ public:
   ~CityBlock() = default;
 
 public:
-  void tick(/*Logic &logic*/);
+  void tick(CityMap const &/*, Logic &logic*/);
   bool upgrade();
+  bool hasNeighbors(CityMap const &, int x, int y);
+  int getHab() const;
 };
