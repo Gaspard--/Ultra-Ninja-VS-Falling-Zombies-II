@@ -85,9 +85,9 @@ std::string     Logic::getTime(void) const
   auto secondTime((time * getTickTime().count()) / 1000000);
   std::string   toReturn;
 
-  if (secondTime / 3600 >= 10)
+  if (secondTime / 60 >= 10)
     toReturn = std::to_string(secondTime / 60) + " m ";
-  else if (secondTime / 3600)
+  else if (secondTime / 60)
     toReturn = "0" + std::to_string(secondTime / 60) + " m ";
   if ((secondTime) % 60 >= 10)
     toReturn += std::to_string((secondTime) % 60) + " s";
