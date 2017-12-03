@@ -10,6 +10,9 @@ void MobManager::update(Physics const &physics)
     physics.move(zombie.entity.fixture);
   physics.quadTree([](auto &, auto &){}, humans, zombies, players);
   mobDeath();
+
+  for (auto &player : players)
+    player.update();
 }
 
 void MobManager::mobDeath()
