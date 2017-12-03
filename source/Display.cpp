@@ -328,11 +328,23 @@ void Display::copyRenderData(Logic const &logic)
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
+  for (auto &slash : manager.slashes)
+    {
+      auto pos(camera.apply(slash.entity.fixture.pos));
+
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SLASH)].push_back(Renderable{
+	  {0.2 * slash.getAnimationFrame(), 0.0f},
+	    {0.2, 1.0f},
+	      pos,
+		camera.zoom * static_cast<float>(slash.entity.fixture.radius),
+		(pos[1] + 1.1f) * 0.4f
+		});
+    }
   auto cityMap(logic.getCityMap().getCityMap());
   for (std::size_t i(0); i != 100ul; ++i)
     for (std::size_t j(0); j != 100ul; ++j)
       {
-  	auto const &house(cityMap[i][j]);
+	auto const &house(cityMap[i][j]);
 	auto pos(camera.apply(Vect<2u, double>{static_cast<double>(j) - 0.5, static_cast<double>(i)}));
 
 	if (!(house.type == BlockType::NONE || house.type == BlockType::ROAD))

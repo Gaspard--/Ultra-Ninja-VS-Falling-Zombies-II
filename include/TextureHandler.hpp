@@ -26,7 +26,8 @@ public :
       BOMB,
       BOMBHOLLOW,
       ROAD,
-      BORDER
+      BORDER,
+      SLASH,
     };
 
   static void initTextureHandler();

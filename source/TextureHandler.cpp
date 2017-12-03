@@ -26,6 +26,7 @@ void TextureHandler::initTextureHandler()
   _instance->addTexture(TextureList::TEST, "resources/test.bmp");
   _instance->addTexture(TextureList::BOMB, "resources/Bomb.bmp");
   _instance->addTexture(TextureList::BOMBHOLLOW, "resources/BombHollow.bmp");
+  _instance->addTexture(TextureList::SLASH, "resources/SlashSpriteSheet.bmp");
 }
 
 TextureHandler& TextureHandler::getInstance()
