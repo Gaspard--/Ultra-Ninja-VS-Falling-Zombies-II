@@ -27,6 +27,8 @@ public:
   template <class H, class... Types>
   void quadTree(H const &h, std::vector<Types> &... entities) const
   {
+    using expander = int[];
+
     std::tuple<std::vector<Types *>...> e;
 
     auto addElems([](auto &entities, auto &e)
@@ -36,7 +38,7 @@ public:
 		    for (auto i = entities.begin() ; i != entities.end() ; ++i)
 		      std::get<std::vector<T *>>(e).push_back(&(*i));
 		  });
-    (addElems(entities, e) , ...);
+    (void)expander{(addElems(entities, e), 0)...};
     this->quadTreeRec(h, std::get<std::vector<Types *>>(e)...);
   }
 
@@ -54,6 +56,8 @@ private:
   template <class H, class... Types>
   void classicComparaison(H const &h, std::vector<Types*> &... entities) const
   {
+    using expander = int[];
+
     auto checkAll([this, &h](auto &entityGroupe, auto &... entities)
 		  {
 		    auto everyPair([this, &h](auto &a, auto &b)
@@ -63,9 +67,9 @@ private:
 					 if (this->haveCollision(aEntity->entity.fixture, bEntity->entity.fixture))
 					   h(*aEntity, *bEntity);
 				   });
-		    (everyPair(entities, entityGroupe) , ...);
+		    (void)expander{(everyPair(entities, entityGroupe), 0)...};
 		  });
-    (checkAll(entities, entities...) , ...);
+    (void)expander{(checkAll(entities, entities...), 0)...};
   }
 
   enum HPosition {
@@ -86,9 +90,9 @@ private:
   template <class H, class... Types>
   void quadTreeRec(H const &h, std::vector<Types*> &... entities) const
   {
-    if (((!entities.size()) & ...))
+    if (Vect<sizeof...(Types), bool>(!entities.size()...).all())
       return ;
-    if ((entities.size() + ...) <= endCond) {
+    if (Vect<sizeof...(Types), std::size_t>(entities.size()...).sum() <= endCond) {
       this->classicComparaison(h, entities...);
       return ;
     }
@@ -133,7 +137,8 @@ private:
 		}
 	      }
 	    });
-    (op(entities, children) , ...);
+    using expander = int[];
+    (void)expander{(op(entities, children), 0)...};
     for (auto i = children.begin() ; i != children.end() ; ++i) {
       this->quadTreeRec(h, std::get<std::vector<Types *>>(*i)...);
     }
