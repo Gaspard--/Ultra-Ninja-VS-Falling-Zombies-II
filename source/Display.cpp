@@ -242,7 +242,7 @@ void Display::displayRenderableAsHUD(Renderable const& renderable)
     {
       Vect<2u, float> const corner(static_cast<float>(j & 1u), static_cast<float>(j >> 1u));
       Vect<2u, float> const sourceCorner(renderable.sourcePos + corner * renderable.sourceSize);
-      Vect<2u, float> const destCorner(renderable.destPos + (corner - Vect<2u, float>{0.5f, 0.5f}));
+      Vect<2u, float> const destCorner(renderable.destPos + (corner * renderable.destSize));
 
       std::copy(&sourceCorner[0u], &sourceCorner[2u], &buffer[j * 4u]);
       std::copy(&destCorner[0u], &destCorner[2u], &buffer[j * 4u + 2u]);
@@ -311,6 +311,16 @@ void Display::displayInterface()
   displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  for (int i = 0; i < 5; i++)
+    {
+      displayRenderableAsHUD(Renderable{
+        TextureHandler::getInstance().getTexture((i < displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW),
+	        {0.0f, 0.0f},
+	        {1.0f, 1.0f},
+	        {1.0f / dim[0] - 0.1f - (i * 0.07f), -1.0f / dim[1] + 0.05f},
+            {0.09f, 0.09f}
+		});
+    }
   if (displayInfo.gameOver)
     {
       displayText("Game Over", 256, {0.2f, 0.2f}, {-0.65f, 0.42f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
@@ -320,11 +330,12 @@ void Display::displayInterface()
 
 void Display::copyRenderData(Logic const &logic)
 {
-  camera.offset = camera.offset * 0.8f + logic.getPlayerPos() * 0.2f;
+  camera.offset = camera.offset * 0.8f - logic.getPlayerPos() * 0.2f;
   displayInfo.time = logic.getTime();
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
   displayInfo.combo = logic.getCombo();
+  displayInfo.bomb = 3;
 
   displayInfo.renderables.clear();
   auto const &manager(logic.getMobManager());
