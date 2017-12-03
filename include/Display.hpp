@@ -11,6 +11,7 @@
 #include "RenderTexture.hpp"
 #include "Camera.hpp"
 #include "DisplayInfo.hpp"
+#include "Bind.hpp"
 
 class Display
 {
@@ -76,4 +77,45 @@ public:
   bool isKeyPressed(int key) const;
 
   void copyRenderData(Logic const &);
+
+  template<class IT>
+  void displayRenderables(IT begin, std::size_t count, GLuint texture)
+  {
+    Bind<RenderContext> bind(textureContext);
+    std::size_t bufferSize(count * 4u * 6u);
+    std::unique_ptr<float[]> buffer(new float[bufferSize]);
+
+    for (std::size_t i(0u); i != count; ++i)
+      {
+	auto renderable(*begin);
+
+	for (unsigned int j(0u); j != 6u; ++j)
+	  {
+	    constexpr std::array<Vect<2u, float>, 6u> const corners
+	    {
+	      Vect<2u, float>{0.0f, 0.0f},
+	      Vect<2u, float>{1.0f, 0.0f},
+	      Vect<2u, float>{0.0f, 1.0f},
+	      Vect<2u, float>{0.0f, 1.0f},
+	      Vect<2u, float>{1.0f, 0.0f},
+	      Vect<2u, float>{1.0f, 1.0f}
+	    };
+	    Vect<2u, float> const corner(corners[j]);
+	    Vect<2u, float> const sourceCorner(renderable.sourcePos + corner * renderable.sourceSize);
+	    Vect<2u, float> const destCorner(renderable.destPos - Vect<2u, float>{0.5f, 0.0f} + (corner * renderable.destSize));
+
+	    std::copy(&sourceCorner[0u], &sourceCorner[2u], &buffer[(j + i * 6u) * 4u]);
+	    std::copy(&destCorner[0u], &destCorner[2u], &buffer[(j + i * 6u) * 4u]);
+	  }
+	++begin;
+      }
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
+    my_opengl::setUniform(dim, "dim", textureContext.program);
+    my_opengl::setUniform(0u, "tex", textureContext.program);
+    glBufferData(GL_ARRAY_BUFFER, count * 4u * 6u * sizeof(float), buffer.get(), GL_STATIC_DRAW);
+    glDrawArrays(GL_TRIANGLES, 0, 6 * count);
+  }
+
 };

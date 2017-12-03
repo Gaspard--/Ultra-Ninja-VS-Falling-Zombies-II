@@ -281,8 +281,8 @@ void Display::render()
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
-  for (auto const &renderable : displayInfo.renderables)
-    displayRenderable(renderable);
+  for (auto const &renderables : displayInfo.renderables)
+    displayRenderables(renderables.second.begin(), renderables.second.size(), renderables.first);
   // displayPlanet(background, 4.0, camera.normalized());
   // displayPlanet(planetBackground, 1.54, camera);
   // displayPlanet(planetRenderTexture.texture, logic.getPlanetSize(), camera);
@@ -331,7 +331,7 @@ void Display::copyRenderData(Logic const &logic)
 
   for (auto &zombie : manager.zombies)
     {
-      displayInfo.renderables.emplace_back(Renderable{
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIE)].emplace_back(Renderable{
 	  TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIE),
 	    {0.0f, 0.0f},
 	      {0.5f, 1.0f},
@@ -341,7 +341,7 @@ void Display::copyRenderData(Logic const &logic)
     }
   for (auto &human : manager.humans)
     {
-      displayInfo.renderables.push_back(Renderable{
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMAN)].push_back(Renderable{
 	  TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMAN),
 	    {0.0f, 0.0f},
 	      {0.5f, 1.0f},
@@ -350,7 +350,7 @@ void Display::copyRenderData(Logic const &logic)
     }
   for (auto &player : manager.players)
     {
-      displayInfo.renderables.emplace_back(Renderable{
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
 	  TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER),
 	    {0.0f, 0.0f},
 	      {0.5f, 1.0f},
@@ -359,23 +359,23 @@ void Display::copyRenderData(Logic const &logic)
 		  });
     }
   auto cityMap(logic.getCityMap().getCityMap());
-  for (std::size_t i(0); i != 100; ++i)
-    for (std::size_t j(0); j != 100; ++j)
-      {
-	auto house(cityMap[i][j]);
+  // for (std::size_t i(0); i != 100; ++i)
+  //   for (std::size_t j(0); j != 100; ++j)
+  //     {
+  // 	auto house(cityMap[i][j]);
 
-	displayInfo.renderables.push_back(Renderable{
-	    TextureHandler::getInstance().getTexture((house.type == BlockType::SHED) ? TextureHandler::TextureList::HOUSE1 :
-						     (house.type == BlockType::HOUSE) ? TextureHandler::TextureList::HOUSE2 :
-						     (house.type == BlockType::MANSION) ? TextureHandler::TextureList::HOUSE3 :
-						     (house.type == BlockType::NONE) ? TextureHandler::TextureList::NONE :
-						     (house.type == BlockType::ROAD) ? TextureHandler::TextureList::ROAD :
-						     TextureHandler::TextureList::BORDER),
-	      {0.0f, 0.0f},
-		{1.0f, 1.0f},
-		  camera.apply(Vect<2u, double>{static_cast<double>(j) - 0.5, static_cast<double>(i)}),
-		    camera.zoom});
-      }
+  // 	displayInfo.renderables.push_back(Renderable{
+  // 	    TextureHandler::getInstance().getTexture((house.type == BlockType::SHED) ? TextureHandler::TextureList::HOUSE1 :
+  // 						     (house.type == BlockType::HOUSE) ? TextureHandler::TextureList::HOUSE2 :
+  // 						     (house.type == BlockType::MANSION) ? TextureHandler::TextureList::HOUSE3 :
+  // 						     (house.type == BlockType::NONE) ? TextureHandler::TextureList::NONE :
+  // 						     (house.type == BlockType::ROAD) ? TextureHandler::TextureList::ROAD :
+  // 						     TextureHandler::TextureList::BORDER),
+  // 	      {0.0f, 0.0f},
+  // 		{1.0f, 1.0f},
+  // 		  camera.apply(Vect<2u, double>{static_cast<double>(j) - 0.5, static_cast<double>(i)}),
+  // 		    camera.zoom});
+  //     }
 }
 
 bool Display::isRunning() const
