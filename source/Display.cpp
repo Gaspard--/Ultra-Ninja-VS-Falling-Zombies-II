@@ -217,7 +217,7 @@ void Display::displayRenderable(Renderable const& renderable)
     {
       Vect<2u, float> const corner(static_cast<float>(j & 1u), static_cast<float>(j >> 1u));
       Vect<2u, float> const sourceCorner(renderable.sourcePos + corner * renderable.sourceSize);
-      Vect<2u, float> const destCorner(renderable.destPos + (corner - Vect<2u, float>{0.5f, 0.0f} * renderable.destSize));
+      Vect<2u, float> const destCorner(renderable.destPos - Vect<2u, float>{0.5f, 0.0f} + (corner * renderable.destSize));
 
       std::copy(&sourceCorner[0u], &sourceCorner[2u], &buffer[j * 4u]);
       std::copy(&destCorner[0u], &destCorner[2u], &buffer[j * 4u + 2u]);
