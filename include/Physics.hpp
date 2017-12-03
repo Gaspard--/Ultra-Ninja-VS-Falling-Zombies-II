@@ -14,9 +14,6 @@ struct Entity;
 
 class Physics
 {
-private:
-  static constexpr double const G{6.67384 * pow(10.0, -11.0)};
-
 public:
   Physics() = default;
 

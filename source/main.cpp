@@ -48,7 +48,7 @@ int main()
 		       {
 			 while (true)
 			   {
-			     std::scoped_lock(lock);
+			     std::scoped_lock<std::mutex> scope_lock{lock};
 
 			     if (!logic.isRunning())
 			       break;
@@ -56,26 +56,25 @@ int main()
 			   }
 		       });
     try {
-      while (display.isRunning())
-	{
-	  {
-	    std::scoped_lock(lock);
+		while (display.isRunning())
+		{
+			{
+				std::scoped_lock<std::mutex> scope_lock{ lock };
 
-	    // handle events
-	    for (Event ev = Input::pollEvent(); ev; ev = Input::pollEvent())
-	      logic.handleEvent(display, ev);
-	    logic.checkEvents(display);
-	    display.copyRenderData(logic);
-	  }
-	  display.render();
-	}
-      std::scoped_lock(lock);
-
+				// handle events
+				for (Event ev = Input::pollEvent(); ev; ev = Input::pollEvent())
+					logic.handleEvent(display, ev);
+				logic.checkEvents(display);
+				display.copyRenderData(logic);
+			}
+			display.render();
+		}
     } catch (std::runtime_error const &e) {
       std::cerr << "Display thread encoutered runtime error:" << std::endl
 		<< e.what() << std::endl;
     }
-    logic.isRunning() = display.isRunning();
+	std::scoped_lock<std::mutex> scope_lock{ lock };
+    logic.isRunning() = false;
     thread.join();
   } catch (std::runtime_error const &e) {
     std::cerr << "program encoutered runtime error:" << std::endl
