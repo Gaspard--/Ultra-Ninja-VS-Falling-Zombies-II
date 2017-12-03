@@ -32,6 +32,7 @@ public:
   void updateWeapons(Physics const &physics);
   void update(Physics const &physics, Logic const &logic);
   void mobDeath();
+  void spawnHuman(Vect<2, double> const& pos, CityBlock &home);
   void spawnZombie(Vect<2, double> const& pos);
   void spawnPlayer(Vect<2, double> const& pos);
   Player& getPlayer();

@@ -261,7 +261,7 @@ void Display::displayInterface()
 {
   // displayText("Current Population",
   //             256, {0.05f, 0.05f}, {-0.017f * 18, -0.315f}, {sqrt(camera.length2()), 0}, {1.0f, 1.0f, 1.0f});
-  displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  // displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayRenderableAsHUD(Renderable{
@@ -274,16 +274,16 @@ void Display::displayInterface()
     {0.0f, 0.0f},
 	{1.0f, 1.0f},
 	{1.0f / dim[0] - 0.71f, -1.0f / dim[1] + 0.055f},
-	{0.007f * static_cast<float>(displayInfo.ulti), 0.07f}
+	{0.0066f * static_cast<float>(displayInfo.ulti), 0.07f}
   }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BARFRONT));
   for (unsigned int i = 0; i < 5; i++)
     {
       displayRenderableAsHUD(Renderable{
 	    {0.0f, 0.0f},
 	    {1.0f, 1.0f},
-	      {1.0f / dim[0] - (static_cast<float>(i + 1) * 0.07f + 0.05f), -1.0f / dim[1] + 0.15f},
+	    {1.0f / dim[0] - (static_cast<float>(i + 1) * 0.07f + 0.05f), -1.0f / dim[1] + 0.15f},
 		{0.09f, 0.09f}
-	}, TextureHandler::getInstance().getTexture((i < displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW));
+	}, TextureHandler::getInstance().getTexture((i >= 5 - displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW));
     }
   if (displayInfo.gameOver)
     {
@@ -299,8 +299,8 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
   displayInfo.combo = logic.getCombo();
-  displayInfo.bomb = 3;
-  displayInfo.ulti = 60;
+  displayInfo.bomb = logic.getEntityManager().players[0].getNbBombs();
+  displayInfo.ulti = logic.getEntityManager().players[0].getUlti();
 
   displayInfo.renderables.clear();
   auto const &manager(logic.getEntityManager());
