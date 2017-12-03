@@ -70,10 +70,10 @@ public:
   void copyRenderData(Logic const &);
 
   template<class IT>
-  void displayRenderables(IT begin, std::size_t count, GLuint texture)
+  void displayRenderables(IT begin, GLuint count, GLuint texture)
   {
     Bind<RenderContext> bind(textureContext);
-    std::size_t bufferSize(count * 5u * 6u);
+    GLuint bufferSize(count * 5u * 6u);
     std::unique_ptr<float[]> buffer(new float[bufferSize]);
 
     for (std::size_t i(0u); i != count; ++i)

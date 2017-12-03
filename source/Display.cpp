@@ -249,7 +249,7 @@ void Display::render()
   glEnable(GL_BLEND);
   glDepthFunc(GL_LESS);
   for (auto const &renderables : displayInfo.renderables)
-    displayRenderables(renderables.second.begin(), renderables.second.size(), renderables.first);
+    displayRenderables(renderables.second.begin(), static_cast<GLuint>(renderables.second.size()), renderables.first);
   glDisable(GL_DEPTH_TEST);
   displayInterface();
   glDisable(GL_BLEND);
@@ -334,10 +334,10 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(player.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
-	  {0.125 * player.getAnimationFrame(), 0.0f},
+	  {0.125f * player.getAnimationFrame(), 0.0f},
 	    {0.125f, 1.0f},
 	      pos,
-		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0),
+		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0f),
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
