@@ -34,7 +34,6 @@ void Player::highFive(Human &villager)
     ulti += (ulti < 100.0) ? 20.0 : 0.0;
   else if (nbBombs < 5)
     nbBombs += 1;
-  std::cout << "Ulti: " << ulti << "\nBombs: " << nbBombs << std::endl;
   villager.setCoolDown(cd);
 }
 

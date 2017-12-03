@@ -18,8 +18,8 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  entityManager.spawnZombie({10.0, 10.0});
-  entityManager.spawnHuman({50.0, 50.0}, block);
+  entityManager.spawnZombie({48.0, 49.0});
+  entityManager.spawnHuman({49.0, 49.0}, block);
   entityManager.spawnPlayer({50.4, 50.3});
 }
 
