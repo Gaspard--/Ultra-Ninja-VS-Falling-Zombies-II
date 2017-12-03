@@ -16,8 +16,8 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  // entityManager.mobManager.spawnZombie({0.0, 0.0});
-  entityManager.mobManager.spawnPlayer({0.4, 0.3});
+  entityManager.spawnZombie({10.0, 10.0});
+  entityManager.spawnPlayer({0.4, 0.3});
 }
 
 void Logic::update()
@@ -25,7 +25,7 @@ void Logic::update()
   if (!gameOver)
     {
       ++time;
-      entityManager.mobManager.update(physics);
+      entityManager.update(physics, *this);
       cityMap.tick();
       multiplier += (1.0 / 600.0);
     }
@@ -128,7 +128,7 @@ void Logic::handleKey(GLFWwindow *window, Key key)
 
 void Logic::checkEvents(Display const &display)
 {
-  Player& player = entityManager.mobManager.getPlayer();
+  Player& player = entityManager.getPlayer();
   if (display.isKeyPressed(GLFW_KEY_ENTER) && gameOver)
     {
       // TODO: restart
@@ -159,9 +159,9 @@ Vect<2u, double> Logic::getMouse(Display const &display) const
   return display.getCamera().unapply(mousePos);
 }
 
-MobManager const& Logic::getMobManager() const
+EntityManager const& Logic::getEntityManager() const
 {
-  return entityManager.mobManager;
+  return entityManager;
 }
 
 void Logic::handleButton(GLFWwindow *, Button button)
@@ -172,7 +172,7 @@ void Logic::handleButton(GLFWwindow *, Button button)
 
 Vect<2, double> Logic::getPlayerPos(void) const
 {
-  return {0.0, 0.0}; // TODO: return player's pos
+  return entityManager.getPlayer().entity.fixture.pos;
 }
 
 bool Logic::getGameOver(void) const

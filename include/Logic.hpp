@@ -61,7 +61,7 @@ public:
   Vect<2, double> getPlayerPos(void) const;
   Vect<2u, double> getMouse(Display const &) const;
   CityMap const& getCityMap() const;
-  MobManager const& getMobManager() const;
+  EntityManager const& getEntityManager() const;
   unsigned int  getScore(void) const;
   std::string   getTime(void) const;
   std::string   getCombo(void) const;
