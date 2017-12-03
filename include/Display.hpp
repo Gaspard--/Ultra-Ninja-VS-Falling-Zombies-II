@@ -37,7 +37,7 @@ private:
   Texture background;
   Texture bloodSpray[3];
   Texture mobSpray[3];
-  RenderTexture planetRenderTexture; 
+  RenderTexture planetRenderTexture;
   Vect<2u, float> size;
   Vect<2u, float> dim;
 
@@ -70,10 +70,10 @@ public:
   void copyRenderData(Logic const &);
 
   template<class IT>
-  void displayRenderables(IT begin, std::size_t count, GLuint texture)
+  void displayRenderables(IT begin, GLuint count, GLuint texture)
   {
     Bind<RenderContext> bind(textureContext);
-    std::size_t bufferSize(count * 5u * 6u);
+    GLuint bufferSize(count * 5u * 6u);
     std::unique_ptr<float[]> buffer(new float[bufferSize]);
 
     for (std::size_t i(0u); i != count; ++i)
@@ -93,7 +93,7 @@ public:
 	    };
 	    Vect<2u, float> const corner(corners[j]);
 	    Vect<2u, float> const sourceCorner(renderable.sourcePos + corner * renderable.sourceSize);
-	    Vect<2u, float> const destCorner(renderable.destPos - Vect<2u, float>{0.5f, 0.0f} + (corner * renderable.destSize));
+	    Vect<2u, float> const destCorner(renderable.destPos + ((corner - Vect<2u, float>{0.5f, 0.0f}) * renderable.destSize));
 
 	    std::copy(&sourceCorner[0u], &sourceCorner[2u], &buffer[(j + i * 6u) * 5u]);
 	    std::copy(&destCorner[0u], &destCorner[2u], &buffer[(j + i * 6u) * 5u + 2u]);

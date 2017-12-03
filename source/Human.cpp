@@ -3,12 +3,20 @@
 Human::Human(Entity entity, CityBlock &home)
   : Mob(entity, 1),
     infected(false),
-    homePtr(&home)
+    homePtr(&home),
+    coolDown(0)
 {
 }
 
 Human::~Human()
 {
+}
+
+void Human::update()
+{
+  anim.animate(entity);
+  if (coolDown > 0)
+    coolDown--;
 }
 
 void Human::setInfected(bool infected)
@@ -31,7 +39,17 @@ CityBlock &Human::getHome()
   return *homePtr;
 }
 
-void	Human::addHunter(Zombie& z)
+void Human::setCoolDown(int coolDown)
+{
+  this->coolDown = coolDown;
+}
+
+bool Human::canHighFive() const
+{
+  return coolDown <= 0;
+}
+
+void Human::addHunter(Zombie& z)
 {
   for (auto h : this->hunters) {
     if (h == &z)
@@ -40,7 +58,7 @@ void	Human::addHunter(Zombie& z)
   this->hunters.push_back(&z);
 }
 
-void	Human::removeHunter(Zombie& z)
+void Human::removeHunter(Zombie& z)
 {
   for (auto h = this->hunters.begin() ; h != this->hunters.end() ; ++h) {
     if (*h == &z) {
@@ -48,4 +66,9 @@ void	Human::removeHunter(Zombie& z)
       return ;
     }
   }
+}
+
+float Human::getAnimationFrame() const
+{
+  return anim.getAnimationFrame();
 }
