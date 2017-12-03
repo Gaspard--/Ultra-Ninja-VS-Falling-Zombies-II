@@ -80,7 +80,7 @@ void Player::highFive(Human &villager)
 
 void Player::accelerate(Vect<2, int> const& dir)
 {
-  this->entity.fixture.speed += Vect<2, double>(0.005, 0.005) * dir;
+  this->entity.fixture.speed += Vect<2, double>(0.0005, 0.0005) * dir;
 }
 
 void Player::setNbBombs(int nbBombs)

@@ -19,8 +19,8 @@ Logic::Logic()
   combo = 0;
   multiplier = 0;
   entityManager.spawnZombie({10.0, 10.0});
-  entityManager.spawnPlayer({0.4, 0.3});
-  entityManager.spawnHuman({9.0, 9.0}, block);
+  entityManager.spawnHuman({50.0, 50.0}, block);
+  entityManager.spawnPlayer({50.4, 50.3});
 }
 
 void Logic::update()
