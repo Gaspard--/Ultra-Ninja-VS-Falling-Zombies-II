@@ -280,17 +280,6 @@ void Display::render()
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
-
-  {
-    Renderable test{
-      TextureHandler::getInstance().getTexture(TextureHandler::PLAYER),
-  	{0.0f, 0.0f},
-  	  {1.0f, 1.0f},
-  	    {0.0f, 0.0f},
-  	      {1.0f, 1.0f}
-    };
-    displayRenderable(test);
-  }
   for (auto const &renderable : displayInfo.renderables)
     displayRenderable(renderable);
   // displayPlanet(background, 4.0, camera.normalized());
@@ -342,7 +331,7 @@ void Display::copyRenderData(Logic const &logic)
   for (auto &zombie : manager.zombies)
     {
       displayInfo.renderables.emplace_back(Renderable{
-	  TextureHandler::getInstance().getTexture(TextureHandler::ZOMBIE),
+	  TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIE),
 	    {0.0f, 0.0f},
 	      {0.5f, 1.0f},
 		camera.apply(zombie.entity.fixture.pos),
@@ -352,13 +341,30 @@ void Display::copyRenderData(Logic const &logic)
   for (auto &human : manager.humans)
     {
       displayInfo.renderables.push_back(Renderable{
-	  TextureHandler::getInstance().getTexture(TextureHandler::HUMAN),
+	  TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMAN),
 	    {0.0f, 0.0f},
 	      {0.5f, 1.0f},
 		camera.apply(human.entity.fixture.pos),
 		  camera.zoom * static_cast<float>(human.entity.fixture.radius)});
     }
+  auto cityMap(logic.getCityMap().getCityMap());
+  for (std::size_t i(0); i != 100; ++i)
+    for (std::size_t j(0); j != 100; ++j)
+      {
+	auto house(cityMap[i][j]);
 
+	if (house.type != BlockType::NONE)
+	  {
+	    displayInfo.renderables.push_back(Renderable{
+		TextureHandler::getInstance().getTexture((house.type == BlockType::SHED) ? TextureHandler::TextureList::HOUSE1 :
+							 (house.type == BlockType::HOUSE) ? TextureHandler::TextureList::HOUSE2 :
+							 TextureHandler::TextureList::HOUSE3),
+		  {0.0f, 0.0f},
+		    {1.0f, 1.0f},
+		      camera.apply(Vect<2u, double>{static_cast<double>(i) - 0.5, static_cast<double>(j)}),
+			camera.zoom});
+	  }
+      }
 }
 
 bool Display::isRunning() const

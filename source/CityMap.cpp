@@ -1,6 +1,7 @@
 #include "CityMap.hpp"
 
 CityMap::CityMap()
+  : cooldown(HOUSE_SPAWN_CD)
 {
   int x, y;
 

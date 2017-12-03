@@ -168,3 +168,8 @@ bool Logic::getGameOver(void) const
 {
   return gameOver;
 }
+
+CityMap const &Logic::getCityMap() const
+{
+  return cityMap;
+}

@@ -27,8 +27,8 @@ private:
   double multiplier;
 
   Physics physics;
-  MobManager mobManager;
   CityMap cityMap;
+  MobManager mobManager;
   bool gameOver;
   bool running;
 
@@ -38,7 +38,9 @@ private:
   {
     return std::chrono::microseconds(1000000 / 120);
   };
+
   std::size_t updatesSinceLastFrame;
+
   decltype(Clock::now()) lastUpdate;
 
   void handleKey(GLFWwindow *window, Key key);
@@ -58,6 +60,7 @@ public:
 
   Vect<2, double> getPlayerPos(void) const;
   Vect<2u, double> getMouse(Display const &) const;
+  CityMap const& getCityMap() const;
   MobManager const& getMobManager() const;
   unsigned int  getScore(void) const;
   std::string   getTime(void) const;
