@@ -311,10 +311,10 @@ void Display::displayInterface()
   displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 5; i++)
     {
       displayRenderableAsHUD(Renderable{
-        TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BOMB),
+        TextureHandler::getInstance().getTexture((i < displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW),
 	        {0.0f, 0.0f},
 	        {1.0f, 1.0f},
 	        {1.0f / dim[0] - 0.1f - (i * 0.07f), -1.0f / dim[1] + 0.05f},
@@ -335,7 +335,7 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
   displayInfo.combo = logic.getCombo();
-  displayInfo.bomb = 6;
+  displayInfo.bomb = 3;
 
   displayInfo.renderables.clear();
   auto const &manager(logic.getMobManager());
