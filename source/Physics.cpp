@@ -40,8 +40,8 @@ void Physics::fixMapCollision(Fixture& a, std::array<std::array<CityBlock, MAP_S
   };
   Vect<2, int> corner(getCorner(a.pos[0] - tilePos[0]), getCorner(a.pos[1] - tilePos[1]));
   Vect<2, double> points[3] = {tilePos + corner,
-			       {corner[0] + tilePos[0], a.pos[1]},
-			       {a.pos[0], corner[1] + tilePos[1]}};
+			       {static_cast<double>(corner[0] + tilePos[0]), a.pos[1]},
+			       {a.pos[0], static_cast<double>(corner[1] + tilePos[1])}};
   Vect<2, int> cornerNeg(corner * 2 - Vect<2u, int>{1, 1});
   Vect<2, int> sides[3] = {tilePos + cornerNeg,
 			   {tilePos[0] + cornerNeg[0], tilePos[1]},
