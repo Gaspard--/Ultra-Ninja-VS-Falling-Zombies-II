@@ -348,6 +348,16 @@ void Display::copyRenderData(Logic const &logic)
 		camera.apply(human.entity.fixture.pos),
 		  camera.zoom * static_cast<float>(human.entity.fixture.radius)});
     }
+  for (auto &player : manager.players)
+    {
+      displayInfo.renderables.emplace_back(Renderable{
+	  TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER),
+	    {0.0f, 0.0f},
+	      {0.5f, 1.0f},
+		camera.apply(player.entity.fixture.pos),
+		  camera.zoom * static_cast<float>(player.entity.fixture.radius)
+		  });
+    }
   auto cityMap(logic.getCityMap().getCityMap());
   for (std::size_t i(0); i != 100; ++i)
     for (std::size_t j(0); j != 100; ++j)
