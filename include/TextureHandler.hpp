@@ -21,7 +21,9 @@ public :
       TEST,
       HOUSE1,
       HOUSE2,
-      HOUSE3
+      HOUSE3,
+      BOMB,
+      BOMBHOLLOW
     };
 
   static void initTextureHandler();

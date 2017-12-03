@@ -21,6 +21,8 @@ void TextureHandler::initTextureHandler()
   _instance->addTexture(TextureList::HOUSE2, "resources/House.bmp");
   _instance->addTexture(TextureList::HOUSE3, "resources/Mansion.bmp");
   _instance->addTexture(TextureList::TEST, "resources/test.bmp");
+  _instance->addTexture(TextureList::BOMB, "resources/Bomb.bmp");
+  _instance->addTexture(TextureList::BOMBHOLLOW, "resources/BombHollow.bmp");
 }
 
 TextureHandler& TextureHandler::getInstance()
