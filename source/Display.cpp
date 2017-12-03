@@ -300,7 +300,7 @@ void Display::copyRenderData(Logic const &logic)
 	  {0.0f, 0.0f},
 	    {0.5f, 1.0f},
 	      pos,
-		camera.zoom * static_cast<float>(zombie.entity.fixture.radius),
+		camera.zoom * static_cast<float>(zombie.entity.fixture.radius * 2.0),
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
@@ -312,7 +312,7 @@ void Display::copyRenderData(Logic const &logic)
 	  {0.0f, 0.0f},
 	    {0.5f, 1.0f},
 	      pos,
-		camera.zoom * static_cast<float>(human.entity.fixture.radius),
+		camera.zoom * static_cast<float>(human.entity.fixture.radius * 2.0),
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
@@ -324,7 +324,7 @@ void Display::copyRenderData(Logic const &logic)
 	  {0.125 * player.getAnimationFrame(), 0.0f},
 	    {0.125f, 1.0f},
 	      pos,
-		camera.zoom * static_cast<float>(player.entity.fixture.radius),
+		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0),
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
@@ -333,7 +333,7 @@ void Display::copyRenderData(Logic const &logic)
     for (std::size_t j(0); j != 100ul; ++j)
       {
   	auto const &house(cityMap[i][j]);
-	auto pos(camera.apply(Vect<2u, double>{static_cast<double>(j) - 0.5, static_cast<double>(i)}));
+	auto pos(camera.apply(Vect<2u, double>{static_cast<double>(j), static_cast<double>(i)} + Vect<2u, float>{0.5f, 0.0f}));
 
 	if (!(house.type == BlockType::NONE || house.type == BlockType::ROAD))
 	  displayInfo.renderables[TextureHandler::getInstance().getTexture((house.type == BlockType::SHED) ? TextureHandler::TextureList::HOUSE1 :
@@ -346,7 +346,7 @@ void Display::copyRenderData(Logic const &logic)
 										 {1.0f, 1.0f},
 										   pos,
 										     camera.zoom,
-										     (pos[1] + 1.1f) * 0.4f});
+										       (pos[1] + 1.1f) * 0.4f});
       }
 }
 

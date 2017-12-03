@@ -93,7 +93,7 @@ public:
 	    };
 	    Vect<2u, float> const corner(corners[j]);
 	    Vect<2u, float> const sourceCorner(renderable.sourcePos + corner * renderable.sourceSize);
-	    Vect<2u, float> const destCorner(renderable.destPos - Vect<2u, float>{0.5f, 0.0f} + (corner * renderable.destSize));
+	    Vect<2u, float> const destCorner(renderable.destPos + ((corner - Vect<2u, float>{0.5f, 0.0f}) * renderable.destSize));
 
 	    std::copy(&sourceCorner[0u], &sourceCorner[2u], &buffer[(j + i * 6u) * 5u]);
 	    std::copy(&destCorner[0u], &destCorner[2u], &buffer[(j + i * 6u) * 5u + 2u]);
