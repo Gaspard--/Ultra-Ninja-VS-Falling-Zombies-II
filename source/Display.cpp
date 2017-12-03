@@ -281,7 +281,7 @@ void Display::displayInterface()
       displayRenderableAsHUD(Renderable{
 	    {0.0f, 0.0f},
 	    {1.0f, 1.0f},
-	    {1.0f / dim[0] - ((i + 1) * 0.07f + 0.05f), -1.0f / dim[1] + 0.15f},
+	      {1.0f / dim[0] - (static_cast<float>(i + 1) * 0.07f + 0.05f), -1.0f / dim[1] + 0.15f},
 		{0.09f, 0.09f}
 	}, TextureHandler::getInstance().getTexture((i < displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW));
     }
@@ -334,7 +334,7 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(player.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
-	  {0.125f * player.getAnimationFrame(), 0.0f},
+	  {0.125f * static_cast<float>(player.getAnimationFrame()), 0.0f},
 	    {0.125f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0f),
