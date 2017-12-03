@@ -41,7 +41,8 @@ void CityMap::tick(/*Logic &logic*/)
     for (auto &block : line)
       {
 	block.tick(/*logic*/);
-	if (block.type != BlockType::ROAD)
+	if (static_cast<int>(block.type) > 0 &&
+	    static_cast<int>(block.type) < static_cast<int>(BlockType::ROAD))
 	  {
 	    int newHouse = std::rand() % 100;
 
