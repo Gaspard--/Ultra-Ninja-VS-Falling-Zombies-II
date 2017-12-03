@@ -270,7 +270,13 @@ void Display::displayInterface()
 	{1.0f / dim[0] - 0.73f, -1.0f / dim[1] + 0.05f},
 	{0.7f, 0.08f}
   }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BARBACK));
-  for (int i = 0; i < 5; i++)
+  displayRenderableAsHUD(Renderable{
+    {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	{1.0f / dim[0] - 0.71f, -1.0f / dim[1] + 0.055f},
+	{0.007f * static_cast<float>(displayInfo.ulti), 0.07f}
+  }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BARFRONT));
+  for (unsigned int i = 0; i < 5; i++)
     {
       displayRenderableAsHUD(Renderable{
 	    {0.0f, 0.0f},
@@ -294,6 +300,7 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.gameOver = logic.getGameOver();
   displayInfo.combo = logic.getCombo();
   displayInfo.bomb = 3;
+  displayInfo.ulti = 60;
 
   displayInfo.renderables.clear();
   auto const &manager(logic.getMobManager());
