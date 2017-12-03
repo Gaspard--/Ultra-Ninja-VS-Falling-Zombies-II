@@ -330,7 +330,7 @@ void Display::displayInterface()
 
 void Display::copyRenderData(Logic const &logic)
 {
-  camera.offset = camera.offset * 0.8f + logic.getPlayerPos() * 0.2f;
+  camera.offset = camera.offset * 0.8f - logic.getPlayerPos() * 0.2f;
   displayInfo.time = logic.getTime();
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
