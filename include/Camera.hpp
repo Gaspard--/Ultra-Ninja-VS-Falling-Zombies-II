@@ -3,7 +3,7 @@
 struct Camera
 {
   Vect<2u, double> offset{50.0, 50.0};
-  Vect<2u, float> zoom{0.5f, 0.5f};
+  Vect<2u, float> zoom{0.5f, 0.37f};
 
   template<class T>
   constexpr Vect<2u, float> apply(Vect<2u, T> pos) const
