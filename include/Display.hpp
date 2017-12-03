@@ -37,7 +37,7 @@ private:
   Texture background;
   Texture bloodSpray[3];
   Texture mobSpray[3];
-  RenderTexture planetRenderTexture; 
+  RenderTexture planetRenderTexture;
   Vect<2u, float> size;
   Vect<2u, float> dim;
 
