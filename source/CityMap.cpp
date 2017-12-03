@@ -55,7 +55,7 @@ void CityMap::tick(/*Logic &logic*/)
   for (auto &line : cityMap)
     for (auto &block : line)
       {
-	block.tick(/*logic*/);
+	block.tick(*this/*, logic*/);
 	if (static_cast<int>(block.type) > 0 &&
 	    static_cast<int>(block.type) < static_cast<int>(BlockType::ROAD))
 	  {
