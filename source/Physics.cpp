@@ -42,31 +42,23 @@ void Physics::fixMapCollision(Fixture& a, std::array<std::array<CityBlock, MAP_S
   Vect<2, int> points[3] = {tilePos + corner,
 			    {corner[0] + tilePos[0], static_cast<int>(a.pos[1])},
 			    {static_cast<int>(a.pos[0]), corner[1] + tilePos[1]}};
-  Vect<2, int> cornerNeg(corner[0] == 1 ? 1 : -1, corner[1] == 1 ? 1 : -1);
+  Vect<2, int> cornerNeg(corner * 2 - Vect<2u, int>{1, 1});
   Vect<2, int> sides[3] = {tilePos + cornerNeg,
 			   {tilePos[0] + cornerNeg[0], tilePos[1]},
 			   {tilePos[0], tilePos[1] + cornerNeg[1]}};
 
-  auto handleCollision = [&] (int i, auto func) {
+  auto handleCollision = [&] (int i) {
     if (cityMap[sides[i][1]][sides[i][0]].type != BlockType::NONE &&
 	cityMap[sides[i][1]][sides[i][0]].type != BlockType::ROAD &&
 	haveCollision(points[i], a))
       {
-	func();
+	a.pos = (a.pos - points[i]).normalized() * a.radius + points[i];
       }
   };
 
-  handleCollision(0, [&] () {
-      a.pos -= a.speed;
-    });
-
-  handleCollision(1, [&] () {
-      a.pos[0] = points[1][0] - a.radius * cornerNeg[0];
-    });
-
-  handleCollision(2, [&] () {
-      a.pos[1] = points[1][1] - a.radius * cornerNeg[1];
-    });
+  handleCollision(0);
+  handleCollision(1);
+  handleCollision(2);
 }
 
 void Physics::move(Fixture& fixture) const

@@ -9,7 +9,7 @@ out vec4 color;
 void main()
 {
   color = texture(tex, vert_coord);
-  if (length(color) < 0.1f)
+  if (color.a < 0.1f)
     gl_FragDepth = 1.0f;
   else
     gl_FragDepth = frag_depth;

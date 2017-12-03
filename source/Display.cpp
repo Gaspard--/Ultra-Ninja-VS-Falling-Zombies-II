@@ -240,7 +240,7 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
 
 void Display::render()
 {
-  glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
+  glClearColor(0.0f, 0.5f, 0.2f, 0.0f);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -282,7 +282,7 @@ void Display::displayInterface()
 
 void Display::copyRenderData(Logic const &logic)
 {
-  camera.offset = (camera.offset * 0.5f - logic.getPlayerPos() * 0.5f) + Vect<2u, float>{dim[0] - dim[1], 0.0f};
+  camera.offset = (camera.offset * 0.5f - (logic.getPlayerPos() - Vect<2u, float>{(dim[1] - 1.0f / dim[0]), 0.0f})* 0.5f);
   displayInfo.time = logic.getTime();
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
@@ -290,7 +290,7 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.bomb = 3;
 
   displayInfo.renderables.clear();
-  auto const &manager(logic.getMobManager());
+  auto const &manager(logic.getEntityManager());
 
   for (auto &zombie : manager.zombies)
     {
