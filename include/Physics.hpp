@@ -17,15 +17,14 @@ class Physics
 public:
 
   void move(Fixture&) const;
-
-  bool haveCollision(const Fixture& a, const Fixture& b) const;
+  bool haveCollision(Fixture const& a, Fixture const& b) const;
   bool haveCollision(Vect<2, int> const& a, Fixture const& b) const;
   void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
 
   template <class H, class T>
   void quadTree(H &h, std::vector<T> &entities)
   {
-    std::vector<T*> &e;
+    std::vector<T*> e;
 
     for (auto i = entities.begin() ; i != entities.end() ; ++i)
       e.push_back(&(*i));
