@@ -3,6 +3,7 @@
 
 #include "Zombie.hpp"
 #include "Human.hpp"
+#include "EntityAnimation.hpp"
 
 class Player
 {
@@ -14,7 +15,7 @@ public:
 
   void update();
   void accelerate(Vect<2, int> const& dir);
-  int getAnimationFrame() const;
+  float getAnimationFrame() const;
 
   void highFive(Human &villager);
   // dir[0] = x axis , dir[1] = y axis
@@ -24,14 +25,10 @@ public:
   double getUlti() const;
 
 private:
-  int animationFrame;
-  int internalFrame;
-  int maxFrame = 20;
+  EntityAnimation anim;
   double ulti;
   int nbBombs;
 
-  void setNewAnimationFrame(int stop, int move);
-  void animate();
 };
 
 #endif //!PLAYER_HPP_

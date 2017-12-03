@@ -14,6 +14,7 @@ Human::~Human()
 
 void Human::update()
 {
+  anim.animate(entity);
   if (coolDown > 0)
     coolDown--;
 }
@@ -48,7 +49,7 @@ bool Human::canHighFive() const
   return coolDown <= 0;
 }
 
-void	Human::addHunter(Zombie& z)
+void Human::addHunter(Zombie& z)
 {
   for (auto h : this->hunters) {
     if (h == &z)
@@ -57,7 +58,7 @@ void	Human::addHunter(Zombie& z)
   this->hunters.push_back(&z);
 }
 
-void	Human::removeHunter(Zombie& z)
+void Human::removeHunter(Zombie& z)
 {
   for (auto h = this->hunters.begin() ; h != this->hunters.end() ; ++h) {
     if (*h == &z) {
@@ -65,4 +66,9 @@ void	Human::removeHunter(Zombie& z)
       return ;
     }
   }
+}
+
+float Human::getAnimationFrame() const
+{
+  return anim.getAnimationFrame();
 }

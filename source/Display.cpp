@@ -316,10 +316,10 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(zombie.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIE)].emplace_back(Renderable{
-	  {0.0f, 0.0f},
-	    {0.5f, 1.0f},
+	  {0.1 * zombie.getAnimationFrame(), 0.0f},
+	    {0.1f, 1.0f},
 	      pos,
-		camera.zoom * static_cast<float>(zombie.entity.fixture.radius * 2.0),
+		camera.zoom * static_cast<float>(zombie.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
@@ -328,10 +328,10 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(human.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMAN)].push_back(Renderable{
-	  {0.0f, 0.0f},
-	    {0.5f, 1.0f},
+	  {0.1 * human.getAnimationFrame(), 0.0f},
+	    {0.1f, 1.0f},
 	      pos,
-		camera.zoom * static_cast<float>(human.entity.fixture.radius * 2.0),
+		camera.zoom * static_cast<float>(human.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
@@ -340,10 +340,10 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(player.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
-	  {0.125f * static_cast<float>(player.getAnimationFrame()), 0.0f},
-	    {0.125f, 1.0f},
+	    {0.1 * player.getAnimationFrame(), 0.0f},
+	    {0.1f, 1.0f},
 	      pos,
-		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0f),
+		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
@@ -362,9 +362,15 @@ void Display::copyRenderData(Logic const &logic)
 									   (house.type == BlockType::ROAD) ? TextureHandler::TextureList::ROAD :
 									   TextureHandler::TextureList::BORDER)].push_back(Renderable{
 									       {0.0f, 0.0f},
-										 {1.0f, 1.0f},
+										 {1.0f, 0.99f},
 										   pos,
-										     camera.zoom,
+										     camera.zoom * Vect<2u, float>{1.0f,
+										       (house.type == BlockType::SHED) ? 1.1f :
+										       (house.type == BlockType::HOUSE) ? 1.24f :
+										       (house.type == BlockType::MANSION) ? 1.55f :
+										       (house.type == BlockType::NONE) ? 1.0f :
+										       (house.type == BlockType::ROAD) ? 1.0f :
+										       1.0f},
 										       (pos[1] + 1.1f) * 0.4f});
       }
 }

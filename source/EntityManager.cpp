@@ -73,14 +73,14 @@ void EntityManager::mobDeath()
 
 void EntityManager::spawnHuman(Vect<2, double> const &pos, CityBlock &home)
 {
-  Entity e({pos, {0.0, 0.0}, 0.5, 0.0, 0.0});
+  Entity e({pos, {0.0, 0.0}, 0.062, 0.0, 0.0});
 
   humans.emplace_back(e, home);
 }
 
 void EntityManager::spawnZombie(Vect<2, double> const& pos)
 {
-  Entity e({pos, {0.0, 0.0}, 0.1, 0.0, 0.0});
+  Entity e({pos, {0.0, 0.0}, 0.062, 0.0, 0.0});
 
   zombies.emplace_back(e);
 }
@@ -89,7 +89,7 @@ void EntityManager::spawnPlayer(Vect<2, double> const& pos)
 {
   if (!players.empty())
     return;
-  Entity e({pos, {0.0, 0.0}, 0.05, 0.0, 0.0});
+  Entity e({pos, {0.0, 0.0}, 0.062, 0.0, 0.0});
 
   players.emplace_back(e);
 }
