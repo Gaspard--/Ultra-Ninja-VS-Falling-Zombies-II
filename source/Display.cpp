@@ -264,12 +264,18 @@ void Display::displayInterface()
   displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayRenderableAsHUD(Renderable{
+    {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	{1.0f / dim[0] - 0.73f, -1.0f / dim[1] + 0.05f},
+	{0.7f, 0.08f}
+  }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BARBACK));
   for (int i = 0; i < 5; i++)
     {
       displayRenderableAsHUD(Renderable{
-	  {0.0f, 0.0f},
+	    {0.0f, 0.0f},
 	    {1.0f, 1.0f},
-	      {1.0f / dim[0] - 0.1f - (i * 0.07f), -1.0f / dim[1] + 0.05f},
+	    {1.0f / dim[0] - ((i + 1) * 0.07f + 0.05f), -1.0f / dim[1] + 0.15f},
 		{0.09f, 0.09f}
 	}, TextureHandler::getInstance().getTexture((i < displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW));
     }
