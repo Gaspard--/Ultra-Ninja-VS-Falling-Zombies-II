@@ -12,6 +12,7 @@
 #include "Human.hpp"
 #include "Zombie.hpp"
 #include "Vect.hpp"
+# include "ZombieDetectionRange.hpp"
 
 struct Logic;
 
@@ -21,6 +22,7 @@ public:
   std::vector<Player> players;
   std::vector<Human> humans;
   std::vector<Zombie> zombies;
+  std::vector<ZombieDetectionRange> detectionRanges;
   std::vector<Slash> slashes;
   std::vector<Bomb> bombs;
   std::vector<Explosion> explosions;
