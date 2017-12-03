@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>
 #include "Weapon.hpp"
 #include "Slash.hpp"
 #include "Explosion.hpp"
