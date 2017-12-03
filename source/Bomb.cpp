@@ -7,11 +7,7 @@ Bomb::Bomb(Vect<2, double> const& pos,
 {
 }
 
-constexpr double Bomb::explosionRadius()
+bool Bomb::isExploding() const
 {
-  return 0.5;
-}
-
-void Bomb::explosion()
-{
+  return explode;
 }

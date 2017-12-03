@@ -3,8 +3,11 @@
 #include "Weapon.hpp"
 #include "Zombie.hpp"
 
-struct Bomb : public Weapon
+class Bomb : public Weapon
 {
+private:
+  bool explode;
+
 public:
   Bomb(Vect<2, double> const& pos,
        Vect<2, double> const& speed,
@@ -13,5 +16,5 @@ public:
 
   void explosion();
 
-  static constexpr double explosionRadius();
+  bool isExploding() const;
 };

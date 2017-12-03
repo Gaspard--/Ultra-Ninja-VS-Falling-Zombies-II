@@ -2,13 +2,18 @@
 
 #include <vector>
 #include "Weapon.hpp"
+#include "Slash.hpp"
+#include "Explosion.hpp"
+#include "Bomb.hpp"
 
 struct WeaponManager
 {
-public:
+  std::vector<Slash> slashes;
+  std::vector<Bomb> bombs;
+  std::vector<Explosion> explosions;
+
   WeaponManager();
   ~WeaponManager() = default;
 
-  std::vector<Slash> slashes;
-  std::vector<Bomb> bombs;
+  void update();
 };
