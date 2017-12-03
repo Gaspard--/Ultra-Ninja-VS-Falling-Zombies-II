@@ -23,7 +23,7 @@ void WeaponManager::update()
 	{
 	  explosions.emplace_back(it->entity.fixture.pos, 0.5, 1);
 	  explosions.emplace_back(it->entity.fixture.pos, 0.25, 2);
+	  it = bombs.erase(it);
 	}
-      it = bombs.erase(it);
     }
 }
