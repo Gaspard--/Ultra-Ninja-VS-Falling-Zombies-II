@@ -62,7 +62,7 @@ int main()
       while (display.isRunning())
 	{
 	  {
-	    std::scoped_lock<std::mutex> scopedLock(lock);
+	    std::lock_guard<std::mutex> scopedLock(lock);
 
 	    // handle events
 	    for (Event ev = Input::pollEvent(); ev; ev = Input::pollEvent())
@@ -77,7 +77,7 @@ int main()
 		<< e.what() << std::endl;
     }
     {
-      std::scoped_lock<std::mutex> scopedLock(lock);
+      std::lock_guard<std::mutex> scopedLock(lock);
       logic.isRunning() = false;
     }
     thread.join();

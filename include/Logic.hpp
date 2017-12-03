@@ -28,12 +28,16 @@ private:
 
   Physics physics;
   MobManager mobManager;
+  CityMap cityMap;
   bool gameOver;
   bool running;
 
   Vect<2u, double> mousePos;
 
-  static constexpr std::chrono::microseconds const TICK_TIME{1000000 / 120};
+  static constexpr std::chrono::microseconds const getTickTime()
+  {
+    return std::chrono::microseconds(1000000 / 120);
+  };
   std::size_t updatesSinceLastFrame;
   decltype(Clock::now()) lastUpdate;
 
@@ -41,13 +45,12 @@ private:
   void handleMouse(Display const &, GLFWwindow *window, Mouse mouse);
   void handleButton(GLFWwindow *window, Button button);
 
-  CityMap cityMap;
-
 public:
   Logic();
 
   void handleEvent(Display const &, Event const& event);
   void checkEvents(Display const &);
+  void update();
   void tick(std::mutex &lock);
   void addToScore(int);
   void resetCombo();

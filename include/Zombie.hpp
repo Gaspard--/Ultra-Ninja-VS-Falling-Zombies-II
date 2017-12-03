@@ -13,10 +13,10 @@ public:
 
   void setLead(bool lead);
   bool const& getLead() const;
+  void infectHuman(Human &villager) const;
 
 private:
   bool lead;
 };
 
 #endif //!ZOMBIE_HPP_
-

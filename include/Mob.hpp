@@ -14,9 +14,8 @@ public:
   void setLife(int life);
   int const& getLife() const;
 
-private:
+protected:
   int life;
-  //ref Maison
 };
 
 #endif //!MOB_HPP_
