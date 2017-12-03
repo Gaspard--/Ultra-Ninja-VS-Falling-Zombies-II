@@ -208,20 +208,6 @@ void Display::displayRect(Rect const &rect)
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void Display::displayInterface()
-{
-  // displayText("Current Population",
-  //             256, {0.05f, 0.05f}, {-0.017f * 18, -0.315f}, {sqrt(camera.length2()), 0}, {1.0f, 1.0f, 1.0f});
-  displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  if (displayInfo.gameOver)
-    {
-      displayText("Game Over", 256, {0.2f, 0.2f}, {-0.65f, 0.42f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
-      displayText("Press enter to retry", 256, {0.1f, 0.1f}, {-0.65f, -0.82f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
-    }
-}
-
 void Display::displayRenderable(Renderable const& renderable)
 {
   Bind<RenderContext> bind(textureContext);
@@ -328,6 +314,20 @@ void Display::render()
   glfwPollEvents();
 }
 
+void Display::displayInterface()
+{
+  // displayText("Current Population",
+  //             256, {0.05f, 0.05f}, {-0.017f * 18, -0.315f}, {sqrt(camera.length2()), 0}, {1.0f, 1.0f, 1.0f});
+  displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  if (displayInfo.gameOver)
+    {
+      displayText("Game Over", 256, {0.2f, 0.2f}, {-0.65f, 0.42f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
+      displayText("Press enter to retry", 256, {0.1f, 0.1f}, {-0.65f, -0.82f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
+    }
+}
+
 void Display::copyRenderData(Logic const &logic)
 {
   camera.offset = camera.offset * 0.8f + logic.getPlayerPos() * 0.2f;
@@ -358,7 +358,7 @@ void Display::copyRenderData(Logic const &logic)
 		camera.apply(human.entity.fixture.pos),
 		  camera.zoom * static_cast<float>(human.entity.fixture.radius)});
     }
-    
+
 }
 
 bool Display::isRunning() const

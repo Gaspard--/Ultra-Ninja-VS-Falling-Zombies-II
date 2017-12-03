@@ -31,10 +31,12 @@ public:
 
     auto addElems([](auto &entities, auto &e)
 		  {
+		    using T = std::remove_reference_t<decltype(entities[0])>;
+
 		    for (auto i = entities.begin() ; i != entities.end() ; ++i)
-		      e.push_back(&(*i));
+		      std::get<std::vector<T *>>(e).push_back(&(*i));
 		  });
-    (addElems(entities, std::get<std::vector<Types *>>(e)) , ...);
+    (addElems(entities, e) , ...);
     this->quadTreeRec(h, std::get<std::vector<Types *>>(e)...);
   }
 

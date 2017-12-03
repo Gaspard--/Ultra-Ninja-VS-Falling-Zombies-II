@@ -9,7 +9,5 @@ public:
   Slash(Vect<2, double> const& pos,
 	Vect<2, double> const& speed,
 	int damage);
-  ~Slash();
-
-  void hit(Zombie &zombie);
+  ~Slash() = default;
 };
