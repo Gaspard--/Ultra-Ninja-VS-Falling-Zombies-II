@@ -11,7 +11,7 @@ bool Physics::haveCollision(Vect<2, int> const& a, Fixture const& b) const
   return (Vect<2, double>(static_cast<double>(a[0]), static_cast<double>(a[1])) - b.pos).length2() < CAR(b.radius);
 }
 
-void Physics::fixMapCollision(Fixture& a, std::array<std::array<int/*cityBlock*/, 100>, 100> const& cityMap)
+void Physics::fixMapCollision(Fixture& a, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const
 {
   Vect<2, int> tilePos(static_cast<int>(a.pos[0]), static_cast<int>(a.pos[1]));
   static auto getCorner = [] (double pos) {
@@ -27,7 +27,8 @@ void Physics::fixMapCollision(Fixture& a, std::array<std::array<int/*cityBlock*/
 			   {tilePos[0], tilePos[1] + cornerNeg[1]}};
 
   auto handleCollision = [&] (int i, auto func) {
-    if (cityMap[sides[i][1]][sides[i][0]] == 1/* TODO switch 1 to enum wall */ &&
+    if (cityMap[sides[i][1]][sides[i][0]].getType() != BlockType::NONE &&
+	cityMap[sides[i][1]][sides[i][0]].getType() != BlockType::ROAD &&
 	haveCollision(points[i], a))
       {
 	func();
@@ -49,8 +50,6 @@ void Physics::fixMapCollision(Fixture& a, std::array<std::array<int/*cityBlock*/
 
 void Physics::move(Fixture& fixture) const
 {
-  Vect<2, double> vec(0.0, 0.0);
-
   fixture.pos += fixture.speed;
   fixture.speed *= 0.96;
 }

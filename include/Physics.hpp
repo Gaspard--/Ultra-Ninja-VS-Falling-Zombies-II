@@ -3,6 +3,7 @@
 
 # include "Vect.hpp"
 # include "Fixture.hpp"
+# include "CityMap.hpp"
 # include <array>
 # include <cmath>
 # include <vector>
@@ -13,17 +14,58 @@ struct Entity;
 
 class Physics
 {
+private:
+  static constexpr double const G{6.67384 * pow(10.0, -11.0)};
+
 public:
   Physics() = default;
 
-  bool haveCollision(Fixture const&, Fixture const&) const;
-  bool haveCollision(Vect<2, int> const& a, Fixture const& b) const;
-  void fixMapCollision(Fixture&, std::array<std::array<int/*cityBlock*/, 100>, 100> const& cityMap);
   void move(Fixture&) const;
+  bool haveCollision(Fixture const& a, Fixture const& b) const;
+  bool haveCollision(Vect<2, int> const& a, Fixture const& b) const;
+
+  void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
+
+  template <class H, class T>
+  void quadTree(H &h, std::vector<T> &entities)
+  {
+    std::vector<T*> e;
+
+    for (auto i = entities.begin() ; i != entities.end() ; ++i)
+      e.push_back(&(*i));
+    this->quadTreeRec(h, e);
+  }
+
+  template <class T>
+  void updateFixtures(T begin, T end)
+  {
+    for (T i = begin ; i != end ; ++i)
+      this->move((*i)->fixture);
+  }
 
 private:
-  static constexpr const double G{6.67384 * pow(10.0, -11.0)};
-};
 
+  static constexpr int const endCond{20};
+
+  template <class H, class T>
+  void classicComparaison(H &h, std::vector<T*> &entities)
+  {
+    for (auto i = entities.begin() ; i != entities.end() ; ++i)
+      for (auto j = i + 1 ; j != entities.end() ; ++j)
+	if (this->haveCollision((*i)->entity.fixture, (*j)->entity.fixture))
+	  h(i, j);
+  }
+
+  template <class H, class T>
+  void quadTreeRec(H &h, std::vector<T*> &entities)
+  {
+    if (entities.size() == 0)
+      return ;
+    if (entities.size() <= endCond) {
+      this->classicComparaison(h, entities);
+      return ;
+    }
+  }
+};
 
 #endif /* PHYSICS_HPP */
