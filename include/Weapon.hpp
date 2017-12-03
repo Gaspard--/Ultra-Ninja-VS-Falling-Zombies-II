@@ -15,6 +15,6 @@ struct Weapon
   void hit(Zombie &zombie);
 
   Entity entity;
-  int const damage;
+  int damage;
   int lifetime;
 };

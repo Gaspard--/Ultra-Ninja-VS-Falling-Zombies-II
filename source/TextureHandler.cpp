@@ -24,6 +24,8 @@ void TextureHandler::initTextureHandler()
   _instance->addTexture(TextureList::ROAD, "resources/Road.bmp");
   _instance->addTexture(TextureList::BORDER, "resources/Border.bmp");
   _instance->addTexture(TextureList::TEST, "resources/test.bmp");
+  _instance->addTexture(TextureList::BOMB, "resources/Bomb.bmp");
+  _instance->addTexture(TextureList::BOMBHOLLOW, "resources/BombHollow.bmp");
 }
 
 TextureHandler& TextureHandler::getInstance()

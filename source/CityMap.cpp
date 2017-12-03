@@ -99,7 +99,7 @@ void CityMap::tick(/*Logic &logic*/)
 		  }
 	      }
 	  }
-      }
+        }
 }
 
 std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const &CityMap::getCityMap() const
