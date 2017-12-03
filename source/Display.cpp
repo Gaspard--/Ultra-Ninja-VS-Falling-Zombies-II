@@ -353,7 +353,8 @@ void Display::copyRenderData(Logic const &logic)
       {
 	auto house(cityMap[i][j]);
 
-	if (house.type != BlockType::NONE)
+	if (static_cast<int>(block.type) > 0 &&
+	    static_cast<int>(block.type) < static_cast<int>(BlockType::ROAD))
 	  {
 	    displayInfo.renderables.push_back(Renderable{
 		TextureHandler::getInstance().getTexture((house.type == BlockType::SHED) ? TextureHandler::TextureList::HOUSE1 :
