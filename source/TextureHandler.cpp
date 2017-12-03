@@ -16,7 +16,7 @@ void TextureHandler::initTextureHandler()
   _instance->addTexture(TextureList::BULLET, "resources/bite.bmp");
   _instance->addTexture(TextureList::ZOMBIE, "resources/ZombieSpriteSheet.bmp");
   _instance->addTexture(TextureList::PLAYER, "resources/PlayerSpriteSheet.bmp");
-  _instance->addTexture(TextureList::HUMAN, "resources/PlayerSpriteSheet.bmp");
+  _instance->addTexture(TextureList::HUMAN, "resources/CitizenSpriteSheet.bmp");
   _instance->addTexture(TextureList::NONE, "resources/None.bmp");
   _instance->addTexture(TextureList::HOUSE1, "resources/Shed.bmp");
   _instance->addTexture(TextureList::HOUSE2, "resources/House.bmp");

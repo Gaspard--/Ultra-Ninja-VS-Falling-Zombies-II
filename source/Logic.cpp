@@ -11,12 +11,15 @@ Logic::Logic()
     mousePos{0.0, 0.0},
     lastUpdate(Clock::now())
 {
+  CityBlock block;
+
   time = 0;
   score = 0;
   gameOver = false;
   combo = 0;
   multiplier = 0;
   entityManager.spawnZombie({10.0, 10.0});
+  entityManager.spawnHuman({50.0, 50.0}, block);
   entityManager.spawnPlayer({50.4, 50.3});
 }
 
@@ -142,6 +145,8 @@ void Logic::checkEvents(Display const &display)
     player.accelerate({0, 1});
   if (display.isKeyPressed(GLFW_KEY_S))
     player.accelerate({0, -1});
+  if (display.isKeyPressed(GLFW_KEY_SPACE))
+    player.highFive(entityManager.humans[0]);
 }
 
 void Logic::handleMouse(Display const &display, GLFWwindow *, Mouse mouse)
