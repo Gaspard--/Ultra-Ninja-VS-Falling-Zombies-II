@@ -22,6 +22,7 @@ private:
   int maxFrame = 20;
 
   void setNewAnimationFrame(int stop, int move);
+  void setNewAnimationFrame(int stop, int move, int move2);
   void animate();
 };
 

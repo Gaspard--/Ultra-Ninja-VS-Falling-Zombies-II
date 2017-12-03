@@ -25,20 +25,48 @@ void Player::setNewAnimationFrame(int stop, int move)
     }
 }
 
+void Player::setNewAnimationFrame(int stop, int move, int move2)
+{
+  if (animationFrame != stop && animationFrame != move && animationFrame != move2)
+    animationFrame = stop;
+  else if (++internalFrame > maxFrame)
+    {
+      internalFrame = 0;
+      if (animationFrame == move)
+	animationFrame = move2;
+      else
+	animationFrame = move;
+    }
+}
+
 void Player::animate()
 {
   if (entity.fixture.speed[0] <= 0.005 && entity.fixture.speed[0] >= -0.005 &&
       entity.fixture.speed[1] <= 0.005 && entity.fixture.speed[1] >= -0.005)
     {
-      animationFrame -= (animationFrame % 2 != 0);
+      switch (animationFrame) {
+      case 0 ... 1:
+	animationFrame = 0;
+	break;
+      case 2 ... 4:
+	animationFrame = 2;
+	break;
+      case 5 ... 7:
+	animationFrame = 5;
+	break;
+      case 8 ... 9:
+	animationFrame = 8;
+	break;
+      }
       return;
     }
+
   // x axis animation
   if (abs(entity.fixture.speed[0]) > abs(entity.fixture.speed[1]))
     {
       // check right side animation
       if (entity.fixture.speed[0] > 0)
-	setNewAnimationFrame(6, 7);
+	setNewAnimationFrame(8, 9);
       else
 	setNewAnimationFrame(0, 1);
     }
@@ -47,9 +75,9 @@ void Player::animate()
     {
       // check up side animation
       if (entity.fixture.speed[1] > 0)
-	setNewAnimationFrame(5, 4);
+	setNewAnimationFrame(5, 6, 7);
       else
-	setNewAnimationFrame(3, 2);
+	setNewAnimationFrame(2, 3, 4);
     }
 }
 
