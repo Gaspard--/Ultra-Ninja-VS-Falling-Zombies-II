@@ -1,6 +1,7 @@
 #include <exception>
 #include "FreeTypeLib.hpp"
 #include "Display.hpp"
+#include <iostream>
 
 FreeTypeLib::FreeTypeLib(std::string fontFile)
   : face(nullptr)
@@ -16,7 +17,10 @@ FreeTypeLib::FreeTypeLib(std::string fontFile)
   if (error == FT_Err_Unknown_File_Format)
     throw std::runtime_error(fontFile + ": failed to load font, unsupported font type");
   else if (error)
-    throw std::runtime_error(fontFile + ": failed to load font");
+  {
+	  std::cerr << error << std::endl;
+	  throw std::runtime_error(fontFile + ": failed to load font");
+  }
 }
 
 FreeTypeLib::~FreeTypeLib()

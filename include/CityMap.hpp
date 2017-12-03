@@ -1,8 +1,7 @@
 #pragma once
 
-// Spawn rate / 100
 #define HOUSE_SPAWN_CD 1000
-#define HOUSE_SPAWN_RATE 20
+#define HOUSE_SPAWN_RATE 20 // Spawn rate (x / 100)
 #define MAP_SIZE 100
 
 #include <array>

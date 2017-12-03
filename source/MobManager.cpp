@@ -14,3 +14,11 @@ void MobManager::mutation()
     }
   humans.erase(bound, humans.end());
 }
+
+void MobManager::update(Physics const &physics)
+{
+  for (auto &human : humans)
+    physics.move(human.entity.fixture);
+  for (auto &zombie : zombies)
+    physics.move(zombie.entity.fixture);
+}

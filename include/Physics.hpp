@@ -3,6 +3,7 @@
 
 # include "Vect.hpp"
 # include "Fixture.hpp"
+# include "CityMap.hpp"
 # include <array>
 # include <cmath>
 # include <vector>
@@ -13,18 +14,22 @@ struct Entity;
 
 class Physics
 {
+private:
+  static constexpr double const G{6.67384 * pow(10.0, -11.0)};
+
 public:
+  Physics() = default;
 
   void move(Fixture&) const;
-
-  bool haveCollision(const Fixture& a, const Fixture& b) const;
+  bool haveCollision(Fixture const& a, Fixture const& b) const;
   bool haveCollision(Vect<2, int> const& a, Fixture const& b) const;
-  void fixMapCollision(Fixture&, std::array<std::array<int/*cityBlock*/, 100>, 100> const& cityMap);
+
+  void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
 
   template <class H, class T>
   void quadTree(H &h, std::vector<T> &entities)
   {
-    std::vector<T*> &e;
+    std::vector<T*> e;
 
     for (auto i = entities.begin() ; i != entities.end() ; ++i)
       e.push_back(&(*i));
@@ -40,7 +45,7 @@ public:
 
 private:
 
-  static const int	m_endCond = 20;
+  static constexpr int const endCond{20};
 
   template <class H, class T>
   void classicComparaison(H &h, std::vector<T*> &entities)
@@ -56,12 +61,11 @@ private:
   {
     if (entities.size() == 0)
       return ;
-    if (entities.size() <= m_endCond) {
+    if (entities.size() <= endCond) {
       this->classicComparaison(h, entities);
       return ;
     }
   }
-
 };
 
 #endif /* PHYSICS_HPP */
