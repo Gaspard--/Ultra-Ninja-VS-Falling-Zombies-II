@@ -37,6 +37,7 @@ Display::GlfwContext::GlfwContext()
                        });
   if (!glfwInit())
     throw std::runtime_error("opengl: failed to initialize glfw");
+  
 }
 
 Display::GlfwContext::~GlfwContext()
@@ -66,6 +67,7 @@ Display::GlfwContext::~GlfwContext()
 Display::Display()
   : camera{}
   , window([this]{
+      glfwWindowHint(GLFW_DEPTH_BITS, 1);
       std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> window(glfwCreateWindow(1920, 1080, "ultra-ninja VS falling zombies II", nullptr, nullptr), &glfwDestroyWindow);
 
       if (!window)
@@ -110,8 +112,10 @@ Display::Display()
     glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * sizeof(float), nullptr);
-    glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * sizeof(float), reinterpret_cast<void *>(2u * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(0, 2, GL_FLOAT, false, 5 * sizeof(float), nullptr);
+    glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * sizeof(float), reinterpret_cast<void *>(2u * sizeof(float)));
+    glVertexAttribPointer(2, 1, GL_FLOAT, false, 5 * sizeof(float), reinterpret_cast<void *>(4u * sizeof(float)));
   }
   {
     Bind<RenderContext> bind(rectContext);
@@ -209,33 +213,10 @@ void Display::displayRect(Rect const &rect)
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void Display::displayRenderable(Renderable const& renderable)
+void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint texture)
 {
   Bind<RenderContext> bind(textureContext);
-  float buffer[4u * 4u];
-
-  for (unsigned int j(0u); j != 4u; ++j)
-    {
-      Vect<2u, float> const corner(static_cast<float>(j & 1u), static_cast<float>(j >> 1u));
-      Vect<2u, float> const sourceCorner(renderable.sourcePos + corner * renderable.sourceSize);
-      Vect<2u, float> const destCorner(renderable.destPos - Vect<2u, float>{0.5f, 0.0f} + (corner * renderable.destSize));
-
-      std::copy(&sourceCorner[0u], &sourceCorner[2u], &buffer[j * 4u]);
-      std::copy(&destCorner[0u], &destCorner[2u], &buffer[j * 4u + 2u]);
-    }
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, renderable.texture);
-  glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-  my_opengl::setUniform(dim, "dim", textureContext.program);
-  my_opengl::setUniform(0u, "tex", textureContext.program);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
-  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
-
-void Display::displayRenderableAsHUD(Renderable const& renderable)
-{
-  Bind<RenderContext> bind(textureContext);
-  float buffer[4u * 4u];
+  float buffer[5u * 4u];
   Vect<2u, float> const up(renderable.destPos.normalized());
 
   for (unsigned int j(0u); j != 4u; ++j)
@@ -244,11 +225,12 @@ void Display::displayRenderableAsHUD(Renderable const& renderable)
       Vect<2u, float> const sourceCorner(renderable.sourcePos + corner * renderable.sourceSize);
       Vect<2u, float> const destCorner(renderable.destPos + (corner * renderable.destSize));
 
-      std::copy(&sourceCorner[0u], &sourceCorner[2u], &buffer[j * 4u]);
-      std::copy(&destCorner[0u], &destCorner[2u], &buffer[j * 4u + 2u]);
+      std::copy(&sourceCorner[0u], &sourceCorner[2u], &buffer[j * 5u]);
+      std::copy(&destCorner[0u], &destCorner[2u], &buffer[j * 5u + 2u]);
+      buffer[j * 5u + 4u] = renderable.depth;
     }
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, renderable.texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
   glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
   my_opengl::setUniform(dim, "dim", textureContext.program);
   my_opengl::setUniform(0u, "tex", textureContext.program);
@@ -258,46 +240,17 @@ void Display::displayRenderableAsHUD(Renderable const& renderable)
 
 void Display::render()
 {
-  {
-    Vect<2u, float> olddim(dim);
-
-    dim = {1.0f, 1.0f};
-    glEnable(GL_BLEND);
-    // logic.for_each_flesh([this](auto const &flesh)
-    //                      {
-    //                        if (flesh->entity.isOnPlanet)
-    //                          this->drawBlood(rotate(flesh->entity.fixture.pos.normalized(), Vect<2u, float>{0, -1.0}), bloodSpray[rand() % 3]);
-    //                      });
-    // logic.for_each_enemy([this](auto const &enemy)
-    //                      {
-    //                        if (enemy->entity.isOnPlanet && rand() % 10 == 0)
-    //                          this->drawBlood(rotate(enemy->entity.fixture.pos.normalized(), Vect<2u, float>{0, -1.0}), mobSpray[rand() % 3]);
-    //                      });
-    glDisable(GL_BLEND);
-    dim = olddim;
-  }
-  glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClearColor(0.0f, 0.0f, 1.0f, 0.0f);
+  glClearDepth(1.0f);
+  glEnable(GL_DEPTH_TEST);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
+  glDepthFunc(GL_LESS);
   for (auto const &renderables : displayInfo.renderables)
     displayRenderables(renderables.second.begin(), renderables.second.size(), renderables.first);
-  // displayPlanet(background, 4.0, camera.normalized());
-  // displayPlanet(planetBackground, 1.54, camera);
-  // displayPlanet(planetRenderTexture.texture, logic.getPlanetSize(), camera);
-  // logic.for_each_projectile([this, logic](auto const &e)
-  //                           {
-  //                             this->displayEntityWithSpeed(*e, camera);
-  //                           });
-  // logic.for_each_enemy([this, logic](auto const &e)
-  // 		       {
-  // 			 this->displayText(std::to_string(e->_hp), 256, {0.03f, 0.03f}, {0.01, 1.05}, rotate(rotate(camera, e->entity.renderable.destPos), {0.0, -1.0}), {1.0, 0.2, 0.2});
-  // 		       });
-  // logic.for_each_entity([this, logic](auto const &e)
-  //                       {
-  //                         this->displayRenderable(e->renderable, camera);
-  //                       });
+  glDisable(GL_DEPTH_TEST);
   displayInterface();
   glDisable(GL_BLEND);
   glfwSwapBuffers(window.get());
@@ -314,12 +267,11 @@ void Display::displayInterface()
   for (int i = 0; i < 5; i++)
     {
       displayRenderableAsHUD(Renderable{
-        TextureHandler::getInstance().getTexture((i < displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW),
-	        {0.0f, 0.0f},
-	        {1.0f, 1.0f},
-	        {1.0f / dim[0] - 0.1f - (i * 0.07f), -1.0f / dim[1] + 0.05f},
-            {0.09f, 0.09f}
-		});
+	  {0.0f, 0.0f},
+	    {1.0f, 1.0f},
+	      {1.0f / dim[0] - 0.1f - (i * 0.07f), -1.0f / dim[1] + 0.05f},
+		{0.09f, 0.09f}
+	}, TextureHandler::getInstance().getTexture((i < displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW));
     }
   if (displayInfo.gameOver)
     {
@@ -330,7 +282,7 @@ void Display::displayInterface()
 
 void Display::copyRenderData(Logic const &logic)
 {
-  camera.offset = camera.offset * 0.8f - logic.getPlayerPos() * 0.2f;
+  camera.offset = (camera.offset * 0.5f - logic.getPlayerPos() * 0.5f) + Vect<2u, float>{dim[0] - dim[1], 0.0f};
   displayInfo.time = logic.getTime();
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
@@ -342,51 +294,60 @@ void Display::copyRenderData(Logic const &logic)
 
   for (auto &zombie : manager.zombies)
     {
+      auto pos(camera.apply(zombie.entity.fixture.pos));
+
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIE)].emplace_back(Renderable{
-	  TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIE),
-	    {0.0f, 0.0f},
-	      {0.5f, 1.0f},
-		camera.apply(zombie.entity.fixture.pos),
-		  camera.zoom * static_cast<float>(zombie.entity.fixture.radius)
-		  });
+	  {0.0f, 0.0f},
+	    {0.5f, 1.0f},
+	      pos,
+		camera.zoom * static_cast<float>(zombie.entity.fixture.radius),
+		(pos[1] + 1.1f) * 0.4f
+		});
     }
   for (auto &human : manager.humans)
     {
+      auto pos(camera.apply(human.entity.fixture.pos));
+
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMAN)].push_back(Renderable{
-	  TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMAN),
-	    {0.0f, 0.0f},
-	      {0.5f, 1.0f},
-		camera.apply(human.entity.fixture.pos),
-		  camera.zoom * static_cast<float>(human.entity.fixture.radius)});
+	  {0.0f, 0.0f},
+	    {0.5f, 1.0f},
+	      pos,
+		camera.zoom * static_cast<float>(human.entity.fixture.radius),
+		(pos[1] + 1.1f) * 0.4f
+		});
     }
   for (auto &player : manager.players)
     {
+      auto pos(camera.apply(player.entity.fixture.pos));
+
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
-	  TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER),
-	    {0.0f, 0.0f},
-	      {0.5f, 1.0f},
-		camera.apply(player.entity.fixture.pos),
-		  camera.zoom * static_cast<float>(player.entity.fixture.radius)
-		  });
+	  {0.0f, 0.0f},
+	    {0.5f, 1.0f},
+	      pos,
+		camera.zoom * static_cast<float>(player.entity.fixture.radius),
+		(pos[1] + 1.1f) * 0.4f
+		});
     }
   auto cityMap(logic.getCityMap().getCityMap());
-  // for (std::size_t i(0); i != 100; ++i)
-  //   for (std::size_t j(0); j != 100; ++j)
-  //     {
-  // 	auto house(cityMap[i][j]);
+  for (std::size_t i(0); i != 100ul; ++i)
+    for (std::size_t j(0); j != 100ul; ++j)
+      {
+  	auto const &house(cityMap[i][j]);
+	auto pos(camera.apply(Vect<2u, double>{static_cast<double>(j) - 0.5, static_cast<double>(i)}));
 
-  // 	displayInfo.renderables.push_back(Renderable{
-  // 	    TextureHandler::getInstance().getTexture((house.type == BlockType::SHED) ? TextureHandler::TextureList::HOUSE1 :
-  // 						     (house.type == BlockType::HOUSE) ? TextureHandler::TextureList::HOUSE2 :
-  // 						     (house.type == BlockType::MANSION) ? TextureHandler::TextureList::HOUSE3 :
-  // 						     (house.type == BlockType::NONE) ? TextureHandler::TextureList::NONE :
-  // 						     (house.type == BlockType::ROAD) ? TextureHandler::TextureList::ROAD :
-  // 						     TextureHandler::TextureList::BORDER),
-  // 	      {0.0f, 0.0f},
-  // 		{1.0f, 1.0f},
-  // 		  camera.apply(Vect<2u, double>{static_cast<double>(j) - 0.5, static_cast<double>(i)}),
-  // 		    camera.zoom});
-  //     }
+	if (!(house.type == BlockType::NONE || house.type == BlockType::ROAD))
+	  displayInfo.renderables[TextureHandler::getInstance().getTexture((house.type == BlockType::SHED) ? TextureHandler::TextureList::HOUSE1 :
+									   (house.type == BlockType::HOUSE) ? TextureHandler::TextureList::HOUSE2 :
+									   (house.type == BlockType::MANSION) ? TextureHandler::TextureList::HOUSE3 :
+									   (house.type == BlockType::NONE) ? TextureHandler::TextureList::NONE :
+									   (house.type == BlockType::ROAD) ? TextureHandler::TextureList::ROAD :
+									   TextureHandler::TextureList::BORDER)].push_back(Renderable{
+									       {0.0f, 0.0f},
+										 {1.0f, 1.0f},
+										   pos,
+										     camera.zoom,
+										     (pos[1] + 1.1f) * 0.4f});
+      }
 }
 
 bool Display::isRunning() const

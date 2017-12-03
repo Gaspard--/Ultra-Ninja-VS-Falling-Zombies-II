@@ -4,7 +4,7 @@
 
 struct DisplayInfo
 {
-  std::unordered_map<std::size_t, std::vector<Renderable>> renderables;
+  std::unordered_map<GLuint, std::vector<Renderable>> renderables;
   std::string time;
   unsigned int score;
   std::string combo;

@@ -6,8 +6,6 @@
 
 struct Renderable
 {
-  Texture texture;
-
   // TEXTURE
   /// bottom left corner of source rect
   Vect<2u, float> sourcePos{0.0f, 0.0f};
@@ -19,6 +17,8 @@ struct Renderable
   Vect<2u, float> destPos{0.0f, 0.0f};
   /// size when displayed
   Vect<2u, float> destSize{0.0f, 0.0f};
+
+  float depth{0.0f};
 };
 
 #endif
