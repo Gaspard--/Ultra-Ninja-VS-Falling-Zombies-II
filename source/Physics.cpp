@@ -1,7 +1,7 @@
 # include "Physics.hpp"
 # include "Entity.hpp"
 
-Physics::HPosition Physics::getHRelativePosition(Vect<2, double> const& middle, Fixture const& f)
+Physics::HPosition Physics::getHRelativePosition(Vect<2, double> const& middle, Fixture const& f) const
 {
   double diff = f.pos[0] - middle[0];
   if ((diff < 0 ? -1 * diff : diff) <= f.radius)
@@ -11,7 +11,7 @@ Physics::HPosition Physics::getHRelativePosition(Vect<2, double> const& middle, 
   return (Physics::BOTTOM);
 }
 
-Physics::VPosition Physics::getVRelativePosition(Vect<2, double> const& middle, Fixture const& f)
+Physics::VPosition Physics::getVRelativePosition(Vect<2, double> const& middle, Fixture const& f) const
 {
   double diff = f.pos[1] - middle[1];
 

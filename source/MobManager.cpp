@@ -21,4 +21,5 @@ void MobManager::update(Physics const &physics)
     physics.move(human.entity.fixture);
   for (auto &zombie : zombies)
     physics.move(zombie.entity.fixture);
+  physics.quadTree([](auto &, auto &){}, humans, zombies);
 }
