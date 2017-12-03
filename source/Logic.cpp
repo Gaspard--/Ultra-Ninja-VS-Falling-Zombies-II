@@ -172,7 +172,7 @@ void Logic::handleButton(GLFWwindow *, Button button)
 
 Vect<2, double> Logic::getPlayerPos(void) const
 {
-  return {0.0, 0.0}; // TODO: return player's pos
+  return entityManager.mobManager.getPlayer().entity.fixture.pos;
 }
 
 bool Logic::getGameOver(void) const

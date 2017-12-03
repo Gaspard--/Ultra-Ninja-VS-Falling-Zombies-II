@@ -23,6 +23,7 @@ public:
   void spawnZombie(Vect<2, double> const& pos);
   void spawnPlayer(Vect<2, double> const& pos);
   Player& getPlayer();
+  Player const& getPlayer() const;
 };
 
 #endif //!MOBMANAGER_HPP_

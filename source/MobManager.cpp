@@ -50,3 +50,8 @@ Player& MobManager::getPlayer()
 {
   return players[0];
 }
+
+Player const& MobManager::getPlayer() const
+{
+  return players.at(0);
+}
