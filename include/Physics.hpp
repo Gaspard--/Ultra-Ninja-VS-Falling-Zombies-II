@@ -3,6 +3,7 @@
 
 # include "Vect.hpp"
 # include "Fixture.hpp"
+# include "CityMap.hpp"
 # include <array>
 # include <cmath>
 # include <vector>
@@ -19,7 +20,7 @@ public:
 
   bool haveCollision(Fixture const&, Fixture const&) const;
   bool haveCollision(Vect<2, int> const& a, Fixture const& b) const;
-  void fixMapCollision(Fixture&, std::array<std::array<int/*cityBlock*/, 100>, 100> const& cityMap);
+  void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
   bool move(Fixture&) const;
 
   template <class T>
