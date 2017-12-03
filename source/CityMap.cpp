@@ -24,6 +24,7 @@ void CityMap::tick(/*Logic &logic*/)
   cooldown -= (cooldown != 0);
   if (cooldown)
     return;
+  /*cooldown = HOUSE_SPAWN_CD;*/
   for (auto &line : cityMap)
     for (auto &block : line)
       {
@@ -66,8 +67,14 @@ void CityMap::tick(/*Logic &logic*/)
 		      default:
 			break;
 		      }
+		    count += 1;
 		  }
 	      }
 	  }
       }
+}
+
+std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const &CityMap::getCityMap() const
+{
+  return (cityMap);
 }
