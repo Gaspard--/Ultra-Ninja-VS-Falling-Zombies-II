@@ -28,6 +28,7 @@ private:
 
   Physics physics;
   MobManager mobManager;
+  CityMap cityMap;
   bool gameOver;
   bool running;
 
@@ -49,6 +50,7 @@ public:
 
   void handleEvent(Display const &, Event const& event);
   void checkEvents(Display const &);
+  void update();
   void tick(std::mutex &lock);
   void addToScore(int);
   void resetCombo();

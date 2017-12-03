@@ -19,6 +19,17 @@ Logic::Logic()
   mobManager.spawnZombie({0.0, 0.0});
 }
 
+void Logic::update()
+{
+  if (!gameOver)
+    {
+      ++time;
+      mobManager.update(physics);
+      cityMap.tick();
+      multiplier += (1.0 / 600.0);
+    }
+}
+
 void Logic::tick(std::mutex &lock)
 {
   auto const now(Clock::now());
@@ -32,15 +43,9 @@ void Logic::tick(std::mutex &lock)
   if (now < lastUpdate)
     std::this_thread::sleep_for(lastUpdate - now);
 
-  if (!gameOver)
-    {
-      ++time;
-    }
   {
     std::lock_guard<std::mutex> scopedLock(lock);
-
-    mobManager.update(physics);
-    multiplier += (1.0 / 600.0);
+    update();
   }
 }
 
