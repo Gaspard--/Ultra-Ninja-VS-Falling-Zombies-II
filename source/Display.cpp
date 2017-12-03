@@ -353,18 +353,17 @@ void Display::copyRenderData(Logic const &logic)
       {
 	auto house(cityMap[i][j]);
 
-	if (static_cast<int>(block.type) > 0 &&
-	    static_cast<int>(block.type) < static_cast<int>(BlockType::ROAD))
-	  {
-	    displayInfo.renderables.push_back(Renderable{
-		TextureHandler::getInstance().getTexture((house.type == BlockType::SHED) ? TextureHandler::TextureList::HOUSE1 :
-							 (house.type == BlockType::HOUSE) ? TextureHandler::TextureList::HOUSE2 :
-							 TextureHandler::TextureList::HOUSE3),
-		  {0.0f, 0.0f},
-		    {1.0f, 1.0f},
-		      camera.apply(Vect<2u, double>{static_cast<double>(i) - 0.5, static_cast<double>(j)}),
-			camera.zoom});
-	  }
+	displayInfo.renderables.push_back(Renderable{
+	    TextureHandler::getInstance().getTexture((house.type == BlockType::SHED) ? TextureHandler::TextureList::HOUSE1 :
+						     (house.type == BlockType::HOUSE) ? TextureHandler::TextureList::HOUSE2 :
+						     (house.type == BlockType::MANSION) ? TextureHandler::TextureList::HOUSE3 :
+						     (house.type == BlockType::NONE) ? TextureHandler::TextureList::NONE :
+						     (house.type == BlockType::ROAD) ? TextureHandler::TextureList::ROAD :
+						     TextureHandler::TextureList::BORDER),
+	      {0.0f, 0.0f},
+		{1.0f, 1.0f},
+		  camera.apply(Vect<2u, double>{static_cast<double>(j) - 0.5, static_cast<double>(i)}),
+		    camera.zoom});
       }
 }
 

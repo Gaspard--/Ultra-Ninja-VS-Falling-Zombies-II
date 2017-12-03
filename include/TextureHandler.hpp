@@ -19,9 +19,12 @@ public :
       HUMAN,
       PLAYER,
       TEST,
+      NONE,
       HOUSE1,
       HOUSE2,
-      HOUSE3
+      HOUSE3,
+      ROAD,
+      BORDER
     };
 
   static void initTextureHandler();
