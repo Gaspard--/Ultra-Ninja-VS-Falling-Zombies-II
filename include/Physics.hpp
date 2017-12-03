@@ -15,28 +15,54 @@ struct Entity;
 class Physics
 {
 public:
-  Physics(const Vect<2, double>& planetCenter, double radius, double mass)
-    : _planet{planetCenter, Vect<2, double>(0.0, 0.0), radius, mass, 0.0} {}
 
-  bool haveCollision(Fixture const&, Fixture const&) const;
+  void move(Fixture&) const;
+
+  bool haveCollision(const Fixture& a, const Fixture& b) const;
   bool haveCollision(Vect<2, int> const& a, Fixture const& b) const;
   void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
-  bool move(Fixture&) const;
+
+  template <class H, class T>
+  void quadTree(H &h, std::vector<T> &entities)
+  {
+    std::vector<T*> &e;
+
+    for (auto i = entities.begin() ; i != entities.end() ; ++i)
+      e.push_back(&(*i));
+    this->quadTreeRec(h, e);
+  }
 
   template <class T>
   void updateFixtures(T begin, T end)
   {
     for (T i = begin ; i != end ; ++i)
-      (*i)->isOnPlanet = this->move((*i)->fixture);
+      this->move((*i)->fixture);
   }
 
-  /* Planet size getter */
-  double getPlanetRadius(void) const;
-
 private:
-  const Fixture _planet;
-  static const double _G;
-};
 
+  static const int	m_endCond = 20;
+
+  template <class H, class T>
+  void classicComparaison(H &h, std::vector<T*> &entities)
+  {
+    for (auto i = entities.begin() ; i != entities.end() ; ++i)
+      for (auto j = i + 1 ; j != entities.end() ; ++j)
+	if (this->haveCollision((*i)->entity.fixture, (*j)->entity.fixture))
+	  h(i, j);
+  }
+
+  template <class H, class T>
+  void quadTreeRec(H &h, std::vector<T*> &entities)
+  {
+    if (entities.size() == 0)
+      return ;
+    if (entities.size() <= m_endCond) {
+      this->classicComparaison(h, entities);
+      return ;
+    }
+  }
+
+};
 
 #endif /* PHYSICS_HPP */
