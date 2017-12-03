@@ -1,4 +1,5 @@
 #include <thread>
+#include <mutex>
 
 #include "Logic.hpp"
 #include "Input.hpp"
@@ -22,12 +23,12 @@ void Logic::tick(std::mutex &lock)
 {
   auto const now(Clock::now());
 
-  if (now > lastUpdate + TICK_TIME * 3)
+  if (now > lastUpdate + getTickTime() * 3)
     {
       lastUpdate = now;
       return ;
     }
-  lastUpdate += TICK_TIME;
+  lastUpdate += getTickTime();
   if (now < lastUpdate)
     std::this_thread::sleep_for(lastUpdate - now);
 
@@ -36,7 +37,7 @@ void Logic::tick(std::mutex &lock)
       ++time;
     }
   {
-    std::scoped_lock<std::mutex> scopedLock(lock);
+    std::lock_guard<std::mutex> scopedLock(lock);
 
     mobManager.update(physics);
     multiplier += (1.0 / 600.0);
@@ -72,9 +73,9 @@ std::string     Logic::getCombo(void) const
 
 std::string     Logic::getTime(void) const
 {
-  auto secondTime((time * TICK_TIME.count()) / 1000000);
+  auto secondTime((time * getTickTime().count()) / 1000000);
   std::string   toReturn;
-  
+
   if (secondTime / 3600 >= 10)
     toReturn = std::to_string(secondTime / 60) + " m ";
   else if (secondTime / 3600)
