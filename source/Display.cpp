@@ -276,6 +276,12 @@ void Display::displayInterface()
 	{1.0f / dim[0] - 0.71f, -1.0f / dim[1] + 0.055f},
 	{0.0066f * static_cast<float>(displayInfo.ulti), 0.07f}
   }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BARFRONT));
+  displayRenderableAsHUD(Renderable{
+    {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	{1.0f / dim[0] - 0.82f, -1.0f / dim[1] + 0.054f},
+	{0.072f, 0.072f}
+  }, TextureHandler::getInstance().getTexture((displayInfo.ulti == 100) ? TextureHandler::TextureList::SPIN : TextureHandler::TextureList::SPINHOLLOW));
   for (unsigned int i = 0; i < 5; i++)
     {
       displayRenderableAsHUD(Renderable{

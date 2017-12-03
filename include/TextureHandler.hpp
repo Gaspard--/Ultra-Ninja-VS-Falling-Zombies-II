@@ -28,7 +28,9 @@ public :
       ROAD,
       BORDER,
       BARFRONT,
-      BARBACK
+      BARBACK,
+      SPIN,
+      SPINHOLLOW
     };
 
   static void initTextureHandler();
