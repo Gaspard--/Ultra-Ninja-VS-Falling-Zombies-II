@@ -9,15 +9,23 @@ TextureHandler::TextureHandler()
 void TextureHandler::initTextureHandler()
 {
   _instance.reset(new TextureHandler());
-  _instance->addTexture(BOYAUX, "resources/boyaux.bmp");
+  _instance->addTexture(TextureList::BOYAUX, "resources/boyaux.bmp");
   // Already loaded in display.cpp
   // _instance->addTexture(PLANET, "resources/planet.bmp");
-  _instance->addTexture(SWORDRADIUS, "resources/swordRadius.bmp");
-  _instance->addTexture(BULLET, "resources/bite.bmp");
-  _instance->addTexture(ZOMBIE, "resources/ZombieSpriteSheet.bmp");
-  _instance->addTexture(PLAYER, "resources/PlayerSpriteSheet.bmp");
-  _instance->addTexture(HUMAN, "resources/PlayerSpriteSheet.bmp");
-  _instance->addTexture(TEST, "resources/test.bmp");
+  _instance->addTexture(TextureList::SWORDRADIUS, "resources/swordRadius.bmp");
+  _instance->addTexture(TextureList::BULLET, "resources/bite.bmp");
+  _instance->addTexture(TextureList::ZOMBIE, "resources/ZombieSpriteSheet.bmp");
+  _instance->addTexture(TextureList::PLAYER, "resources/PlayerSpriteSheet.bmp");
+  _instance->addTexture(TextureList::HUMAN, "resources/PlayerSpriteSheet.bmp");
+  _instance->addTexture(TextureList::NONE, "resources/None.bmp");
+  _instance->addTexture(TextureList::HOUSE1, "resources/Shed.bmp");
+  _instance->addTexture(TextureList::HOUSE2, "resources/House.bmp");
+  _instance->addTexture(TextureList::HOUSE3, "resources/Mansion.bmp");
+  _instance->addTexture(TextureList::ROAD, "resources/Road.bmp");
+  _instance->addTexture(TextureList::BORDER, "resources/Border.bmp");
+  _instance->addTexture(TextureList::TEST, "resources/test.bmp");
+  _instance->addTexture(TextureList::BOMB, "resources/Bomb.bmp");
+  _instance->addTexture(TextureList::BOMBHOLLOW, "resources/BombHollow.bmp");
 }
 
 TextureHandler& TextureHandler::getInstance()

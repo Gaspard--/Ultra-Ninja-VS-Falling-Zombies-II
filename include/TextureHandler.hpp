@@ -9,7 +9,7 @@ class TextureHandler
 {
 public :
 
-  enum TextureList
+  enum class TextureList : std::size_t
     {
       BOYAUX,
       PLANET,
@@ -18,7 +18,15 @@ public :
       ZOMBIE,
       HUMAN,
       PLAYER,
-      TEST
+      TEST,
+      NONE,
+      HOUSE1,
+      HOUSE2,
+      HOUSE3,
+      BOMB,
+      BOMBHOLLOW,
+      ROAD,
+      BORDER
     };
 
   static void initTextureHandler();

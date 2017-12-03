@@ -13,7 +13,8 @@ public:
   Entity entity;
 
   void update();
-
+  // dir[0] = x axis , dir[1] = y axis
+  void accelerate(Vect<2, int> const& dir);
 };
 
 #endif //!PLAYER_HPP_
