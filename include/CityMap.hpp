@@ -5,6 +5,7 @@
 #define MAP_SIZE 100
 
 #include <array>
+#include <iostream>
 #include "CityBlock.hpp"
 
 class CityMap

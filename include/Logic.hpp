@@ -8,6 +8,7 @@
 # include "Entity.hpp"
 # include "Input.hpp"
 # include "MobManager.hpp"
+# include "CityMap.hpp"
 
 class Display;
 
@@ -28,6 +29,8 @@ private:
   void handleKey(GLFWwindow *window, Key key);
   void handleMouse(Display const &, GLFWwindow *window, Mouse mouse);
   void handleButton(GLFWwindow *window, Button button);
+
+  CityMap cityMap;
 
 public:
   Logic();
