@@ -10,4 +10,6 @@ public:
   Explosion(Vect<2, double> const& pos,
 	    double radius,
 	    int damage);
+
+  void updateAnimation();
 };

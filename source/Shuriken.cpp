@@ -7,3 +7,8 @@ Shuriken::Shuriken(Vect<2, double> const& pos,
     touched(false)
 {
 }
+
+void Shuriken::updateAnimation()
+{
+  //TODO
+}

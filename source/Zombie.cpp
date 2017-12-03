@@ -43,3 +43,13 @@ void Zombie::updateTarget(Human& newTarget)
     this->target->addHunter(*this);
   }
 }
+
+void Zombie::update()
+{
+  anim.animate(entity);
+}
+
+float Zombie::getAnimationFrame() const
+{
+  return anim.getAnimationFrame();
+}

@@ -7,3 +7,8 @@ Bomb::Bomb(Vect<2, double> const& pos,
     explodes(false)
 {
 }
+
+void Bomb::updateAnimation()
+{
+  //TODO:
+}

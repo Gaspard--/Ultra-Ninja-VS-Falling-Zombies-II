@@ -20,7 +20,7 @@ public:
 
   void move(Fixture&) const;
   bool haveCollision(Fixture const& a, Fixture const& b) const;
-  bool haveCollision(Vect<2, int> const& a, Fixture const& b) const;
+  bool haveCollision(Vect<2, double> const& a, Fixture const& b) const;
 
   void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
 

@@ -3,17 +3,17 @@
 Slash::Slash(Vect<2, double> const& pos,
 	     Vect<2, double> const& speed,
 	     int damage = 2)
-  : Weapon(pos, speed, 0.1, damage, 10),
+  : Weapon(pos, speed, 0.1, damage, 40),
     animationFrame(0), maxFrame(lifetime)
 {
 }
 
-void Slash::update()
+void Slash::updateAnimation()
 {
-  animationFrame = spriteSheetSize - (maxFrame - lifetime) / (maxFrame / spriteSheetSize);
+  animationFrame = (maxFrame - lifetime) / (maxFrame / spriteSheetSize);
 }
 
-int Slash::getAnimationFrame() const
+float Slash::getAnimationFrame() const
 {
-  return animationFrame;
+  return static_cast<float>(animationFrame);
 }

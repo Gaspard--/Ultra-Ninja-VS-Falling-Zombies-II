@@ -11,13 +11,16 @@ Logic::Logic()
     mousePos{0.0, 0.0},
     lastUpdate(Clock::now())
 {
+  CityBlock block;
+
   time = 0;
   score = 0;
   gameOver = false;
   combo = 0;
   multiplier = 0;
   entityManager.spawnZombie({10.0, 10.0});
-  entityManager.spawnPlayer({0.4, 0.3});
+  entityManager.spawnHuman({50.0, 50.0}, block);
+  entityManager.spawnPlayer({50.4, 50.3});
 }
 
 void Logic::update()
@@ -82,9 +85,9 @@ std::string     Logic::getTime(void) const
   auto secondTime((time * getTickTime().count()) / 1000000);
   std::string   toReturn;
 
-  if (secondTime / 3600 >= 10)
+  if (secondTime / 60 >= 10)
     toReturn = std::to_string(secondTime / 60) + " m ";
-  else if (secondTime / 3600)
+  else if (secondTime / 60)
     toReturn = "0" + std::to_string(secondTime / 60) + " m ";
   if ((secondTime) % 60 >= 10)
     toReturn += std::to_string((secondTime) % 60) + " s";
@@ -142,6 +145,11 @@ void Logic::checkEvents(Display const &display)
     player.accelerate({0, 1});
   if (display.isKeyPressed(GLFW_KEY_S))
     player.accelerate({0, -1});
+  if (display.isKeyPressed(GLFW_KEY_SPACE))
+    player.highFive(entityManager.humans[0]);
+  if (display.isKeyPressed(GLFW_KEY_K))
+    // entityManager.slashes.push_back(player.slash());
+    entityManager.slashes.emplace_back(player.entity.fixture.pos, Vect<2, double>{0.0, 0.0}, 2);
 }
 
 void Logic::handleMouse(Display const &display, GLFWwindow *, Mouse mouse)

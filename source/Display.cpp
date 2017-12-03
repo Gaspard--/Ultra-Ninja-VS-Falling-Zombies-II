@@ -249,7 +249,7 @@ void Display::render()
   glEnable(GL_BLEND);
   glDepthFunc(GL_LESS);
   for (auto const &renderables : displayInfo.renderables)
-    displayRenderables(renderables.second.begin(), renderables.second.size(), renderables.first);
+    displayRenderables(renderables.second.begin(), static_cast<GLuint>(renderables.second.size()), renderables.first);
   glDisable(GL_DEPTH_TEST);
   displayInterface();
   glDisable(GL_BLEND);
@@ -261,17 +261,29 @@ void Display::displayInterface()
 {
   // displayText("Current Population",
   //             256, {0.05f, 0.05f}, {-0.017f * 18, -0.315f}, {sqrt(camera.length2()), 0}, {1.0f, 1.0f, 1.0f});
-  displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  // displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  for (int i = 0; i < 5; i++)
+  displayRenderableAsHUD(Renderable{
+    {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	{1.0f / dim[0] - 0.73f, -1.0f / dim[1] + 0.05f},
+	{0.7f, 0.08f}
+  }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BARBACK));
+  displayRenderableAsHUD(Renderable{
+    {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	{1.0f / dim[0] - 0.71f, -1.0f / dim[1] + 0.055f},
+	{0.0066f * static_cast<float>(displayInfo.ulti), 0.07f}
+  }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BARFRONT));
+  for (unsigned int i = 0; i < 5; i++)
     {
       displayRenderableAsHUD(Renderable{
-	  {0.0f, 0.0f},
+	    {0.0f, 0.0f},
 	    {1.0f, 1.0f},
-	      {1.0f / dim[0] - 0.1f - (i * 0.07f), -1.0f / dim[1] + 0.05f},
+	    {1.0f / dim[0] - (static_cast<float>(i + 1) * 0.07f + 0.05f), -1.0f / dim[1] + 0.15f},
 		{0.09f, 0.09f}
-	}, TextureHandler::getInstance().getTexture((i < displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW));
+	}, TextureHandler::getInstance().getTexture((i >= 5 - displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW));
     }
   if (displayInfo.gameOver)
     {
@@ -287,7 +299,8 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
   displayInfo.combo = logic.getCombo();
-  displayInfo.bomb = 3;
+  displayInfo.bomb = logic.getEntityManager().players[0].getNbBombs();
+  displayInfo.ulti = logic.getEntityManager().players[0].getUlti();
 
   displayInfo.renderables.clear();
   auto const &manager(logic.getEntityManager());
@@ -297,10 +310,10 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(zombie.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIE)].emplace_back(Renderable{
-	  {0.0f, 0.0f},
-	    {0.5f, 1.0f},
+	  {0.1 * zombie.getAnimationFrame(), 0.0f},
+	    {0.1f, 1.0f},
 	      pos,
-		camera.zoom * static_cast<float>(zombie.entity.fixture.radius),
+		camera.zoom * static_cast<float>(zombie.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
@@ -309,10 +322,10 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(human.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMAN)].push_back(Renderable{
-	  {0.0f, 0.0f},
-	    {0.5f, 1.0f},
+	  {0.1 * human.getAnimationFrame(), 0.0f},
+	    {0.1f, 1.0f},
 	      pos,
-		camera.zoom * static_cast<float>(human.entity.fixture.radius),
+		camera.zoom * static_cast<float>(human.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
@@ -321,10 +334,10 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(player.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
-	  {0.125 * player.getAnimationFrame(), 0.0f},
-	    {0.125f, 1.0f},
+	    {0.1 * player.getAnimationFrame(), 0.0f},
+	    {0.1f, 1.0f},
 	      pos,
-		camera.zoom * static_cast<float>(player.entity.fixture.radius),
+		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
@@ -333,10 +346,10 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(slash.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SLASH)].push_back(Renderable{
-	  {0.2 * slash.getAnimationFrame(), 0.0f},
-	    {0.2, 1.0f},
+	    {0.2 * slash.getAnimationFrame(), 0.0f},
+	    {0.2f, 1.0f},
 	      pos,
-		camera.zoom * static_cast<float>(slash.entity.fixture.radius),
+		camera.zoom * static_cast<float>(slash.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
@@ -344,8 +357,8 @@ void Display::copyRenderData(Logic const &logic)
   for (std::size_t i(0); i != 100ul; ++i)
     for (std::size_t j(0); j != 100ul; ++j)
       {
-	auto const &house(cityMap[i][j]);
-	auto pos(camera.apply(Vect<2u, double>{static_cast<double>(j) - 0.5, static_cast<double>(i)}));
+  	auto const &house(cityMap[i][j]);
+	auto pos(camera.apply(Vect<2u, double>{static_cast<double>(j), static_cast<double>(i)} + Vect<2u, float>{0.5f, 0.0f}));
 
 	if (!(house.type == BlockType::NONE || house.type == BlockType::ROAD))
 	  displayInfo.renderables[TextureHandler::getInstance().getTexture((house.type == BlockType::SHED) ? TextureHandler::TextureList::HOUSE1 :
@@ -355,10 +368,16 @@ void Display::copyRenderData(Logic const &logic)
 									   (house.type == BlockType::ROAD) ? TextureHandler::TextureList::ROAD :
 									   TextureHandler::TextureList::BORDER)].push_back(Renderable{
 									       {0.0f, 0.0f},
-										 {1.0f, 1.0f},
+										 {1.0f, 0.99f},
 										   pos,
-										     camera.zoom,
-										     (pos[1] + 1.1f) * 0.4f});
+										     camera.zoom * Vect<2u, float>{1.0f,
+										       (house.type == BlockType::SHED) ? 1.1f :
+										       (house.type == BlockType::HOUSE) ? 1.24f :
+										       (house.type == BlockType::MANSION) ? 1.55f :
+										       (house.type == BlockType::NONE) ? 1.0f :
+										       (house.type == BlockType::ROAD) ? 1.0f :
+										       1.0f},
+										       (pos[1] + 1.1f) * 0.4f});
       }
 }
 

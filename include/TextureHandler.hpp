@@ -28,6 +28,8 @@ public :
       ROAD,
       BORDER,
       SLASH,
+      BARFRONT,
+      BARBACK
     };
 
   static void initTextureHandler();

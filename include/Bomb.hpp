@@ -11,4 +11,6 @@ struct Bomb : public Weapon
        Vect<2, double> const& speed,
        int damage);
   ~Bomb() = default;
+
+  void updateAnimation();
 };

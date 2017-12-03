@@ -7,9 +7,8 @@ struct Slash : public Weapon
 {
 private:
   int animationFrame;
-  int const maxFrame;
-  static constexpr spriteSheetSize = 5;
-  int const
+  int maxFrame;
+  static constexpr int spriteSheetSize = 5;
 
 public:
   Slash(Vect<2, double> const& pos,
@@ -17,7 +16,7 @@ public:
 	int damage);
   ~Slash() = default;
 
-  void update();
+  void updateAnimation();
 
-  int getAnimationFrame() const;
+  float getAnimationFrame() const;
 };

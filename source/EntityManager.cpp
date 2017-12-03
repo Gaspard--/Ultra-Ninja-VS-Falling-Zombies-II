@@ -3,7 +3,7 @@
 
 void EntityManager::updateWeapons(Physics const &physics)
 {
-  static constexpr auto lifetimeCheck = [](auto container)
+  static constexpr auto lifetimeCheck = [](auto &container)
     {
       container.erase(container.begin(), std::remove_if(container.begin(), container.end(),
 							[](auto const &elem)
@@ -11,6 +11,18 @@ void EntityManager::updateWeapons(Physics const &physics)
       return elem.lifetime > 0;
     }));
     };
+  static auto updateWeapon = [](auto &weaponContainer)
+    {
+      for (auto &elem : weaponContainer)
+	{
+	  elem.update();
+	  elem.updateAnimation();
+	}
+    };
+  updateWeapon(slashes);
+  updateWeapon(bombs);
+  updateWeapon(explosions);
+  updateWeapon(shurikens);
   lifetimeCheck(slashes);
   lifetimeCheck(explosions);
   for (auto it = bombs.begin(); it != bombs.end(); ++it)
@@ -31,10 +43,10 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
 {
   for (auto &player : players)
     player.update();
-  // for (auto &human : humans)
-  //   human.update();
-  // for (auto &zombie : zombies)
-  //   zombie.update();
+  for (auto &human : humans)
+    human.update();
+  for (auto &zombie : zombies)
+    zombie.update();
   for (auto &player : players)
     physics.move(player.entity.fixture);
   for (auto &human : humans)
@@ -48,7 +60,7 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
     physics.fixMapCollision(human.entity.fixture, logic.getCityMap().getCityMap());
   for (auto &zombie : zombies)
     physics.fixMapCollision(zombie.entity.fixture, logic.getCityMap().getCityMap());
-  
+
   physics.quadTree([](auto &, auto &){}, humans, zombies, players);
   mobDeath();
 }
@@ -71,9 +83,16 @@ void EntityManager::mobDeath()
   humans.erase(bound, humans.end());
 }
 
-void EntityManager::spawnZombie(Vect<2, double> const& pos)
+void EntityManager::spawnHuman(Vect<2, double> const &pos, CityBlock &home)
 {
   Entity e({pos, {0.0, 0.0}, 0.5, 0.0, 0.0});
+
+  humans.emplace_back(e, home);
+}
+
+void EntityManager::spawnZombie(Vect<2, double> const& pos)
+{
+  Entity e({pos, {0.0, 0.0}, 0.1, 0.0, 0.0});
 
   zombies.emplace_back(e);
 }
@@ -82,7 +101,7 @@ void EntityManager::spawnPlayer(Vect<2, double> const& pos)
 {
   if (!players.empty())
     return;
-  Entity e({pos, {0.0, 0.0}, 0.5, 0.0, 0.0});
+  Entity e({pos, {0.0, 0.0}, 0.05, 0.0, 0.0});
 
   players.emplace_back(e);
 }
