@@ -14,18 +14,18 @@ int main()
   try {
     Display display;
 
-    struct SoundHandlerInit
-    {
-      SoundHandlerInit()
-      {
-        SoundHandler::initSoundHandler();
-      }
+    // struct SoundHandlerInit
+    // {
+    //   SoundHandlerInit()
+    //   {
+    //     SoundHandler::initSoundHandler();
+    //   }
 
-      ~SoundHandlerInit()
-      {
-        SoundHandler::destroySoundHandler();
-      }
-    } SoundHandlerIniter;
+    //   ~SoundHandlerInit()
+    //   {
+    //     SoundHandler::destroySoundHandler();
+    //   }
+    // } SoundHandlerIniter;
 
     struct TextureHandlerInit
     {
@@ -43,23 +43,26 @@ int main()
     Input::setWindow(display.getWindow());
 
     std::mutex lock;
-    SoundHandler::getInstance().playMainMusic();
+    // SoundHandler::getInstance().playMainMusic();
     std::thread thread([&logic, &display, &lock]()
 		       {
-			 while (true)
-			   {
-			     std::scoped_lock(lock);
-
-			     if (!logic.isRunning())
-			       break;
-			     logic.tick();
-			   }
+			 try {
+			   while (true)
+			     {
+			       if (!logic.isRunning())
+				 break;
+			       logic.tick(lock);
+			     }
+			 } catch (std::runtime_error const &e) {
+			   std::cerr << "Logic thread encoutered runtime error:" << std::endl
+				     << e.what() << std::endl;
+			 }
 		       });
     try {
       while (display.isRunning())
 	{
 	  {
-	    std::scoped_lock(lock);
+	    std::scoped_lock<std::mutex> scopedLock(lock);
 
 	    // handle events
 	    for (Event ev = Input::pollEvent(); ev; ev = Input::pollEvent())
@@ -69,13 +72,14 @@ int main()
 	  }
 	  display.render();
 	}
-      std::scoped_lock(lock);
-
     } catch (std::runtime_error const &e) {
       std::cerr << "Display thread encoutered runtime error:" << std::endl
 		<< e.what() << std::endl;
     }
-    logic.isRunning() = display.isRunning();
+    {
+      std::scoped_lock<std::mutex> scopedLock(lock);
+      logic.isRunning() = false;
+    }
     thread.join();
   } catch (std::runtime_error const &e) {
     std::cerr << "program encoutered runtime error:" << std::endl
