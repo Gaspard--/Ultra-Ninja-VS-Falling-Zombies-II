@@ -7,7 +7,8 @@
 
 Logic::Logic()
   : running(true),
-    mousePos{0.0, 0.0}
+    mousePos{0.0, 0.0},
+    lastUpdate(Clock::now())
 {
   time = 0;
   score = 0;
@@ -16,10 +17,8 @@ Logic::Logic()
   multiplier = 0;
 }
 
-void Logic::tick(void)
+void Logic::tick(std::mutex &lock)
 {
-  lastUpdate = Clock::now();
-  updatesSinceLastFrame = 0;
   auto const now(Clock::now());
 
   if (now > lastUpdate + TICK_TIME * 3)
@@ -35,8 +34,12 @@ void Logic::tick(void)
     {
       ++time;
     }
-  mobManager.update(physics);
-  multiplier += (1.0 / 600.0);
+  {
+    std::scoped_lock<std::mutex> scopedLock(lock);
+
+    mobManager.update(physics);
+    multiplier += (1.0 / 600.0);
+  }
 }
 
 void    Logic::addToScore(int add)

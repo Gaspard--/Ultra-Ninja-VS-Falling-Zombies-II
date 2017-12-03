@@ -6,6 +6,7 @@
 # include <vector>
 # include <memory>
 # include <chrono>
+# include <mutex>
 # include "Entity.hpp"
 # include "Input.hpp"
 # include "MobManager.hpp"
@@ -47,7 +48,7 @@ public:
 
   void handleEvent(Display const &, Event const& event);
   void checkEvents(Display const &);
-  void tick(void);
+  void tick(std::mutex &lock);
   void addToScore(int);
   void resetCombo();
   void incCombo();
