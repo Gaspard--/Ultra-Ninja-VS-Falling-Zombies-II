@@ -10,6 +10,7 @@
 #include "Logic.hpp"
 #include "RenderTexture.hpp"
 #include "Camera.hpp"
+#include "DisplayInfo.hpp"
 
 class Display
 {
@@ -39,6 +40,8 @@ private:
   Vect<2u, float> size;
   Vect<2u, float> dim;
 
+  DisplayInfo displayInfo;
+
 public:
   Display();
   ~Display();
@@ -49,7 +52,7 @@ public:
 
   void displayRect(Rect const &);
 
-  void displayInterface(Logic const &logic);
+  void displayInterface();
 
   /**
    * Displays a renderable in the world.
@@ -68,7 +71,9 @@ public:
 
   Camera const &getCamera() const;
 
-  void render(Logic const &);
+  void render();
   bool isRunning() const;
   bool isKeyPressed(int key) const;
+
+  void copyRenderData(Logic const &);
 };

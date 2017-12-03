@@ -208,14 +208,14 @@ void Display::displayRect(Rect const &rect)
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void Display::displayInterface(Logic const &logic)
+void Display::displayInterface()
 {
   // displayText("Current Population",
   //             256, {0.05f, 0.05f}, {-0.017f * 18, -0.315f}, {sqrt(camera.length2()), 0}, {1.0f, 1.0f, 1.0f});
-  displayText("Combo   " + logic.getCombo(), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  displayText("Score   " + std::to_string(logic.getScore()), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  displayText("Time   " + logic.getTime(), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  if (logic.getGameOver())
+  displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  if (displayInfo.gameOver)
     {
       displayText("Game Over", 256, {0.2f, 0.2f}, {-0.65f, 0.42f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
       displayText("Press enter to retry", 256, {0.1f, 0.1f}, {-0.65f, -0.82f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
@@ -269,9 +269,8 @@ void Display::displayRenderableAsHUD(Renderable const& renderable)
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void Display::render(Logic const &logic)
+void Display::render()
 {
-  camera.offset = camera.offset * 0.8f + logic.getPlayerPos() * 0.2f;
   {
     Vect<2u, float> olddim(dim);
 
@@ -295,14 +294,20 @@ void Display::render(Logic const &logic)
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
-  Renderable test{
-    TextureHandler::getInstance().getTexture(TextureHandler::PLAYER),
-      {0.0f, 0.0f},
-	{1.0f, 1.0f},
-	  {0.0f, 0.0f},
-	    {1.0f, 1.0f}
-  };
-  displayRenderable(test);
+
+  {
+    Renderable test{
+      TextureHandler::getInstance().getTexture(TextureHandler::PLAYER),
+	{0.0f, 0.0f},
+	  {1.0f, 1.0f},
+	    {0.0f, 0.0f},
+	      {1.0f, 1.0f}
+    };
+    displayRenderable(test);
+  }
+  for (auto const &renderable : displayInfo.renderables)
+    displayRenderable(renderable);
+  
   // displayPlanet(background, 4.0, camera.normalized());
   // displayPlanet(planetBackground, 1.54, camera);
   // displayPlanet(planetRenderTexture.texture, logic.getPlanetSize(), camera);
@@ -318,10 +323,19 @@ void Display::render(Logic const &logic)
   //                       {
   //                         this->displayRenderable(e->renderable, camera);
   //                       });
-  displayInterface(logic);
+  displayInterface();
   glDisable(GL_BLEND);
   glfwSwapBuffers(window.get());
   glfwPollEvents();
+}
+
+void Display::copyRenderData(Logic const &logic)
+{
+  camera.offset = camera.offset * 0.8f + logic.getPlayerPos() * 0.2f;
+  displayInfo.time = logic.getTime();
+  displayInfo.score = logic.getScore();
+  displayInfo.gameOver = logic.getGameOver();
+  displayInfo.combo = logic.getCombo();
 }
 
 bool Display::isRunning() const

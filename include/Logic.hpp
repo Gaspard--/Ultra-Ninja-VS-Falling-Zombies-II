@@ -5,6 +5,7 @@
 # include <algorithm>
 # include <vector>
 # include <memory>
+# include <chrono>
 # include "Entity.hpp"
 # include "Input.hpp"
 # include "MobManager.hpp"
@@ -14,6 +15,10 @@ class Display;
 class Logic
 {
 private:
+  using Clock = std::conditional<std::chrono::high_resolution_clock::is_steady,
+                                 std::chrono::high_resolution_clock,
+                                 std::chrono::steady_clock>::type;
+
   unsigned int time;
   unsigned int score;
   unsigned int combo;
@@ -22,8 +27,13 @@ private:
   Physics physics;
   MobManager mobManager;
   bool gameOver;
+  bool running;
 
   Vect<2u, double> mousePos;
+
+  static constexpr std::chrono::microseconds const TICK_TIME{1000000 / 120};
+  std::size_t updatesSinceLastFrame;
+  decltype(Clock::now()) lastUpdate;
 
   void handleKey(GLFWwindow *window, Key key);
   void handleMouse(Display const &, GLFWwindow *window, Mouse mouse);
@@ -46,6 +56,16 @@ public:
   std::string   getTime(void) const;
   std::string   getCombo(void) const;
   bool          getGameOver(void) const;
+
+  bool		isRunning() const
+  {
+    return running;
+  }
+
+  bool		&isRunning()
+  {
+    return running;
+  }
 };
 
 #endif // !LOGIC_HPP_

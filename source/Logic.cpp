@@ -1,10 +1,13 @@
+#include <thread>
+
 #include "Logic.hpp"
 #include "Input.hpp"
 #include "Display.hpp"
 #include "SoundHandler.hpp"
 
 Logic::Logic()
-  : mousePos{0.0, 0.0}
+  : running(true),
+    mousePos{0.0, 0.0}
 {
   time = 0;
   score = 0;
@@ -15,6 +18,19 @@ Logic::Logic()
 
 void Logic::tick(void)
 {
+  lastUpdate = Clock::now();
+  updatesSinceLastFrame = 0;
+  auto const now(Clock::now());
+
+  if (now > lastUpdate + TICK_TIME * 3)
+    {
+      lastUpdate = now;
+      return ;
+    }
+  lastUpdate += TICK_TIME;
+  if (now < lastUpdate)
+    std::this_thread::sleep_for(lastUpdate - now);
+
   if (!gameOver)
     {
       ++time;
@@ -52,16 +68,17 @@ std::string     Logic::getCombo(void) const
 
 std::string     Logic::getTime(void) const
 {
+  auto secondTime((time * TICK_TIME.count()) / 1000000);
   std::string   toReturn;
-
-  if (time / 3600 >= 10)
-    toReturn = std::to_string(time / 3600) + " m ";
-  else if (time / 3600)
-    toReturn = "0" + std::to_string(time / 3600) + " m ";
-  if ((time / 60) % 60 >= 10)
-    toReturn += std::to_string((time / 60) % 60) + " s";
+  
+  if (secondTime / 3600 >= 10)
+    toReturn = std::to_string(secondTime / 60) + " m ";
+  else if (secondTime / 3600)
+    toReturn = "0" + std::to_string(secondTime / 60) + " m ";
+  if ((secondTime) % 60 >= 10)
+    toReturn += std::to_string((secondTime) % 60) + " s";
   else
-    toReturn += "0" + std::to_string((time / 60) % 60) + " s";
+    toReturn += "0" + std::to_string((secondTime) % 60) + " s";
   return (toReturn);
 }
 

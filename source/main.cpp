@@ -5,6 +5,8 @@
 # include "SoundHandler.hpp"
 # include "Input.hpp"
 # include <random>
+# include <thread>
+# include <mutex>
 
 int main()
 {
@@ -40,21 +42,41 @@ int main()
     Logic logic;
     Input::setWindow(display.getWindow());
 
-	SoundHandler::getInstance().playMainMusic();
-    while (display.isRunning())
-      {
-	// handle events
-	for (Event ev = Input::pollEvent(); ev; ev = Input::pollEvent())
-	  logic.handleEvent(display, ev);
-	logic.checkEvents(display);
+    std::mutex lock;
+    SoundHandler::getInstance().playMainMusic();
+    std::thread thread([&logic, &display, &lock]()
+		       {
+			 while (true)
+			   {
+			     std::scoped_lock(lock);
 
-	// update logic
-	logic.tick();
+			     if (!logic.isRunning())
+			       break;
+			     logic.tick();
+			   }
+		       });
+    try {
+      while (display.isRunning())
+	{
+	  {
+	    std::scoped_lock(lock);
 
-	// render
-	display.render(logic);
-      }
+	    // handle events
+	    for (Event ev = Input::pollEvent(); ev; ev = Input::pollEvent())
+	      logic.handleEvent(display, ev);
+	    logic.checkEvents(display);
+	    display.copyRenderData(logic);
+	  }
+	  display.render();
+	}
+      std::scoped_lock(lock);
 
+    } catch (std::runtime_error const &e) {
+      std::cerr << "Display thread encoutered runtime error:" << std::endl
+		<< e.what() << std::endl;
+    }
+    logic.isRunning() = display.isRunning();
+    thread.join();
   } catch (std::runtime_error const &e) {
     std::cerr << "program encoutered runtime error:" << std::endl
 	      << e.what() << std::endl;
