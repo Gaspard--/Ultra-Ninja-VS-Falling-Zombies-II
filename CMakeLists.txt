@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-project(Ultra-Ninja-VS-Fallling-Zombies-II)
+project(Ultra-Ninja-VS-Falling-Zombies-II)
 
 execute_process(COMMAND python2.7 gl3w_gen.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 

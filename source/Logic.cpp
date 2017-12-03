@@ -15,6 +15,7 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
+  mobManager.spawnZombie({0.0, 0.0});
 }
 
 void Logic::tick(std::mutex &lock)

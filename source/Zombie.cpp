@@ -25,3 +25,8 @@ bool const& Zombie::getLead() const
 {
   return lead;
 }
+
+void Zombie::infectHuman(Human &villager) const
+{
+  villager.setInfected(true);
+}

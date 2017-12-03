@@ -9,10 +9,6 @@ Player::~Player()
 {
 }
 
-void Player::attack()
-{
-}
-
 void Player::update()
 {
 }
