@@ -31,8 +31,8 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
 {
   for (auto &player : players)
     player.update();
-  // for (auto &human : humans)
-  //   human.update();
+  for (auto &human : humans)
+    human.update();
   // for (auto &zombie : zombies)
   //   zombie.update();
   for (auto &player : players)
@@ -69,6 +69,13 @@ void EntityManager::mobDeath()
       zombies.push_back(*it);
     }
   humans.erase(bound, humans.end());
+}
+
+void EntityManager::spawnHuman(Vect<2, double> const &pos, CityBlock &home)
+{
+  Entity e({pos, {0.0, 0.0}, 0.5, 0.0, 0.0});
+
+  humans.emplace_back(e, home);
 }
 
 void EntityManager::spawnZombie(Vect<2, double> const& pos)

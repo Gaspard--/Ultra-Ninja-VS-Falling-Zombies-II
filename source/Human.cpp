@@ -3,12 +3,19 @@
 Human::Human(Entity entity, CityBlock &home)
   : Mob(entity, 1),
     infected(false),
-    homePtr(&home)
+    homePtr(&home),
+    coolDown(0)
 {
 }
 
 Human::~Human()
 {
+}
+
+void Human::update()
+{
+  if (coolDown > 0)
+    coolDown--;
 }
 
 void Human::setInfected(bool infected)
@@ -29,6 +36,16 @@ CityBlock const &Human::getHome() const
 CityBlock &Human::getHome()
 {
   return *homePtr;
+}
+
+void Human::setCoolDown(int coolDown)
+{
+  this->coolDown = coolDown;
+}
+
+bool Human::canHighFive() const
+{
+  return coolDown <= 0;
 }
 
 void	Human::addHunter(Zombie& z)

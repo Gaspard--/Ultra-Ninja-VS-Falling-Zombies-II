@@ -1,7 +1,11 @@
 #include "Player.hpp"
 
 Player::Player(Entity entity)
-  : entity(entity), animationFrame(2), internalFrame(0)
+  : entity(entity),
+    animationFrame(2),
+    internalFrame(0),
+    ulti(0.0),
+    nbBombs(0)
 {
 }
 
@@ -58,7 +62,38 @@ void Player::update()
   animate();
 }
 
+void Player::highFive(Human &villager)
+{
+  constexpr int const cd = 1150;
+  unsigned int choice;
+
+  if (!villager.canHighFive())
+    return ;
+  choice = rand() % 5;
+  if (choice < 4)
+    ulti += (ulti < 100.0) ? 20.0 : 0.0;
+  else if (nbBombs < 5)
+    nbBombs += 1;
+  std::cout << "Ulti: " << ulti << "\nBombs: " << nbBombs << std::endl;
+  villager.setCoolDown(cd);
+}
+
 void Player::accelerate(Vect<2, int> const& dir)
 {
   this->entity.fixture.speed += Vect<2, double>(0.005, 0.005) * dir;
+}
+
+void Player::setNbBombs(int nbBombs)
+{
+  this->nbBombs = nbBombs;
+}
+
+int Player::getNbBombs() const
+{
+  return nbBombs;
+}
+
+double Player::getUlti() const
+{
+  return ulti;
 }
