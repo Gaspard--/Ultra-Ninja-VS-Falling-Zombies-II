@@ -19,7 +19,8 @@ private:
   unsigned int combo;
   double multiplier;
 
-  MobManager mobs;
+  Physics physics;
+  MobManager mobManager;
   bool gameOver;
 
   Vect<2u, double> mousePos;
@@ -40,7 +41,7 @@ public:
 
   Vect<2, double> getPlayerPos(void) const;
   Vect<2u, double> getMouse(Display const &) const;
-  MobManager const& getMobs() const;
+  MobManager const& getMobManager() const;
   unsigned int  getScore(void) const;
   std::string   getTime(void) const;
   std::string   getCombo(void) const;

@@ -12,6 +12,7 @@ public:
   MobManager() = default;
   ~MobManager() = default;
 
+  void update(Physics const &physics);
   void mutation();
 
 private:

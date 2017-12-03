@@ -19,6 +19,7 @@ void Logic::tick(void)
     {
       ++time;
     }
+  mobManager.update(physics);
   multiplier += (1.0 / 600.0);
 }
 
@@ -120,9 +121,9 @@ Vect<2u, double> Logic::getMouse(Display const &display) const
   return display.getCamera().unapply(mousePos);
 }
 
-MobManager const& Logic::getMobs() const
+MobManager const& Logic::getMobManager() const
 {
-  return mobs;
+  return mobManager;
 }
 
 void Logic::handleButton(GLFWwindow *, Button button)

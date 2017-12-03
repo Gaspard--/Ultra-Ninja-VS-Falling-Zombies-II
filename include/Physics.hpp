@@ -14,27 +14,15 @@ struct Entity;
 class Physics
 {
 public:
-  Physics(const Vect<2, double>& planetCenter, double radius, double mass)
-    : _planet{planetCenter, Vect<2, double>(0.0, 0.0), radius, mass, 0.0} {}
+  Physics() = default;
 
   bool haveCollision(Fixture const&, Fixture const&) const;
   bool haveCollision(Vect<2, int> const& a, Fixture const& b) const;
   void fixMapCollision(Fixture&, std::array<std::array<int/*cityBlock*/, 100>, 100> const& cityMap);
-  bool move(Fixture&) const;
-
-  template <class T>
-  void updateFixtures(T begin, T end)
-  {
-    for (T i = begin ; i != end ; ++i)
-      (*i)->isOnPlanet = this->move((*i)->fixture);
-  }
-
-  /* Planet size getter */
-  double getPlanetRadius(void) const;
+  void move(Fixture&) const;
 
 private:
-  const Fixture _planet;
-  static const double _G;
+  static constexpr const double G{6.67384 * pow(10.0, -11.0)};
 };
 
 
