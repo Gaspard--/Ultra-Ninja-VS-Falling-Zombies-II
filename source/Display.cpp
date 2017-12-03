@@ -334,7 +334,7 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(player.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
-	  {0.125f * player.getAnimationFrame(), 0.0f},
+	  {0.125f * static_cast<double>(player.getAnimationFrame()), 0.0f},
 	    {0.125f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0f),
