@@ -2,11 +2,13 @@
 
 void MobManager::update(Physics const &physics)
 {
+  for (auto &player : players)
+    physics.move(player.entity.fixture);
   for (auto &human : humans)
     physics.move(human.entity.fixture);
   for (auto &zombie : zombies)
     physics.move(zombie.entity.fixture);
-  physics.quadTree([](auto &, auto &){}, humans, zombies);
+  physics.quadTree([](auto &, auto &){}, humans, zombies, players);
   mobDeath();
 }
 
@@ -28,9 +30,23 @@ void MobManager::mobDeath()
   humans.erase(bound, humans.end());
 }
 
-void MobManager::spawnZombie(Vect<2, double> pos)
+void MobManager::spawnZombie(Vect<2, double> const& pos)
 {
-  Entity e({pos, {0.0, 0.0}, 0.2, 0.0, 0.0});
+  Entity e({pos, {0.0, 0.0}, 0.5, 0.0, 0.0});
 
   zombies.emplace_back(e);
+}
+
+void MobManager::spawnPlayer(Vect<2, double> const& pos)
+{
+  if (!players.empty())
+    return;
+  Entity e({pos, {0.0, 0.0}, 0.5, 0.0, 0.0});
+
+  players.emplace_back(e);
+}
+
+Player& MobManager::getPlayer()
+{
+  return players[0];
 }

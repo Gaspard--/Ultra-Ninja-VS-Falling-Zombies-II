@@ -16,7 +16,8 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  mobManager.spawnZombie({0.0, 0.0});
+  // mobManager.spawnZombie({0.0, 0.0});
+  mobManager.spawnPlayer({0.4, 0.3});
 }
 
 void Logic::update()
@@ -127,10 +128,20 @@ void Logic::handleKey(GLFWwindow *window, Key key)
 
 void Logic::checkEvents(Display const &display)
 {
+  Player& player = mobManager.getPlayer();
   if (display.isKeyPressed(GLFW_KEY_ENTER) && gameOver)
     {
       // TODO: restart
     }
+
+  if (display.isKeyPressed(GLFW_KEY_D))
+    player.accelerate({1, 0});
+  if (display.isKeyPressed(GLFW_KEY_A))
+    player.accelerate({-1, 0});
+  if (display.isKeyPressed(GLFW_KEY_W))
+    player.accelerate({0, 1});
+  if (display.isKeyPressed(GLFW_KEY_S))
+    player.accelerate({0, -1});
 }
 
 void Logic::handleMouse(Display const &display, GLFWwindow *, Mouse mouse)

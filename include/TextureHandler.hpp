@@ -19,11 +19,14 @@ public :
       HUMAN,
       PLAYER,
       TEST,
+      NONE,
       HOUSE1,
       HOUSE2,
       HOUSE3,
       BOMB,
-      BOMBHOLLOW
+      BOMBHOLLOW,
+      ROAD,
+      BORDER
     };
 
   static void initTextureHandler();
