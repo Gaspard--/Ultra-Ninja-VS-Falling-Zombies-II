@@ -28,8 +28,3 @@ bool CityBlock::upgrade(/*Logic &logic*/)
   type = static_cast<BlockType>(static_cast<int>(type) + 1);
   return (true);
 }
-
-BlockType CityBlock::getType() const
-{
-  return (type);
-}
