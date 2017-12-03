@@ -3,6 +3,7 @@
 
 # include "Vect.hpp"
 # include "Fixture.hpp"
+# include <array>
 # include <cmath>
 # include <vector>
 
@@ -16,7 +17,9 @@ public:
   Physics(const Vect<2, double>& planetCenter, double radius, double mass)
     : _planet{planetCenter, Vect<2, double>(0.0, 0.0), radius, mass, 0.0} {}
 
-  bool haveCollision(const Fixture&, const Fixture&) const;
+  bool haveCollision(Fixture const&, Fixture const&) const;
+  bool haveCollision(Vect<2, int> const& a, Fixture const& b) const;
+  void fixMapCollision(Fixture&, std::array<std::array<int/*cityBlock*/, 100>, 100> const& cityMap);
   bool move(Fixture&) const;
 
   template <class T>

@@ -20,7 +20,7 @@ void Input::setWindow(GLFWwindow *window)
 	  ev.hasEvent = true;
 	  ev.window = window;
 	  ev.type = Event::MOUSE;
-	  ev.val.key = { static_cast<int>(x), static_cast<int>(y) };
+	  ev.val.key = { static_cast<int>(x), static_cast<int>(y), 0, 0 };
 	  // Event ev = {true, Event::MOUSE, window, {.mouse = {x, y}}};
       Input::instance._events.push(ev);
     });
@@ -29,7 +29,7 @@ void Input::setWindow(GLFWwindow *window)
 	  ev.hasEvent = true;
 	  ev.window = window;
 	  ev.type = Event::BUTTON;
-	  ev.val = { button, action, mods };
+	  ev.val.button = { button, action, mods };
 	  //Event ev = {true, Event::BUTTON, window, {.button = {button, action, mods}}};
       Input::instance._events.push(ev);
     });

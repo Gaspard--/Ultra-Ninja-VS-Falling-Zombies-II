@@ -29,6 +29,12 @@ message("Flags used: '${CMAKE_CXX_FLAGS}'")
 file(GLOB_RECURSE SOURCES_FILE "${SOURCE_DIRECTORY}/*.cpp" "${SOURCE_DIRECTORY}/*.c")
 file(GLOB_RECURSE HEADERS_FILE "${HEADER_DIRECTORY}/*.hpp" "${HEADER_DIRECTORY}/*.h")
 
+add_executable(
+  ${PROJECT_NAME}
+  ${SOURCES_FILE}
+  ${HEADERS_FILE}
+)
+
 find_package(OpenGL REQUIRED)
 if (WIN32)
   include_directories (
@@ -40,11 +46,6 @@ if (WIN32)
 else()
   find_package(PkgConfig REQUIRED)
   find_package(Freetype REQUIRED)
-  find_package(SFML 2 REQUIRED audio)
-  if(SFML_FOUND)
-    include_directories(${SFML_INCLUDE_DIR})
-    target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
-  endif()
   pkg_search_module(GLFW REQUIRED glfw3)
 endif(WIN32)
 
@@ -53,12 +54,6 @@ include_directories(
   ${GLFW_INCLUDE_DIRS}
   ${HEADER_DIRECTORY}
   ${FREETYPE_INCLUDE_DIRS}
-)
-
-add_executable(
-  ${PROJECT_NAME}
-  ${SOURCES_FILE}
-  ${HEADERS_FILE}
 )
 
 if (WIN32)

@@ -10,12 +10,11 @@
 */
 struct Entity
 {
-  Entity(Fixture = {{0.0, 0.0}, {0.0, 0.0}, 0, 0, 0}, bool b = false);
+  Entity(Fixture = {{0.0, 0.0}, {0.0, 0.0}, 0.0, 0.0, 0.0});
 
   void update();
 
   Fixture fixture;
-  bool isOnPlanet;
   bool isUseless = false;
 };
 

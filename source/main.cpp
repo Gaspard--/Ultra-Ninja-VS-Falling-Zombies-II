@@ -9,9 +9,9 @@
 int main()
 {
   std::srand(static_cast<unsigned int>(time(NULL)));
-  try { 
+  try {
     Display display;
-   
+
     struct SoundHandlerInit
     {
       SoundHandlerInit()
@@ -43,21 +43,21 @@ int main()
     SoundHandler::getInstance().playMainMusic();
     while (display.isRunning())
       {
-        // handle events
-        for (Event ev = Input::pollEvent(); ev; ev = Input::pollEvent())
-          logic.handleEvent(display, ev);
-        logic.checkEvents(display);
+	// handle events
+	for (Event ev = Input::pollEvent(); ev; ev = Input::pollEvent())
+	  logic.handleEvent(display, ev);
+	logic.checkEvents(display);
 
-        // update logic
-        logic.tick();
+	// update logic
+	logic.tick();
 
-        // render
-        display.render(logic);
+	// render
+	display.render(logic);
       }
 
   } catch (std::runtime_error const &e) {
     std::cerr << "program encoutered runtime error:" << std::endl
-              << e.what() << std::endl;
+	      << e.what() << std::endl;
     return -1;
   }
 }
