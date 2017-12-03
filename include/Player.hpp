@@ -13,8 +13,16 @@ public:
   Entity entity;
 
   void update();
-  // dir[0] = x axis , dir[1] = y axis
   void accelerate(Vect<2, int> const& dir);
+  int getAnimationFrame() const;
+
+private:
+  int animationFrame;
+  int internalFrame;
+  int maxFrame = 20;
+
+  void setNewAnimationFrame(int stop, int move);
+  void animate();
 };
 
 #endif //!PLAYER_HPP_

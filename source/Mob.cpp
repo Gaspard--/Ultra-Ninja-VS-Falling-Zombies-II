@@ -19,4 +19,3 @@ int const& Mob::getLife() const
 {
   return life;
 }
-

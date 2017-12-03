@@ -30,6 +30,12 @@ void EntityManager::updateWeapons(Physics const &physics)
 void EntityManager::update(Physics const &physics, Logic const &logic)
 {
   for (auto &player : players)
+    player.update();
+  // for (auto &human : humans)
+  //   human.update();
+  // for (auto &zombie : zombies)
+  //   zombie.update();
+  for (auto &player : players)
     physics.move(player.entity.fixture);
   for (auto &human : humans)
     physics.move(human.entity.fixture);
