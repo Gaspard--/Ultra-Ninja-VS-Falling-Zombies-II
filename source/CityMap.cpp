@@ -18,7 +18,7 @@ CityMap::CityMap(Logic &logic)
 	  //   block.type = BlockType::BORDER;
 	  // else if (!x || (x == MAP_SIZE - 1))
 	  //   block.type = BlockType::BORDER;
-	  // else 
+	  // else
 	  if (y % 2)
 	    block.type = BlockType::ROAD;
 	  else
@@ -58,7 +58,7 @@ void CityMap::tick(Logic &logic)
   for (auto &line : cityMap)
     for (auto &block : line)
       {
-	block.tick(*this, logic);
+	block.update(*this, logic);
 	if (static_cast<int>(block.type) > 0 &&
 	    static_cast<int>(block.type) < static_cast<int>(BlockType::ROAD))
 	  {

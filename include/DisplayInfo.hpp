@@ -7,7 +7,7 @@ struct DisplayInfo
   std::unordered_map<GLuint, std::vector<Renderable>> renderables;
   std::vector<Renderable> arrows;
   std::string time;
-  unsigned int score;
+  long unsigned int score;
   std::string combo;
   unsigned int bomb;
   double ulti;
