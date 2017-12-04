@@ -15,8 +15,7 @@ Human::~Human()
 void Human::update()
 {
   anim.animate(entity);
-  if (coolDown > 0)
-    coolDown--;
+  coolDown -= coolDown > 0;
 }
 
 void Human::setInfected(bool infected)

@@ -17,7 +17,6 @@ void Weapon::hit(Zombie &zombie)
     zombie.setLife(zombie.getLife() - damage);
 }
 
-
 void Weapon::update()
 {
   lifetime -= 1;

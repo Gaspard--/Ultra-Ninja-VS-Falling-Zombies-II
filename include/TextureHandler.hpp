@@ -28,6 +28,7 @@ public :
       ROAD,
       BORDER,
       SLASH,
+      SHURIKEN,
       BARFRONT,
       BARBACK,
       SPIN,

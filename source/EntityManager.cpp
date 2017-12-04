@@ -36,9 +36,14 @@ void EntityManager::updateWeapons(Physics const &physics)
 	  it = bombs.erase(it);
 	}
     }
-  for (auto it = shurikens.begin(); it != shurikens.end(); ++it)
-    if (it->touched || it->lifetime <= 0)
-      it = shurikens.erase(it);
+  for (auto it = shurikens.begin(); it != shurikens.end();)
+    {
+      if (// it->touched || 
+	  it->lifetime <= 0)
+	it = shurikens.erase(it);
+      else
+	++it;
+    }
 }
 
 void EntityManager::update(Physics const &physics, Logic const &logic)

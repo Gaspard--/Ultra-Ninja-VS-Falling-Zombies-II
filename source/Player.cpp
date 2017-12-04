@@ -1,11 +1,11 @@
-#include "Slash.hpp"
 #include "Player.hpp"
 
 Player::Player(Entity entity)
   : entity(entity),
     ulti(0.0),
     nbBombs(0),
-    slashCooldown(0)
+    slashCooldown(0),
+    shurikenCooldown(0)
 {
 }
 
@@ -22,6 +22,7 @@ void Player::update()
 {
   anim.animate(entity);
   slashCooldown -= slashCooldown > 0;
+  shurikenCooldown -= shurikenCooldown > 0;
 }
 
 void Player::highFive(Human &villager)
@@ -52,6 +53,20 @@ bool Player::canSlash() const
   return slashCooldown == 0;
 }
 
+void Player::shuriken(std::vector<Shuriken> &shurikens)
+{
+  Shuriken s(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
+	     entity.fixture.speed.normalized() * 0.08, 1);
+
+  shurikens.push_back(s);
+  shurikenCooldown = 15;
+}
+
+bool Player::canShuriken() const
+{
+  return shurikenCooldown == 0;
+}
+
 void Player::accelerate(Vect<2, int> const& dir)
 {
   this->entity.fixture.speed += Vect<2, double>(0.001, 0.001) * dir;
@@ -59,7 +74,8 @@ void Player::accelerate(Vect<2, int> const& dir)
 
 void Player::setNbBombs(int nbBombs)
 {
-  this->nbBombs = nbBombs;
+  if (this->nbBombs > 0)
+    this->nbBombs = nbBombs;
 }
 
 int Player::getNbBombs() const
@@ -78,6 +94,9 @@ void Player::circleAttack(std::vector<Slash> &slashes)
   static constexpr double speed = 0.01;
   auto &pos = entity.fixture.pos;
 
+  if (ulti < 100.0)
+    return ;
+  ulti = 0.0;
   slashes.emplace_back(Vect<2, double>(pos[0], pos[1] - posOffset), Vect<2, double>(0.0, -speed), 2); // UP
   slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] - posOffset), Vect<2, double>(speed, -speed), 2); // UP RIGHT
   slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1]), Vect<2, double>(speed, 0.0), 2); // RIGHT

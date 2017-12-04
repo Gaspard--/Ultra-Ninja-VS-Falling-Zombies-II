@@ -151,6 +151,8 @@ void Logic::checkEvents(Display const &display)
     player.highFive(entityManager.humans[0]);
   if (display.isKeyPressed(GLFW_KEY_K) && player.canSlash())
     entityManager.slashes.push_back(player.slash());
+  if (display.isKeyPressed(GLFW_KEY_SEMICOLON) && player.canShuriken())
+    player.shuriken(entityManager.shurikens);
   if (display.isKeyPressed(GLFW_KEY_L))
     player.circleAttack(entityManager.slashes);
 }

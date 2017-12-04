@@ -4,8 +4,8 @@
 #include "Zombie.hpp"
 #include "Human.hpp"
 #include "EntityAnimation.hpp"
-
-class Slash;
+#include "Slash.hpp"
+#include "Shuriken.hpp"
 
 class Player
 {
@@ -30,11 +30,15 @@ public:
   Slash slash();
   bool canSlash() const;
 
+  void shuriken(std::vector<Shuriken> &shurikens);
+  bool canShuriken() const;
+
 private:
   EntityAnimation anim;
   double ulti;
   int nbBombs;
   int slashCooldown;
+  int shurikenCooldown;
 };
 
 #endif //!PLAYER_HPP_
