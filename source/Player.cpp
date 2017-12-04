@@ -107,7 +107,17 @@ bool Player::canShuriken() const
 
 void Player::accelerate(Vect<2, int> const& dir)
 {
-  this->entity.fixture.speed += Vect<2, double>(0.001, 0.001) * dir;
+  if (((entity.fixture.speed[0] > 0 && dir[0] > 0) ||
+      (entity.fixture.speed[0] <= 0 && dir[0] <= 0)) || dir[0] == 0)
+    entity.fixture.speed[0] += 0.001 * dir[0];
+  else
+    entity.fixture.speed[0] = 0.001 * dir[0];
+
+  if (((entity.fixture.speed[1] > 0 && dir[1] > 0) ||
+      (entity.fixture.speed[1] <= 0 && dir[1] <= 0)) || dir[1] == 0)
+    entity.fixture.speed[1] += 0.001 * dir[1];
+  else
+    entity.fixture.speed[1] = 0.001 * dir[1];
 }
 
 void Player::setNbBombs(int nbBombs)

@@ -1,8 +1,6 @@
 #ifndef ZOMBIE_HPP_
 # define ZOMBIE_HPP_
 
-#include <optional>
-
 #include "EntityAnimation.hpp"
 #include "Mob.hpp"
 #include "Human.hpp"
@@ -21,13 +19,14 @@ public:
   void setLead(bool lead);
   bool const& getLead() const;
   void infectHuman(Human &villager) const;
-  void updateTarget(Entity &);
+  void updateTarget(Entity const&);
   float getAnimationFrame() const;
 
 private:
   EntityAnimation anim;
   bool lead;
-  std::optional<Vect<2u, double>> target;
+  bool hasTarget;
+  Vect<2u, double> target;
   int detectionCooldown;
 
   static constexpr int detectionTickBetween()

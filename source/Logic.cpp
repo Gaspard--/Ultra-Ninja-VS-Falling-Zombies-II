@@ -55,34 +55,34 @@ void Logic::tick(std::mutex &lock)
   }
 }
 
-void    Logic::addToScore(int add)
+void Logic::addToScore(int add)
 {
   score += static_cast<int>(combo * add * (multiplier == 0 ? 1 : multiplier));
 }
 
-void    Logic::incCombo()
+void Logic::incCombo()
 {
   combo++;
 }
 
-void    Logic::resetCombo()
+void Logic::resetCombo()
 {
   combo = 0;
 }
 
-unsigned int  Logic::getScore(void) const
+unsigned int Logic::getScore(void) const
 {
-  return (score);
+  return score;
 }
 
-std::string     Logic::getCombo(void) const
+std::string Logic::getCombo(void) const
 {
   if (combo < 2)
-    return ("");
-  return ("x" + std::to_string(combo));
+    return "";
+  return "x" + std::to_string(combo);
 }
 
-std::string     Logic::getTime(void) const
+std::string Logic::getTime(void) const
 {
   auto secondTime((time * getTickTime().count()) / 1000000);
   std::string   toReturn;

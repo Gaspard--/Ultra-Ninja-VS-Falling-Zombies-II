@@ -27,7 +27,7 @@ public:
   template <class H, class... Types>
   void quadTree(H &h, std::vector<Types> &... entities) const
   {
-    constexpr int const maxDepth{32};
+    constexpr int const maxDepth{16};
     using expander = int[];
 
     std::tuple<std::vector<Types *>...> e;
