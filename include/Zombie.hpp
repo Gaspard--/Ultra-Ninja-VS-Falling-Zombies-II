@@ -21,7 +21,7 @@ public:
   void setLead(bool lead);
   bool const& getLead() const;
   void infectHuman(Human &villager) const;
-  void updateTarget(Entity &);
+  void updateTarget(Entity const&);
   float getAnimationFrame() const;
 
 private:

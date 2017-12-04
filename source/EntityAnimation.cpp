@@ -40,29 +40,29 @@ void EntityAnimation::animate(Entity const& entity)
   if (entity.fixture.speed[0] <= 0.001 && entity.fixture.speed[0] >= -0.001 &&
       entity.fixture.speed[1] <= 0.001 && entity.fixture.speed[1] >= -0.001)
     {
-        switch (animationFrame) {
-	        case 0:
-	        case 1:
-	            animationFrame = 0;
-	            break;
-            case 2:
-            case 3:
-            case 4:
-	            animationFrame = 2;
-                break;
-            case 5:
-            case 6:
-            case 7:
-                animationFrame = 5;
-                break;
-            case 8:
-            case 9:
-                animationFrame = 8;
-                break;
-            default:
-                return;
-        }
-        return;
+      switch (animationFrame) {
+      case 0:
+      case 1:
+	animationFrame = 0;
+	break;
+      case 2:
+      case 3:
+      case 4:
+	animationFrame = 2;
+	break;
+      case 5:
+      case 6:
+      case 7:
+	animationFrame = 5;
+	break;
+      case 8:
+      case 9:
+	animationFrame = 8;
+	break;
+      default:
+	return;
+      }
+      return;
     }
 
   // x axis animation
