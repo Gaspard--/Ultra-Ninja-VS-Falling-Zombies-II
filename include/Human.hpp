@@ -38,6 +38,9 @@ private:
   CityBlock *homePtr;
   int coolDown;
 
+  int	basicWalkCooldown;
+  double	dir;
+
   int			runAwayCooldown;
   bool			mustRunAway;
   Vect<2, double>	posToEscape;
