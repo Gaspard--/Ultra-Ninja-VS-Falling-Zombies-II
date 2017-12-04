@@ -65,7 +65,7 @@ void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
   weaponMapCollision(shurikens);
 }
 
-void EntityManager::update(Physics const &physics, Logic const &logic)
+void EntityManager::update(Physics const &physics, Logic const &logic, CityMap const &cityMap)
 {
   for (auto &player : players)
     player.update();
@@ -95,9 +95,9 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
   // for (auto const &tmpDetectionRange : tmpDetectionRanges)
   //   {
   //     std::cout << tmpDetectionRange.entity.fixture.radius << std::endl;
-  //   }    
+  //   }
   {
-    CollisionSolver collisionSolver{};
+    CollisionSolver collisionSolver{cityMap};
 
     physics.quadTree(collisionSolver, players, humans, zombies, tmpDetectionRanges,
 		     shurikens, explosions, slashes);

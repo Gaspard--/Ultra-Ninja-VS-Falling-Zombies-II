@@ -5,6 +5,8 @@ Human::Human(Entity entity, CityBlock &home)
     infected(false),
     homePtr(&home),
     coolDown(0),
+    mustRunAway(false),
+    posToEscape({0.0, 0.0}),
     canHighfive(false)
 {
 }
@@ -13,11 +15,28 @@ Human::~Human()
 {
 }
 
+void Human::handleJump()
+{
+  constexpr double const maxHeight = 0.05;
+
+  if (isJumping && offsetY < maxHeight)
+    offsetY += 0.005;
+  if (isJumping && offsetY >= maxHeight)
+    isJumping = false;
+  if (!isJumping && offsetY > 0.0)
+    offsetY -= 0.005;
+}
+
 void Human::update()
 {
-  anim.animate(entity);
+  handleJump();
+  if (!isJumping)
+    anim.animate(entity);
   coolDown -= coolDown > 0;
   canHighfive = false;
+  runAwayCooldown -= runAwayCooldown > 0;
+  if (!runAwayCooldown)
+    mustRunAway = false;
 }
 
 void Human::setInfected(bool infected)
@@ -50,26 +69,16 @@ bool Human::canHighFive() const
   return canHighfive && coolDown <= 0;
 }
 
-void Human::addHunter(Zombie& z)
-{
-  for (auto h : this->hunters) {
-    if (h == &z)
-      return ;
-  }
-  this->hunters.push_back(&z);
-}
-
-void Human::removeHunter(Zombie& z)
-{
-  for (auto h = this->hunters.begin() ; h != this->hunters.end() ; ++h) {
-    if (*h == &z) {
-      this->hunters.erase(h);
-      return ;
-    }
-  }
-}
-
 float Human::getAnimationFrame() const
 {
   return anim.getAnimationFrame();
+}
+
+void	Human::beScaredOf(const Vect<2, double>& pos)
+{
+  if (mustRunAway || (entity.fixture.pos - pos).length2() < (entity.fixture.pos - posToEscape).length2()) {
+    runAwayCooldown = 120;
+    mustRunAway = true;
+    posToEscape = pos;
+  }
 }

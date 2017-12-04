@@ -5,6 +5,8 @@
 // Add fields to initailise at creation if outside context is needed (such as Logic etc)
 struct CollisionSolver
 {
+  CityMap const &cityMap;
+
   // Pushes a and b appart.
   template<class T, class U>
   static void solveCollision(T &a, U &b)
@@ -53,7 +55,14 @@ struct CollisionSolver
   // Player should trigger zombie ranges
   void operator()(Player &a, ZombieDetectionRange &b)
   {
-    b.affiliated->updateTarget(a.entity);
+    b.affiliated->updateTarget(a.entity, cityMap);
+  }
+
+  // Human should trigger zombie ranges
+  void operator()(Human &a, ZombieDetectionRange &b)
+  {
+    if (b.affiliated->updateTarget(a.entity, cityMap))
+      a.beScaredOf(b.entity.fixture.pos);
   }
 
   void operator()(Slash &a, Zombie &b)

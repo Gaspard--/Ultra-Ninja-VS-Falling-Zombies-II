@@ -8,7 +8,8 @@
 #include "Shuriken.hpp"
 
 Logic::Logic()
-  : running(true),
+  : cityMap(*this),
+    running(true),
     mousePos{0.0, 0.0},
     lastUpdate(Clock::now())
 {
@@ -32,8 +33,8 @@ void Logic::update()
   if (!gameOver)
     {
       ++time;
-      entityManager.update(physics, *this);
-      cityMap.tick();
+      entityManager.update(physics, *this, cityMap);
+      cityMap.tick(*this);
       multiplier += (1.0 / 600.0);
     }
 }
@@ -178,6 +179,11 @@ Vect<2u, double> Logic::getMouse(Display const &display) const
 }
 
 EntityManager const& Logic::getEntityManager() const
+{
+  return entityManager;
+}
+
+EntityManager &Logic::getEntityManager()
 {
   return entityManager;
 }

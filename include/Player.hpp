@@ -19,6 +19,7 @@ public:
   bool canHighfive;
 
   void update();
+  void handleJump();
   void accelerate(Vect<2, int> const& dir);
   float getAnimationFrame() const;
 
@@ -45,6 +46,7 @@ private:
   int shurikenCooldown;
   int bombCooldown;
   double offsetY;
+  bool isJumping;
 };
 
 #endif //!PLAYER_HPP_

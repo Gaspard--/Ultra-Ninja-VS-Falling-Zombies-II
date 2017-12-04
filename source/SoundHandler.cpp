@@ -11,7 +11,7 @@ SoundHandler::SoundHandler()
 void SoundHandler::initSoundHandler()
 {
   _instance.reset(new SoundHandler());
-  if (!_instance->mainMusic.openFromFile("resources/Ken new Hope (loop).wav"))
+  if (!_instance->mainMusic.openFromFile("resources/Ken_new_Hope_(loop).wav"))
     throw ("Music not charged");
   _instance->addSoundBuffer(BOYAUX1, "resources/boyaux1.wav");
   _instance->addSoundBuffer(BOYAUX2, "resources/boyaux2.wav");

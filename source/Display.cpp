@@ -83,9 +83,6 @@ Display::Display()
   , fontHandler("./resources/ObelixPro-Broken-cyr.ttf")
   , textureContext(contextFromFiles("texture"))
   , textContext(contextFromFiles("text"))
-    //  , planet(my_opengl::loadTexture("resources/PlanetRed.bmp"))
-    //, planetBackground(my_opengl::loadTexture("resources/BackgroundPlanet.bmp"))
-    //, background(my_opengl::loadTexture("resources/BackgroundSpace.bmp"))
   , bloodSpray{my_opengl::loadTexture("resources/BloodSpray.bmp"), my_opengl::loadTexture("resources/BloodSpray2.bmp"), my_opengl::loadTexture("resources/BloodSpray3.bmp")}
   , mobSpray{my_opengl::loadTexture("resources/MobSpray.bmp"), my_opengl::loadTexture("resources/MobSpray2.bmp"), my_opengl::loadTexture("resources/MobSpray3.bmp")}
   , planetRenderTexture({1024u, 1024u})
@@ -277,31 +274,45 @@ void Display::displayInterface(Logic const &logic)
 	    continue;
 	  Vect<2, double> finalSize = camera.zoom * Vect<2u, float>{0.2f, 0.3f};
 	  Vect<2, double> arrowPos({100.0, 100.0});
+	  Vect<2, double> initialPos({0.0, 0.0});
+	  Vect<2, double> initialSize({0.0, 0.0});
 	  double droiteCoef = (pos[0] - zombiePos[0]) / (pos[1] - zombiePos[1]);
 	  double droiteOrd = pos[1] - pos[0] * droiteCoef;
 	  if (zombiePos[0] < -halfWidth && droiteCoef) {
 	    Vect<2, double> newPos = Vect<2, double>(-halfWidth, (-halfWidth - droiteOrd) / droiteCoef);
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
 	      arrowPos = newPos;
+	      initialSize = {-0.5f, 1.0f};
+	      initialPos = {1.0f, 0.0f};
+	    }
 	  }
 	  else if (zombiePos[0] > halfWidth && droiteCoef) {
 	    Vect<2, double> newPos = Vect<2, double>(halfWidth, (halfWidth - droiteOrd) / droiteCoef) - finalSize[0];
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
 	      arrowPos = newPos;
+	      initialSize = {0.5f, 1.0f};
+	      initialPos = {0.5f, 0.0f};
+	    }
 	  }
 	  if (zombiePos[1] < -halfHeight) {
 	    Vect<2, double> newPos = Vect<2, double>(-droiteCoef * halfHeight + droiteOrd, -halfHeight);
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
 	      arrowPos = newPos;
+	      initialSize = {0.5f, -1.0f};
+	      initialPos = {0.0f, 1.0f};
+	    }
 	  }
 	  else if (zombiePos[1] > halfHeight) {
 	    Vect<2, double> newPos = Vect<2, double>(droiteCoef * halfHeight + droiteOrd, halfHeight) - finalSize[1];
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
 	      arrowPos = newPos;
+	      initialSize = {0.5f, 1.0f};
+	      initialPos = {0.0f, 0.0f};
+	    }
 	  }
 	  displayRenderableAsHUD(Renderable{
-	      {0.0f, 0.0f},
-		{1.0f, 1.0f},
+	      initialPos,
+		initialSize,
 		  arrowPos,
 		    finalSize}, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ARROW));
 	}
@@ -344,7 +355,10 @@ void Display::displayInterface(Logic const &logic)
 
 void Display::copyRenderData(Logic const &logic)
 {
-  camera.offset = (camera.offset * 0.5f - (logic.getPlayerPos() - Vect<2u, float>{(dim[1] - 1.0f / dim[0]), 0.0f})* 0.5f);
+  auto const offset(Vect<2u, float>{// (dim[0] - dim[1]) * 0.25f
+      0.0f, 0.0f});
+
+  camera.offset = (camera.offset + offset) * 0.5f - logic.getPlayerPos() * 0.5f - offset;
   displayInfo.time = logic.getTime();
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
@@ -362,7 +376,7 @@ void Display::copyRenderData(Logic const &logic)
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIE)].emplace_back(Renderable{
 	  {0.1f * zombie.getAnimationFrame(), 0.0f},
 	    {0.1f, 1.0f},
-	      pos,
+	      Vect<2, double>(pos[0], pos[1] + zombie.getOffset()),
 		camera.zoom * static_cast<float>(zombie.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
@@ -374,7 +388,7 @@ void Display::copyRenderData(Logic const &logic)
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMAN)].push_back(Renderable{
 	  {0.1f * human.getAnimationFrame(), 0.0f},
 	    {0.1f, 1.0f},
-	      pos,
+	      Vect<2, double>(pos[0], pos[1] + human.getOffset()),
 		camera.zoom * static_cast<float>(human.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});

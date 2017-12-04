@@ -16,10 +16,11 @@ public:
   ~Zombie();
 
   void update(std::vector<ZombieDetectionRange> &);
+  void handleFall();
   void setLead(bool lead);
   bool const& getLead() const;
   void infectHuman(Human &villager) const;
-  void updateTarget(Entity const&);
+  bool updateTarget(Entity const&, CityMap const &);
   float getAnimationFrame() const;
 
 private:
@@ -28,6 +29,7 @@ private:
   bool hasTarget;
   Vect<2u, double> target;
   int detectionCooldown;
+  double landingSpeed;
 
   static constexpr int detectionTickBetween()
   {
