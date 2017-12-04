@@ -2,14 +2,14 @@
 #include "CollisionSolver.hpp"
 #include "Logic.hpp"
 
-void EntityManager::updateWeapons(Physics const &physics)
+void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
 {
   static constexpr auto lifetimeCheck = [](auto &container)
     {
       container.erase(container.begin(), std::remove_if(container.begin(), container.end(),
 							[](auto const &elem)
 							{
-							return elem.lifetime > 0;
+							  return elem.lifetime > 0;
 							}));
     };
   static auto updateWeapon = [&physics](auto &weaponContainer)
@@ -50,6 +50,19 @@ void EntityManager::updateWeapons(Physics const &physics)
       else
 	++it;
     }
+
+  static auto weaponMapCollision = [&physics, &logic] (auto &weaponContainer)
+    {
+      for (auto &weapon : weaponContainer)
+	{
+	  if (physics.haveCollision(weapon.entity.fixture, logic.getCityMap().getCityMap()))
+	    {
+	      weapon.lifetime = 0;
+	    }
+	}
+    };
+  weaponMapCollision(bombs);
+  weaponMapCollision(shurikens);
 }
 
 void EntityManager::update(Physics const &physics, Logic const &logic)
@@ -73,7 +86,7 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
   for (auto &zombie : zombies)
     physics.move(zombie.entity.fixture);
 
-  updateWeapons(physics);
+  updateWeapons(physics, logic);
 
   for (auto &player : players)
     physics.fixMapCollision(player.entity.fixture, logic.getCityMap().getCityMap());

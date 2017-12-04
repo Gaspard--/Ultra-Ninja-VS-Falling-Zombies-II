@@ -1,8 +1,6 @@
 #ifndef ZOMBIE_HPP_
 # define ZOMBIE_HPP_
 
-#include <optional>
-
 #include "EntityAnimation.hpp"
 #include "Mob.hpp"
 #include "Human.hpp"
@@ -27,7 +25,8 @@ public:
 private:
   EntityAnimation anim;
   bool lead;
-  std::optional<Vect<2u, double>> target;
+  bool hasTarget;
+  Vect<2u, double> target;
   int detectionCooldown;
 
   static constexpr int detectionTickBetween()

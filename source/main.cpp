@@ -14,18 +14,18 @@ int main()
   try {
     Display display;
 
-    // struct SoundHandlerInit
-    // {
-    //   SoundHandlerInit()
-    //   {
-    //     SoundHandler::initSoundHandler();
-    //   }
+    struct SoundHandlerInit
+    {
+      SoundHandlerInit()
+      {
+        SoundHandler::initSoundHandler();
+      }
 
-    //   ~SoundHandlerInit()
-    //   {
-    //     SoundHandler::destroySoundHandler();
-    //   }
-    // } SoundHandlerIniter;
+      ~SoundHandlerInit()
+      {
+        SoundHandler::destroySoundHandler();
+      }
+    } SoundHandlerIniter;
 
     struct TextureHandlerInit
     {
@@ -43,7 +43,7 @@ int main()
     Input::setWindow(display.getWindow());
 
     std::mutex lock;
-    // SoundHandler::getInstance().playMainMusic();
+    SoundHandler::getInstance().playMainMusic();
     std::thread thread([&logic, &display, &lock]()
 		       {
 			 try {
