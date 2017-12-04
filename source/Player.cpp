@@ -61,13 +61,14 @@ void Player::slash(std::vector<Slash> &slashes)
 void Player::circleAttack(std::vector<Slash> &slashes)
 {
   static constexpr double posOffset = 0.1;
-  static constexpr double speed = 0.01;
+  static constexpr double speed = 0.03;
   auto &pos = entity.fixture.pos;
 
   if (ulti < 100.0)
     return ;
   ulti = 0.0;
       slashes.emplace_back(Vect<2, double>(pos[0], pos[1] - posOffset), Vect<2, double>(0.0, -speed), 2); // UP
+      slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] - posOffset), Vect<2, double>(speed, -speed), 2); // UP RIGHT
       slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] - posOffset), Vect<2, double>(speed, -speed), 2); // UP RIGHT
       slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1]), Vect<2, double>(speed, 0.0), 2); // RIGHT
       slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] + posOffset), Vect<2, double>(speed, speed), 2); // DOWN RIGHT

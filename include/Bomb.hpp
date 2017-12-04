@@ -12,8 +12,6 @@ private:
   int frameRatio;
 
 public:
-  bool explodes;
-
   Bomb(Vect<2, double> const& pos,
        Vect<2, double> const& speed,
        int damage);
