@@ -28,6 +28,7 @@ public :
       ROAD,
       BORDER,
       SLASH,
+      SLASH2,
       SHURIKEN,
       BARFRONT,
       BARBACK,

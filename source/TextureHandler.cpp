@@ -27,6 +27,7 @@ void TextureHandler::initTextureHandler()
   _instance->addTexture(TextureList::BOMB, "resources/Bomb.bmp");
   _instance->addTexture(TextureList::BOMBHOLLOW, "resources/BombHollow.bmp");
   _instance->addTexture(TextureList::SLASH, "resources/SlashSpriteSheet.bmp");
+  _instance->addTexture(TextureList::SLASH2, "resources/Slash2SpriteSheet.bmp");
   _instance->addTexture(TextureList::SHURIKEN, "resources/ShurikenSpriteSheet.bmp");
   _instance->addTexture(TextureList::BARFRONT, "resources/BarFront.bmp");
   _instance->addTexture(TextureList::BARBACK, "resources/BarBack.bmp");
