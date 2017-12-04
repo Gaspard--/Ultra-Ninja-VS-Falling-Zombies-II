@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <cmath>
 #include "Vect.hpp"
 #include "RenderContext.hpp"
 #include "my_opengl.hpp"
