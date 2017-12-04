@@ -4,6 +4,7 @@
 
 Mob::Mob(Entity entity, int life)
   : entity(entity),
+    isJumping(false),
     life(life),
     offsetY(0)
 {
