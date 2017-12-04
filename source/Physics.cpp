@@ -27,26 +27,30 @@ bool Physics::haveCollision(Fixture& a, std::array<std::array<CityBlock, MAP_SIZ
 
 void Physics::fixMapCollision(Fixture& a, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const
 {
-  if (a.pos[0] < 1.0)
+  bool ret(false);
+
+  if (a.pos[0] < a.radius)
     {
-      a.pos[0] = 1.0 + a.radius * 5;
-      return;
+      a.pos[0] = a.radius;
+      ret = true;
     }
-  else if (a.pos[0] > MAP_SIZE - 1.0)
+  if (a.pos[0] > MAP_SIZE - a.radius)
     {
-      a.pos[0] = MAP_SIZE - 1.0 - a.radius * 5;
-      return;
+      a.pos[0] = MAP_SIZE - a.radius;
+      ret = true;
     }
-  if (a.pos[1] < 1.0)
+  if (a.pos[1] < a.radius)
     {
-      a.pos[1] = 1.0 + a.radius * 5;
-      return;
+      a.pos[1] = a.radius;
+      ret = true;
     }
-  else if (a.pos[1] > MAP_SIZE - 1.0)
+  if (a.pos[1] > MAP_SIZE - a.radius)
     {
-      a.pos[1] = MAP_SIZE - 1.0 - a.radius * 5;
-      return;
+      a.pos[1] = MAP_SIZE - a.radius;
+      ret = true;
     }
+  if (ret)
+    return ;
   Vect<2, int> tilePos(static_cast<int>(a.pos[0]), static_cast<int>(a.pos[1]));
   static auto getCorner = [] (double pos) {
     return pos > 0.5;

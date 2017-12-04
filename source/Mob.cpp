@@ -4,7 +4,6 @@
 
 Mob::Mob(Entity entity, int life)
   : entity(entity),
-    isJumping(false),
     life(life),
     offsetY(0)
 {
@@ -29,6 +28,8 @@ Vect<2, double> Mob::findPath(Entity const &target, CityMap const &cityMap) cons
   auto map(cityMap.getCityMap());
   Vect<2, int> selfpos(static_cast<int>(entity.fixture.pos[0]),
 		       static_cast<int>(entity.fixture.pos[1]));
+  Vect<2, double> tmppos(entity.fixture.pos);
+  Vect<2, double> directPath((target.fixture.pos - entity.fixture.pos).normalized());
   Vect<2, double> targetpos(entity.fixture.pos[0], entity.fixture.pos[1]);
   Vect<2, int> dist(static_cast<int>(target.fixture.pos[0]) - selfpos[0],
 		    static_cast<int>(target.fixture.pos[1]) - selfpos[1]);
@@ -39,8 +40,27 @@ Vect<2, double> Mob::findPath(Entity const &target, CityMap const &cityMap) cons
 
   dist[0] = abs(dist[0]);
   dist[1] = abs(dist[1]);
-  if (!dir[0] || !dir[1])
-    return (Vect<2, double>(target.fixture.pos[0], target.fixture.pos[1]));
+  std::cout << "TEST" << std::endl;
+  while (static_cast<int>(tmppos[0]) != static_cast<int>(target.fixture.pos[0]) ||
+	 static_cast<int>(tmppos[1]) != static_cast<int>(target.fixture.pos[1]))
+    {
+      BlockType tmpBlk(map[static_cast<int>(tmppos[1])][static_cast<int>(tmppos[0])].type);
+
+      std::cout << tmppos[0] << " " << tmppos[1] << std::endl;
+      std::cout << target.fixture.pos[0] << " " << target.fixture.pos[1] << std::endl;
+      std::cout << directPath[0] << " " << directPath[1] << std::endl;
+      if (tmpBlk != BlockType::ROAD && tmpBlk != BlockType::NONE)
+	break;
+      tmppos[0] += directPath[0];
+      tmppos[1] += directPath[1];
+    }
+  /*if (static_cast<int>(tmppos[0]) == static_cast<int>(target.fixture.pos[0]) &&
+    static_cast<int>(tmppos[1]) == static_cast<int>(target.fixture.pos[1]))*/
+    return (target.fixture.pos + Vect<2, double>(dir[0], dir[1]));
+  /*selfpos = {static_cast<int>(tmppos[0]), static_cast<int>(tmppos[1])};
+  targetpos = {static_cast<int>(tmppos[0]), static_cast<int>(tmppos[1])};
+  dist = {static_cast<int>(target.fixture.pos[0]) - selfpos[0],
+	  static_cast<int>(target.fixture.pos[1]) - selfpos[1]};
   auto findTarget = [&selfpos, &targetpos, &dist, &dir, &blk, &map](int i, int j)
     {
       while ((blk[i] == BlockType::ROAD || blk[i] == BlockType::NONE) &&
@@ -56,16 +76,16 @@ Vect<2, double> Mob::findPath(Entity const &target, CityMap const &cityMap) cons
   if (dist[0] > dist[1] && (blk[0] == BlockType::ROAD || blk[0] == BlockType::NONE))
     {
       findTarget(0, 1);
-      targetpos[0] += static_cast<double>(dir[0] < 0) * 0.6 + 0.2;
-      targetpos[1] += static_cast<double>(dir[1] > 0) * 0.6 + 0.2;
+      targetpos[0] += static_cast<double>(dir[0] < 0) * 0.8 + 0.1;
+      targetpos[1] += static_cast<double>(dir[1] > 0) * 0.8 + 0.1;
     }
   else
     {
       findTarget(1, 0);
-      targetpos[0] += static_cast<double>(dir[0] > 0) * 0.6 + 0.2;
-      targetpos[1] += static_cast<double>(dir[1] < 0) * 0.6 + 0.2;
+      targetpos[0] += static_cast<double>(dir[0] > 0) * 0.8 + 0.1;
+      targetpos[1] += static_cast<double>(dir[1] < 0) * 0.8 + 0.1;
     }
-  return (Vect<2, double>(targetpos[0], targetpos[1]));
+    return (Vect<2, double>(targetpos[0], targetpos[1]));*/
 }
 
 void Mob::setOffset(double offsetY)

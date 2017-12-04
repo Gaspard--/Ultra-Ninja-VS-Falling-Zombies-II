@@ -41,9 +41,8 @@ void Zombie::infectHuman(Human &villager) const
 
 bool Zombie::updateTarget(Entity const& newTarget, CityMap const &cityMap)
 {
-  if (!hasTarget)
-    if ((newTarget.fixture.pos - entity.fixture.pos).length2() <
-	(target - entity.fixture.pos).length2())
+  if (!hasTarget || ((newTarget.fixture.pos - entity.fixture.pos).length2() <
+		     (target - entity.fixture.pos).length2()))
       {
 	target = findPath(newTarget, cityMap);
 	hasTarget = true;

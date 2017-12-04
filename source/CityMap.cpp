@@ -14,11 +14,12 @@ CityMap::CityMap(Logic &logic)
 	{
 	  block.x = x;
 	  block.y = y;
-	  if (!y || (y == MAP_SIZE - 1))
-	    block.type = BlockType::BORDER;
-	  else if (!x || (x == MAP_SIZE - 1))
-	    block.type = BlockType::BORDER;
-	  else if (y % 2)
+	  // if (!y || (y == MAP_SIZE - 1))
+	  //   block.type = BlockType::BORDER;
+	  // else if (!x || (x == MAP_SIZE - 1))
+	  //   block.type = BlockType::BORDER;
+	  // else 
+	  if (y % 2)
 	    block.type = BlockType::ROAD;
 	  else
 	    {

@@ -57,5 +57,5 @@ void TextureHandler::addTexture(TextureList id, std::string const& path)
 
 Texture TextureHandler::getTexture(TextureList id) const
 {
-  return (_instance->_textures[id]);
+  return (_instance->_textures.at(id));
 }
