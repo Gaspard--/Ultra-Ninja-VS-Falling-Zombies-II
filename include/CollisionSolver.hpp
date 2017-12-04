@@ -43,8 +43,9 @@ struct CollisionSolver
   void operator()(Zombie &a, Human &b)
   {
     if (!a.getIsFalling())
-    a.infectHuman(b);
+      a.infectHuman(b);
   }
+
   // Player should suffer knoback from zombies
   void operator()(Player &a, Zombie &b)
   {
