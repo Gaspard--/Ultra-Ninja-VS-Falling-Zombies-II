@@ -36,7 +36,9 @@ public :
       SPINHOLLOW,
       BOMB_SPRITE,
       EXPLOSION,
-      ARROW
+      ARROW,
+	BLOOD,
+	GRASS
     };
 
   static void initTextureHandler();

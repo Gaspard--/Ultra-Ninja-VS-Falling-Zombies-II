@@ -14,6 +14,7 @@
 #include "Vect.hpp"
 #include "ZombieDetectionRange.hpp"
 #include "CityMap.hpp"
+#include "Blood.hpp"
 
 struct Logic;
 
@@ -28,6 +29,7 @@ public:
   std::vector<Bomb> bombs;
   std::vector<Explosion> explosions;
   std::vector<Shuriken> shurikens;
+  std::vector<Blood> bloods;
 
   EntityManager() = default;
   ~EntityManager() = default;

@@ -83,8 +83,6 @@ Display::Display()
   , fontHandler("./resources/ObelixPro-Broken-cyr.ttf")
   , textureContext(contextFromFiles("texture"))
   , textContext(contextFromFiles("text"))
-  , bloodSpray{my_opengl::loadTexture("resources/BloodSpray.bmp"), my_opengl::loadTexture("resources/BloodSpray2.bmp"), my_opengl::loadTexture("resources/BloodSpray3.bmp")}
-  , mobSpray{my_opengl::loadTexture("resources/MobSpray.bmp"), my_opengl::loadTexture("resources/MobSpray2.bmp"), my_opengl::loadTexture("resources/MobSpray3.bmp")}
   , planetRenderTexture({1024u, 1024u})
   , size{0.0f, 0.0f}
   , dim{0.0f, 0.0f}
@@ -237,8 +235,8 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
 
 void Display::render(Logic const &logic)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glClearColor(0.3f, 0.5f, 0.2f, 0.0f);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  // glClearColor(0.3f, 0.5f, 0.2f, 0.0f);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -473,6 +471,19 @@ void Display::copyRenderData(Logic const &logic)
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
+  for (auto &blood : manager.bloods)
+    if (blood.intensity < 1.0 - (blood.delay) * 0.05)
+      {
+	auto pos(camera.apply(blood.pos));
+
+	displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BLOOD)].push_back(Renderable{
+	    {static_cast<double>(blood.type) / 3.0f, 0.0f},
+	      {1.0f / 3.0f, 1.0f},
+		pos,
+		  camera.zoom * 0.5f,
+		  0.90f
+		    });
+      }
   auto cityMap(logic.getCityMap().getCityMap());
   for (std::size_t i(0); i != 100ul; ++i)
     for (std::size_t j(0); j != 100ul; ++j)
@@ -496,9 +507,15 @@ void Display::copyRenderData(Logic const &logic)
 										       (house.type == BlockType::MANSION) ? 1.55f :
 										       (house.type == BlockType::NONE) ? 1.0f :
 										       (house.type == BlockType::ROAD) ? 1.0f :
-										       1.0f},
+										       0.95f},
 										       (pos[1] + 1.1f) * 0.4f});
       }
+  displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::GRASS)].push_back(Renderable{
+      {0.0f, 0.0f},
+	{100.0f, 100.0f},
+	  camera.apply(Vect<2u, double>{50.0, 0.0f}),
+	    camera.zoom * Vect<2u, float>{100.0f, 100.0f},
+	      0.99f});
 }
 
 bool Display::isRunning() const

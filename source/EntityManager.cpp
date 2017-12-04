@@ -7,10 +7,10 @@ void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
   static constexpr auto lifetimeCheck = [](auto &container)
     {
       container.erase(std::remove_if(container.begin(), container.end(),
-							[](auto const &elem)
-							{
-							  return elem.lifetime <= 0;
-							}),
+				     [](auto const &elem)
+    {
+      return elem.lifetime <= 0;
+    }),
 		      container.end());
     };
   static auto updateWeapon = [&physics](auto &weaponContainer)
@@ -33,11 +33,11 @@ void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
       if (it->lifetime <= 0)
 	{
 	  explosions.emplace_back(Vect<2, double>{it->entity.fixture.pos[0],
-				  it->entity.fixture.pos[1]},
-				  0.5, 1);
+		it->entity.fixture.pos[1]},
+	    0.5, 1);
 	  explosions.emplace_back(Vect<2, double>{it->entity.fixture.pos[0],
-				  it->entity.fixture.pos[1]},
-				  0.25, 2);
+		it->entity.fixture.pos[1]},
+	    0.25, 2);
 	  it = bombs.erase(it);
 	}
       else
@@ -63,6 +63,16 @@ void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
     };
   weaponMapCollision(bombs);
   weaponMapCollision(shurikens);
+  for (auto &blood : bloods)
+    {
+      blood.intensity -= 0.001;
+    }
+  bloods.erase(std::remove_if(bloods.begin(), bloods.end(),
+			      [](auto const &elem)
+			      {
+				return elem.intensity < 0.0;
+			      }),
+	       bloods.end());
 }
 
 void EntityManager::update(Physics const &physics, Logic const &logic, CityMap const &cityMap)
@@ -91,13 +101,8 @@ void EntityManager::update(Physics const &physics, Logic const &logic, CityMap c
     physics.fixMapCollision(human.entity.fixture, logic.getCityMap().getCityMap());
   for (auto &zombie : zombies)
     physics.fixMapCollision(zombie.entity.fixture, logic.getCityMap().getCityMap());
-
-  // for (auto const &tmpDetectionRange : tmpDetectionRanges)
-  //   {
-  //     std::cout << tmpDetectionRange.entity.fixture.radius << std::endl;
-  //   }
   {
-    CollisionSolver collisionSolver{cityMap};
+    CollisionSolver collisionSolver{cityMap, bloods};
 
     physics.quadTree(collisionSolver, players, humans, zombies, tmpDetectionRanges,
 		     shurikens, explosions, slashes, bombs);
