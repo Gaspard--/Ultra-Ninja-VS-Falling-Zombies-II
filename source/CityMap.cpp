@@ -1,6 +1,7 @@
 #include "CityMap.hpp"
+#include "Logic.hpp"
 
-CityMap::CityMap()
+CityMap::CityMap(Logic &logic)
   : cooldown(HOUSE_SPAWN_CD)
 {
   int x, y;
@@ -36,9 +37,10 @@ CityMap::CityMap()
 		tmpy -= 1;
 	      while ((tmpx - 2) % 4)
 		tmpx -= 1;
-	      cityMap[tmpy][tmpx].type = BlockType::SHED;
-	      cityMap[tmpy][tmpx + 1].type = BlockType::HOUSE;
-	      cityMap[tmpy][tmpx + 2].type = BlockType::SHED;
+	      cityMap[tmpy][tmpx].upgrade(logic);
+	      cityMap[tmpy][tmpx + 1].upgrade(logic);
+	      cityMap[tmpy][tmpx + 1].upgrade(logic);
+	      cityMap[tmpy][tmpx + 2].upgrade(logic);
 	    }
 	  x += 1;
 	}
@@ -46,7 +48,7 @@ CityMap::CityMap()
     }
 }
 
-void CityMap::tick(/*Logic &logic*/)
+void CityMap::tick(Logic &logic)
 {
   cooldown -= (cooldown != 0);
   if (cooldown)
@@ -55,7 +57,7 @@ void CityMap::tick(/*Logic &logic*/)
   for (auto &line : cityMap)
     for (auto &block : line)
       {
-	block.tick(*this/*, logic*/);
+	block.tick(*this, logic);
 	if (static_cast<int>(block.type) > 0 &&
 	    static_cast<int>(block.type) < static_cast<int>(BlockType::ROAD))
 	  {
@@ -72,25 +74,25 @@ void CityMap::tick(/*Logic &logic*/)
 		      {
 		      case 0:
 			if (block.x > 1)
-			  search = cityMap[block.y][block.x - 2].upgrade(/*logic*/);
+			  search = cityMap[block.y][block.x - 2].upgrade(logic);
 			break;
 		      case 1:
 			if (block.x < (MAP_SIZE - 2))
-			  search = cityMap[block.y][block.x + 2].upgrade(/*logic*/);
+			  search = cityMap[block.y][block.x + 2].upgrade(logic);
 			break;
 		      case 2:
 			if (block.y > 1)
-			  search = cityMap[block.y - 2][block.x].upgrade(/*logic*/);
+			  search = cityMap[block.y - 2][block.x].upgrade(logic);
 			break;
 		      case 3:
 			if (block.y < (MAP_SIZE - 2))
-			  search = cityMap[block.y + 2][block.x].upgrade(/*logic*/);
+			  search = cityMap[block.y + 2][block.x].upgrade(logic);
 			break;
 		      case 4:
-			search = cityMap[block.y][block.x - 1].upgrade(/*logic*/);
+			search = cityMap[block.y][block.x - 1].upgrade(logic);
 			break;
 		      case 5:
-			search = cityMap[block.y][block.x + 1].upgrade(/*logic*/);
+			search = cityMap[block.y][block.x + 1].upgrade(logic);
 			break;
 		      default:
 			break;

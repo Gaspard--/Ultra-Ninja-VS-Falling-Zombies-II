@@ -62,6 +62,7 @@ public:
   Vect<2u, double> getMouse(Display const &) const;
   CityMap const& getCityMap() const;
   EntityManager const& getEntityManager() const;
+  EntityManager &getEntityManager();
   unsigned int  getScore(void) const;
   std::string   getTime(void) const;
   std::string   getCombo(void) const;

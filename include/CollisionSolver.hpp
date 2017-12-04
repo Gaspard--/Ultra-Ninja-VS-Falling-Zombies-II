@@ -66,4 +66,17 @@ struct CollisionSolver
   {
     a.lifetime = 0;
   }
+
+  void operator()(Shuriken &a, Zombie &b)
+  {
+    a.hit(b);
+    a.lifetime = 0;
+  }
+
+  void operator()(Shuriken &a, Human &b)
+  {
+    a.hit(b);
+    a.lifetime = 0;
+  }
+
 };

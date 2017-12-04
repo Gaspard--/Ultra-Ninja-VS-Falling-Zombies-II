@@ -7,7 +7,8 @@
 #include "SoundHandler.hpp"
 
 Logic::Logic()
-  : running(true),
+  : cityMap(*this),
+    running(true),
     mousePos{0.0, 0.0},
     lastUpdate(Clock::now())
 {
@@ -18,8 +19,8 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  for (int i = 0 ; i < 20 ; ++i)
-    for (int j = 0 ; j < 20 ; ++j)
+  for (int i = 0 ; i < 8 ; ++i)
+    for (int j = 0 ; j < 8 ; ++j)
       entityManager.spawnZombie({i * 1.5 + 40.0, j * 1.5 + 40.0});
   entityManager.spawnHuman({50.0, 50.0}, block);
   entityManager.spawnPlayer({50.4, 50.3});
@@ -31,7 +32,7 @@ void Logic::update()
     {
       ++time;
       entityManager.update(physics, *this, cityMap);
-      cityMap.tick();
+      cityMap.tick(*this);
       multiplier += (1.0 / 600.0);
     }
 }
@@ -149,7 +150,7 @@ void Logic::checkEvents(Display const &display)
     player.accelerate({0, -1});
   if (display.isKeyPressed(GLFW_KEY_SPACE))
     player.highFive(entityManager.humans[0]);
-  if (display.isKeyPressed(GLFW_KEY_K) && player.canShuriken())
+  if (display.isKeyPressed(GLFW_KEY_K))
     player.shuriken(entityManager.shurikens);
   if (display.isKeyPressed(GLFW_KEY_J))
     player.slash(entityManager.slashes);
@@ -175,6 +176,11 @@ Vect<2u, double> Logic::getMouse(Display const &display) const
 }
 
 EntityManager const& Logic::getEntityManager() const
+{
+  return entityManager;
+}
+
+EntityManager &Logic::getEntityManager()
 {
   return entityManager;
 }
