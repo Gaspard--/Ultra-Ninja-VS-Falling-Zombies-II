@@ -408,11 +408,31 @@ void Display::copyRenderData(Logic const &logic)
   for (auto &slash : manager.slashes)
     {
       auto pos(camera.apply(slash.entity.fixture.pos));
+      TextureHandler::TextureList texture;
+      float x_in = 0.2f;
+      float y_in = 1.0f;
+      float offset = 0;
 
-      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SLASH)].push_back(Renderable{
-	  {0.2f * slash.getAnimationFrame(), 0.0f},
-	    {0.2f, 1.0f},
-	      pos,
+      if (slash.isHorizontal())
+	{
+	  texture = TextureHandler::TextureList::SLASH;
+	  if (slash.isReversed())
+	    x_in = 0.2f;
+	  else
+	    {
+	      x_in = -0.2f;
+	      offset = 0.2f;
+	    }
+	}
+      else
+	{
+	  texture = TextureHandler::TextureList::SLASH2;
+	  y_in = slash.isReversed() ? 1.0f : -1.0f;
+	}
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(texture)].push_back(Renderable{
+	  {0.2f * slash.getAnimationFrame() + offset, 0.0f},
+	    {x_in, y_in},
+	      pos - Vect<2, double>{0.0, 0.02},
 		camera.zoom * static_cast<float>(slash.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});

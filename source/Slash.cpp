@@ -1,3 +1,4 @@
+#include <cmath>
 #include "Slash.hpp"
 
 Slash::Slash(Vect<2, double> const& pos,
@@ -9,6 +10,16 @@ Slash::Slash(Vect<2, double> const& pos,
     frameRatio(maxFrame / spriteSheetSize),
     nbLaunch(nbLaunch)
 {
+  if (std::abs(entity.fixture.speed[0]) > std::abs(entity.fixture.speed[1]))
+    {
+      horizontal = true;
+      reversed = entity.fixture.speed[0] > 0.0;
+    }
+  else
+    {
+      horizontal = false;
+      reversed = entity.fixture.speed[1] > 0.0;
+    }
 }
 
 void Slash::updateAnimation()
@@ -24,4 +35,14 @@ float Slash::getAnimationFrame() const
 int Slash::getNbLaunch() const
 {
   return nbLaunch;
+}
+
+bool Slash::isHorizontal() const
+{
+  return horizontal;
+}
+
+bool Slash::isReversed() const
+{
+  return reversed;
 }

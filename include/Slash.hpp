@@ -11,6 +11,8 @@ private:
   static constexpr int spriteSheetSize = 5;
   int frameRatio;
   int nbLaunch;
+  bool horizontal;
+  bool reversed;
 
 public:
   Slash(Vect<2, double> const& pos,
@@ -22,4 +24,6 @@ public:
   int getNbLaunch() const;
 
   float getAnimationFrame() const;
+  bool isHorizontal() const;
+  bool isReversed() const;
 };
