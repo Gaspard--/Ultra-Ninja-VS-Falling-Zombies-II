@@ -44,8 +44,7 @@ void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
     }
   for (auto it = shurikens.begin(); it != shurikens.end();)
     {
-      if (// it->touched ||
-	it->lifetime <= 0)
+      if (it->lifetime <= 0)
 	it = shurikens.erase(it);
       else
 	++it;
@@ -102,7 +101,7 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
     CollisionSolver collisionSolver{};
 
     physics.quadTree(collisionSolver, players, humans, zombies, tmpDetectionRanges,
-		     explosions, slashes);
+		     shurikens, explosions, slashes);
   }
   mobDeath();
 }
@@ -110,19 +109,25 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
 void EntityManager::mobDeath()
 {
   auto bound(std::partition(humans.begin(), humans.end(), [](auto const &human)
-			 {
-			   return !human.getInfected();
-			 }));
-  zombies.erase(zombies.begin(), std::remove_if(zombies.begin(), zombies.end(),
-						[](auto const &zombie)
-						{
-						  return zombie.getLife() > 0;
-						}));
+			    {
+			      return !human.getInfected();
+			    }));
+  static constexpr auto lifeCheck = [](auto &container)
+    {
+      container.erase(container.begin(), std::remove_if(container.begin(), container.end(),
+							[](auto const &elem)
+    {
+      return elem.getLife() > 0;
+    }));
+    };
+
+  lifeCheck(zombies);
   for (auto it(bound); it != humans.end(); ++it)
     {
       zombies.push_back(*it);
     }
   humans.erase(bound, humans.end());
+  lifeCheck(humans);
 }
 
 void EntityManager::spawnHuman(Vect<2, double> const &pos, CityBlock &home)

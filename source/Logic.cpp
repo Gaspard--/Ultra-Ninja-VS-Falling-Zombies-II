@@ -18,9 +18,9 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  for (int i = 0 ; i < 2 ; ++i)
-    for (int j = 0 ; j < 2 ; ++j)
-      entityManager.spawnZombie({i * 3.0 + 40.0, j * 3.0 + 40.0});
+  for (int i = 0 ; i < 4 ; ++i)
+    for (int j = 0 ; j < 4 ; ++j)
+      entityManager.spawnZombie({i * 1.5 + 40.0, j * 1.5 + 40.0});
   entityManager.spawnHuman({50.0, 50.0}, block);
   entityManager.spawnPlayer({50.4, 50.3});
 }
@@ -149,7 +149,7 @@ void Logic::checkEvents(Display const &display)
     player.accelerate({0, -1});
   if (display.isKeyPressed(GLFW_KEY_SPACE))
     player.highFive(entityManager.humans[0]);
-  if (display.isKeyPressed(GLFW_KEY_K) && player.canShuriken())
+  if (display.isKeyPressed(GLFW_KEY_K))
     player.shuriken(entityManager.shurikens);
   if (display.isKeyPressed(GLFW_KEY_J))
     player.slash(entityManager.slashes);
