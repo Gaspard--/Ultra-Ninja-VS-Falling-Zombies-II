@@ -38,6 +38,7 @@ public :
       EXPLOSION,
       ARROW,
 	BLOOD,
+	FLESH_SPRITE,
 	GRASS
     };
 

@@ -65,14 +65,6 @@ struct CollisionSolver
     b.affiliated->updateTarget(a.entity, cityMap);
   }
 
-  void spawnBlood(Vect<2u, double> pos, Vect<2u, double> speed)
-  {
-    Vect<2u, float> randOffset(Vect<2u, float>(static_cast<float>(rand() & 255), static_cast<float>(rand() & 255)) - Vect<2u, float>(128.0f, 128.0f));
-    Vect<2u, float> offset(speed * (static_cast<double>(rand() & 16) + 4.0) + randOffset * 0.3 / 256.0);
-
-    bloods.push_back({pos + offset, 1.0, std::sqrt(offset.length2()) * 1.0, rand() % 3});
-  }
-
   // Human should trigger zombie ranges
   void operator()(Human &a, ZombieDetectionRange &b)
   {
@@ -83,28 +75,28 @@ struct CollisionSolver
   void operator()(Slash &a, Zombie &b)
   {
     for (int i(0); i < 5; ++i)
-      spawnBlood(b.entity.fixture.pos, a.entity.fixture.speed);
+      Blood::spawnBlood(bloods, b.entity.fixture.pos, a.entity.fixture.speed);
     a.hit(b);
   }
 
   void operator()(Slash &a, Human &b)
   {
     for (int i(0); i < 5; ++i)
-      spawnBlood(b.entity.fixture.pos, a.entity.fixture.speed);
+      Blood::spawnBlood(bloods, b.entity.fixture.pos, a.entity.fixture.speed);
     a.hit(b);
   }
 
   void operator()(Explosion &a, Zombie &b)
   {
     for (int i(0); i < 5; ++i)
-      spawnBlood(b.entity.fixture.pos, a.entity.fixture.speed);
+      Blood::spawnBlood(bloods, b.entity.fixture.pos, a.entity.fixture.speed);
     a.hit(b);
   }
 
   void operator()(Explosion &a, Human &b)
   {
     for (int i(0); i < 5; ++i)
-      spawnBlood(b.entity.fixture.pos, a.entity.fixture.speed);
+      Blood::spawnBlood(bloods, b.entity.fixture.pos, a.entity.fixture.speed);
     a.hit(b);
   }
 
@@ -121,7 +113,7 @@ struct CollisionSolver
   void operator()(Shuriken &a, Zombie &b)
   {
     for (int i(0); i < 1; ++i)
-      spawnBlood(b.entity.fixture.pos, {0.0, 0.0});
+      Blood::spawnBlood(bloods, b.entity.fixture.pos, {0.0, 0.0});
     a.hit(b);
     a.lifetime = 0;
   }
@@ -129,7 +121,7 @@ struct CollisionSolver
   void operator()(Shuriken &a, Human &b)
   {
     for (int i(0); i < 1; ++i)
-      spawnBlood(b.entity.fixture.pos, {0.0, 0.0});
+      Blood::spawnBlood(bloods, b.entity.fixture.pos, {0.0, 0.0});
     a.hit(b);
     a.lifetime = 0;
   }

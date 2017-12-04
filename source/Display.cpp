@@ -477,6 +477,18 @@ void Display::copyRenderData(Logic const &logic)
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
+  for (auto &flesh : manager.fleshs)
+    {
+      auto pos(camera.apply(flesh.entity.fixture.pos));
+
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::FLESH_SPRITE)].push_back(Renderable{
+	  {static_cast<float>(flesh.type) / 3.0f, 0.0f},
+	    {1.0f / 3.0f, 1.0f},
+	      pos + Vect<2u, float>{0.0f, static_cast<float>(flesh.yOffset)},
+		camera.zoom * static_cast<float>(flesh.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
+		(pos[1] + 1.1f) * 0.4f
+		  });
+    }
   for (auto &blood : manager.bloods)
     if (blood.intensity < 1.0 - (blood.delay) * 0.05)
       {
