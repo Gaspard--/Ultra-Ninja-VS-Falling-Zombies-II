@@ -364,7 +364,7 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(shuriken.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SHURIKEN)].push_back(Renderable{
-	    {0.5 * shuriken.getAnimationFrame(), 0.0f},
+	    {0.5f * shuriken.getAnimationFrame(), 0.0f},
 	    {0.5f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(shuriken.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
