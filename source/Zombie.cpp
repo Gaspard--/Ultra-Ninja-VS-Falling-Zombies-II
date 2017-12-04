@@ -32,7 +32,7 @@ void Zombie::infectHuman(Human &villager) const
   villager.setInfected(true);
 }
 
-void Zombie::updateTarget(Entity& newTarget)
+void Zombie::updateTarget(Entity const& newTarget)
 {
   if (!target || (newTarget.fixture.pos - entity.fixture.pos).length2() < (*target - entity.fixture.pos).length2()) {
     target = newTarget.fixture.pos;

@@ -3,7 +3,7 @@
 
 #include "Entity.hpp"
 
-struct Zombie;
+class Zombie;
 
 class	ZombieDetectionRange
 {

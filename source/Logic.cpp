@@ -18,8 +18,8 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  for (int i = 0 ; i < 10 ; ++i)
-    for (int j = 0 ; j < 10 ; ++j)
+  for (int i = 0 ; i < 2 ; ++i)
+    for (int j = 0 ; j < 2 ; ++j)
       entityManager.spawnZombie({i * 3.0 + 40.0, j * 3.0 + 40.0});
   entityManager.spawnHuman({50.0, 50.0}, block);
   entityManager.spawnPlayer({50.4, 50.3});
@@ -55,34 +55,34 @@ void Logic::tick(std::mutex &lock)
   }
 }
 
-void    Logic::addToScore(int add)
+void Logic::addToScore(int add)
 {
   score += static_cast<int>(combo * add * (multiplier == 0 ? 1 : multiplier));
 }
 
-void    Logic::incCombo()
+void Logic::incCombo()
 {
   combo++;
 }
 
-void    Logic::resetCombo()
+void Logic::resetCombo()
 {
   combo = 0;
 }
 
-unsigned int  Logic::getScore(void) const
+unsigned int Logic::getScore(void) const
 {
-  return (score);
+  return score;
 }
 
-std::string     Logic::getCombo(void) const
+std::string Logic::getCombo(void) const
 {
   if (combo < 2)
-    return ("");
-  return ("x" + std::to_string(combo));
+    return "";
+  return "x" + std::to_string(combo);
 }
 
-std::string     Logic::getTime(void) const
+std::string Logic::getTime(void) const
 {
   auto secondTime((time * getTickTime().count()) / 1000000);
   std::string   toReturn;

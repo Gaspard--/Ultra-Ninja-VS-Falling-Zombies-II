@@ -50,14 +50,20 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
   std::vector<ZombieDetectionRange> tmpDetectionRanges;
 
   for (auto &zombie : zombies)
-    zombie.update(tmpDetectionRanges);
+    {
+      zombie.updateTarget(getPlayer().entity);// TODO delete this
+      zombie.update(tmpDetectionRanges);
+    }
+
   for (auto &player : players)
     physics.move(player.entity.fixture);
   for (auto &human : humans)
     physics.move(human.entity.fixture);
   for (auto &zombie : zombies)
     physics.move(zombie.entity.fixture);
+
   updateWeapons(physics);
+
   for (auto &player : players)
     physics.fixMapCollision(player.entity.fixture, logic.getCityMap().getCityMap());
   for (auto &human : humans)
