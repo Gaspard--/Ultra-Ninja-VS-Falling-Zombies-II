@@ -18,7 +18,7 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  entityManager.spawnPlayer({50.4, 50.3});
+  entityManager.spawnPlayer({51.5, 49.5});
 }
 
 void Logic::update()
