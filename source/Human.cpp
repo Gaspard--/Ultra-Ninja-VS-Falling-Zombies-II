@@ -27,6 +27,11 @@ void Human::handleJump()
     offsetY -= 0.005;
 }
 
+void	Human::runAway(void)
+{
+  entity.fixture.speed += (entity.fixture.pos - posToEscape).normalized() * 0.0002;
+}
+
 void Human::update()
 {
   handleJump();
@@ -34,6 +39,8 @@ void Human::update()
     anim.animate(entity);
   coolDown -= coolDown > 0;
   canHighfive = false;
+  if (mustRunAway)
+    runAway();
   runAwayCooldown -= runAwayCooldown > 0;
   if (!runAwayCooldown)
     mustRunAway = false;
