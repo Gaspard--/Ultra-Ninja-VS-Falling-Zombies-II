@@ -25,7 +25,7 @@ Logic::Logic()
       entityManager.spawnZombie({i * 1.0 + 40.0, j * 1.0 + 40.0});
   entityManager.spawnHuman({49.0, 50.0}, block);
   entityManager.spawnHuman({49.3, 50.0}, block);
-  entityManager.spawnPlayer({50.4, 50.3});
+  entityManager.spawnPlayer({99.4, 99.3});
 }
 
 void Logic::update()
