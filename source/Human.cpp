@@ -5,16 +5,19 @@ Human::Human(Entity entity, CityBlock &home)
     infected(false),
     homePtr(&home),
     coolDown(0),
+    basicWalkCooldown(0),
+    dir(-1.0),
     runAwayCooldown(0),
     mustRunAway(false),
     posToEscape({0.0, 0.0}),
     canHighfive(false)
 {
+  entity.fixture.speed = {0.01, 0.0};
 }
 
 Human::~Human()
 {
-  homePtr->hab -= 1;
+  homePtr->hab -= homePtr->hab ? 1 : 0;
 }
 
 void Human::handleJump()
@@ -43,6 +46,14 @@ void Human::update()
   canHighfive = false;
   if (mustRunAway)
     runAway();
+  else {
+    basicWalkCooldown -= basicWalkCooldown > 0;
+    if (!basicWalkCooldown) {
+      basicWalkCooldown = 100;
+      dir *= -1.0;
+    }
+    entity.fixture.speed[0] += 0.0001 * dir;
+  }
   runAwayCooldown -= runAwayCooldown > 0;
   if (!runAwayCooldown)
     mustRunAway = false;
@@ -85,7 +96,7 @@ float Human::getAnimationFrame() const
 
 void	Human::beScaredOf(const Vect<2, double>& pos)
 {
-  if (mustRunAway || (entity.fixture.pos - pos).length2() < (entity.fixture.pos - posToEscape).length2()) {
+  if (!mustRunAway || (entity.fixture.pos - pos).length2() < (entity.fixture.pos - posToEscape).length2()) {
     runAwayCooldown = 120;
     mustRunAway = true;
     posToEscape = pos;

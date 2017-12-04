@@ -1,6 +1,6 @@
 #pragma once
 
-#define REPOP_HAB_CD 500
+#define REPOP_HAB_CD 2
 
 class CityMap;
 class Logic;
@@ -30,7 +30,7 @@ public:
   ~CityBlock() = default;
 
 public:
-  void tick(CityMap const &, Logic &logic);
+  void update(CityMap const &, Logic &logic);
   bool upgrade(Logic &logic);
   bool hasNeighbors(CityMap const &, int x, int y);
 };
