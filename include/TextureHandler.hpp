@@ -27,10 +27,12 @@ public :
       BOMBHOLLOW,
       ROAD,
       BORDER,
+      SLASH,
       BARFRONT,
       BARBACK,
       SPIN,
-      SPINHOLLOW
+      SPINHOLLOW,
+      BOMB_SPRITE,
     };
 
   static void initTextureHandler();

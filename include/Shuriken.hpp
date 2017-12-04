@@ -10,4 +10,6 @@ struct Shuriken : public Weapon
 	   Vect<2, double> const& speed,
 	   int damage);
   ~Shuriken() = default;
+
+  void updateAnimation();
 };

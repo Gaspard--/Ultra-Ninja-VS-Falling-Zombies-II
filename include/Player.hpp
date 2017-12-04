@@ -5,6 +5,9 @@
 #include "Human.hpp"
 #include "EntityAnimation.hpp"
 
+class Slash;
+class Bomb;
+
 class Player
 {
 public:
@@ -24,11 +27,18 @@ public:
   void setUlti(double ulti);
   double getUlti() const;
 
+  void slash(std::vector<Slash> &slashes);
+  void circleAttack(std::vector<Slash> &slashes);
+  void bomb(std::vector<Bomb> &bombs);
+
 private:
   EntityAnimation anim;
   double ulti;
   int nbBombs;
 
+  int slashCooldown;
+  int circleAttackCooldown;
+  int bombCooldown;
 };
 
 #endif //!PLAYER_HPP_

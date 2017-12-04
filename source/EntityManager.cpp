@@ -4,7 +4,7 @@
 
 void EntityManager::updateWeapons(Physics const &physics)
 {
-  static constexpr auto lifetimeCheck = [](auto container)
+  static constexpr auto lifetimeCheck = [](auto &container)
     {
       container.erase(container.begin(), std::remove_if(container.begin(), container.end(),
 							[](auto const &elem)
@@ -12,9 +12,22 @@ void EntityManager::updateWeapons(Physics const &physics)
       return elem.lifetime > 0;
     }));
     };
+  static auto updateWeapon = [&physics](auto &weaponContainer)
+    {
+      for (auto &elem : weaponContainer)
+	{
+	  elem.update();
+	  elem.updateAnimation();
+	  physics.move(elem.entity.fixture);
+	}
+    };
+  updateWeapon(slashes);
+  updateWeapon(bombs);
+  updateWeapon(explosions);
+  updateWeapon(shurikens);
   lifetimeCheck(slashes);
   lifetimeCheck(explosions);
-  for (auto it = bombs.begin(); it != bombs.end(); ++it)
+  for (auto it = bombs.begin(); it != bombs.end();)
     {
       if (it->explodes || it->lifetime <= 0)
 	{
@@ -22,6 +35,8 @@ void EntityManager::updateWeapons(Physics const &physics)
 	  explosions.emplace_back(it->entity.fixture.pos, 0.25, 2);
 	  it = bombs.erase(it);
 	}
+      else
+	++it;
     }
   for (auto it = shurikens.begin(); it != shurikens.end(); ++it)
     if (it->touched || it->lifetime <= 0)
@@ -34,12 +49,10 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
     player.update();
   for (auto &human : humans)
     human.update();
-
   std::vector<ZombieDetectionRange> tmpDetectionRanges;
 
   for (auto &zombie : zombies)
     zombie.update(tmpDetectionRanges);
-
   for (auto &player : players)
     physics.move(player.entity.fixture);
   for (auto &human : humans)

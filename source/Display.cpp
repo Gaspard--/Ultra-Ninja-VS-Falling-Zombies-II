@@ -347,6 +347,30 @@ void Display::copyRenderData(Logic const &logic)
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
+  for (auto &slash : manager.slashes)
+    {
+      auto pos(camera.apply(slash.entity.fixture.pos));
+
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SLASH)].push_back(Renderable{
+	    {0.2f * slash.getAnimationFrame(), 0.0f},
+	    {0.2f, 1.0f},
+	      pos,
+		camera.zoom * static_cast<float>(slash.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
+		(pos[1] + 1.1f) * 0.4f
+		});
+    }
+  for (auto &bomb : manager.bombs)
+    {
+      auto pos(camera.apply(bomb.entity.fixture.pos));
+
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BOMB_SPRITE)].push_back(Renderable{
+	    {0.2f * bomb.getAnimationFrame(), 0.0f},
+	    {0.2f, 1.0f},
+	      pos,
+		camera.zoom * static_cast<float>(bomb.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
+		(pos[1] + 1.1f) * 0.4f
+		});
+    }
   auto cityMap(logic.getCityMap().getCityMap());
   for (std::size_t i(0); i != 100ul; ++i)
     for (std::size_t j(0); j != 100ul; ++j)
