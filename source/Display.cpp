@@ -477,12 +477,12 @@ void Display::copyRenderData(Logic const &logic)
 	auto pos(camera.apply(blood.pos));
 
 	displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BLOOD)].push_back(Renderable{
-	    {static_cast<double>(blood.type) / 3.0f, 0.0f},
+	    {static_cast<float>(blood.type) / 3.0f, 0.0f},
 	      {1.0f / 3.0f, 1.0f},
 		pos,
 		  camera.zoom * 0.5f,
 		  0.90f
-		    });
+		  });
       }
   auto cityMap(logic.getCityMap().getCityMap());
   for (std::size_t i(0); i != 100ul; ++i)
