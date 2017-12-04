@@ -2,6 +2,12 @@
 #include "CollisionSolver.hpp"
 #include "Logic.hpp"
 
+EntityManager::EntityManager()
+  : frame(360)
+{
+
+}
+
 void EntityManager::updateSlashes()
 {
   static constexpr double posOffset = 0.1;
@@ -167,6 +173,22 @@ void EntityManager::spawnZombie(Vect<2, double> const& pos)
 
   zombies.emplace_back(e);
   detectionRanges.emplace_back(zombies.back());
+}
+
+void EntityManager::spawnZombies()
+{
+  constexpr int const rateOfSpawn = 500;
+
+  if (++frame > rateOfSpawn)
+    {
+      if (!humans.empty())
+	{
+	  auto pos(humans.at(humans.size() / 2).entity.fixture.pos);
+
+	  spawnZombie(humans.at(humans.size() / 2).entity.fixture.pos);
+	}
+      frame = 0;
+    }
 }
 
 void EntityManager::spawnPlayer(Vect<2, double> const& pos)

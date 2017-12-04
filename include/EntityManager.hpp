@@ -16,7 +16,7 @@
 #include "CityMap.hpp"
 #include "Blood.hpp"
 
-struct Logic;
+class Logic;
 
 class EntityManager
 {
@@ -31,7 +31,7 @@ public:
   std::vector<Shuriken> shurikens;
   std::vector<Blood> bloods;
 
-  EntityManager() = default;
+  EntityManager();
   ~EntityManager() = default;
 
   void updateSlashes();
@@ -42,6 +42,11 @@ public:
   void spawnHuman(Vect<2, double> const& pos, CityBlock &home);
   void spawnZombie(Vect<2, double> const& pos);
   void spawnPlayer(Vect<2, double> const& pos);
+  void spawnZombies();
   Player& getPlayer();
   Player const& getPlayer() const;
+
+private:
+  // for spawn zombie
+  int frame;
 };

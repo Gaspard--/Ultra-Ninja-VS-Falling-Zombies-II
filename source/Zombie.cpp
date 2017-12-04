@@ -6,7 +6,8 @@ Zombie::Zombie(Entity const &entity)
     hasTarget(false),
     target(),
     detectionCooldown(detectionTickBetween()),
-    landingSpeed(0.005)
+    landingSpeed(0.005),
+    isFalling(true)
 {
   offsetY = 0.8;
 }
@@ -16,6 +17,7 @@ Zombie::Zombie(Human const &villager)
 {
   landingSpeed = 0.0;
   offsetY = 0.0;
+  isFalling = false;
 }
 
 Zombie::~Zombie()
@@ -62,7 +64,10 @@ void Zombie::update(std::vector<ZombieDetectionRange> &detectionRanges)
   if (offsetY > 0.0)
     return handleFall();
   else
-    offsetY = 0.0;
+    {
+      offsetY = 0.0;
+      isFalling = false;
+    }
   anim.animate(entity);
   if (!--detectionCooldown) {
     if (detectionRanges.size() >= 16)
@@ -81,4 +86,9 @@ void Zombie::update(std::vector<ZombieDetectionRange> &detectionRanges)
 float Zombie::getAnimationFrame() const
 {
   return anim.getAnimationFrame();
+}
+
+bool Zombie::getIsFalling() const
+{
+  return isFalling;
 }

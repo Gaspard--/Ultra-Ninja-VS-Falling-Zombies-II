@@ -13,18 +13,14 @@ Logic::Logic()
     mousePos{0.0, 0.0},
     lastUpdate(Clock::now())
 {
-  CityBlock block;
-
   time = 0;
   score = 0;
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  for (int i = 0 ; i < 3; ++i)
-    for (int j = 0 ; j < 3; ++j)
-      entityManager.spawnZombie({i * 1.0 + 40.0, j * 1.0 + 40.0});
-  entityManager.spawnHuman({49.0, 50.0}, block);
-  entityManager.spawnHuman({49.3, 50.0}, block);
+  // for (int i = 0 ; i < 3; ++i)
+  //   for (int j = 0 ; j < 3; ++j)
+  //     entityManager.spawnZombie({i * 1.0 + 40.0, j * 1.0 + 40.0});
   entityManager.spawnPlayer({50.4, 50.3});
 }
 
@@ -34,6 +30,7 @@ void Logic::update()
     {
       ++time;
       entityManager.update(physics, *this, cityMap);
+      entityManager.spawnZombies();
       cityMap.tick(*this);
       multiplier += (1.0 / 600.0);
       if (!(time % 60))

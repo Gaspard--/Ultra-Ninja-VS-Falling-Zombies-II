@@ -42,6 +42,7 @@ struct CollisionSolver
 
   void operator()(Zombie &a, Human &b)
   {
+    if (!a.getIsFalling())
     a.infectHuman(b);
   }
   // Player should suffer knoback from zombies
@@ -70,7 +71,7 @@ struct CollisionSolver
 
     bloods.push_back({pos + offset, 1.0, std::sqrt(offset.length2()) * 1.0, rand() % 3});
   }
-  
+
   // Human should trigger zombie ranges
   void operator()(Human &a, ZombieDetectionRange &b)
   {

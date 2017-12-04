@@ -22,6 +22,7 @@ public:
   void infectHuman(Human &villager) const;
   bool updateTarget(Entity const&, CityMap const &);
   float getAnimationFrame() const;
+  bool getIsFalling() const;
 
 private:
   EntityAnimation anim;
@@ -30,6 +31,7 @@ private:
   Vect<2u, double> target;
   int detectionCooldown;
   double landingSpeed;
+  bool isFalling;
 
   static constexpr int detectionTickBetween()
   {
