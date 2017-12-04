@@ -29,7 +29,9 @@ public :
       BORDER,
       SLASH,
       BARFRONT,
-      BARBACK
+      BARBACK,
+      SPIN,
+      SPINHOLLOW
     };
 
   static void initTextureHandler();

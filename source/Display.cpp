@@ -276,6 +276,12 @@ void Display::displayInterface()
 	{1.0f / dim[0] - 0.71f, -1.0f / dim[1] + 0.055f},
 	{0.0066f * static_cast<float>(displayInfo.ulti), 0.07f}
   }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BARFRONT));
+  displayRenderableAsHUD(Renderable{
+    {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	{1.0f / dim[0] - 0.82f, -1.0f / dim[1] + 0.054f},
+	{0.072f, 0.072f}
+  }, TextureHandler::getInstance().getTexture((displayInfo.ulti == 100) ? TextureHandler::TextureList::SPIN : TextureHandler::TextureList::SPINHOLLOW));
   for (unsigned int i = 0; i < 5; i++)
     {
       displayRenderableAsHUD(Renderable{
@@ -310,7 +316,7 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(zombie.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIE)].emplace_back(Renderable{
-	  {0.1 * zombie.getAnimationFrame(), 0.0f},
+	  {0.1f * zombie.getAnimationFrame(), 0.0f},
 	    {0.1f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(zombie.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
@@ -322,7 +328,7 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(human.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMAN)].push_back(Renderable{
-	  {0.1 * human.getAnimationFrame(), 0.0f},
+	  {0.1f * human.getAnimationFrame(), 0.0f},
 	    {0.1f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(human.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
@@ -334,7 +340,7 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(player.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
-	    {0.1 * player.getAnimationFrame(), 0.0f},
+	    {0.1f * player.getAnimationFrame(), 0.0f},
 	    {0.1f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},

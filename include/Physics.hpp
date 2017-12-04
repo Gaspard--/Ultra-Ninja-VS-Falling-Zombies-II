@@ -25,8 +25,9 @@ public:
   void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
 
   template <class H, class... Types>
-  void quadTree(H const &h, std::vector<Types> &... entities) const
+  void quadTree(H &h, std::vector<Types> &... entities) const
   {
+    constexpr int const maxDepth{32};
     using expander = int[];
 
     std::tuple<std::vector<Types *>...> e;
@@ -38,8 +39,8 @@ public:
 		    for (auto i = entities.begin() ; i != entities.end() ; ++i)
 		      std::get<std::vector<T *>>(e).push_back(&(*i));
 		  });
-//    (addElems(entities, e) , ...);
-    this->quadTreeRec(h, std::get<std::vector<Types *>>(e)...);
+    (void)expander{(addElems(entities, e), 0)...};
+    this->quadTreeRec(h, maxDepth, std::move(std::get<std::vector<Types *>>(e))...);
   }
 
   template <class T>
@@ -54,7 +55,7 @@ private:
   static constexpr int const endCond{20};
 
   template <class H, class... Types>
-  void classicComparaison(H const &h, std::vector<Types*> &... entities) const
+  void classicComparaison(H &h, std::vector<Types*> &&... entities) const
   {
     using expander = int[];
 
@@ -88,61 +89,68 @@ private:
   VPosition	getVRelativePosition(Vect<2, double> const& middle, Fixture const& f) const;
 
   template <class H, class... Types>
-  void quadTreeRec(H const &h, std::vector<Types*> &... entities) const
+  void quadTreeRec(H &h, int depth, std::vector<Types*> &&... entities) const
   {
+    using expander = int[];
+    
     if (Vect<sizeof...(Types), bool>(!entities.size()...).all())
       return ;
-    if (Vect<sizeof...(Types), std::size_t>(entities.size()...).sum() <= endCond) {
-      this->classicComparaison(h, entities...);
+    if (!depth || Vect<sizeof...(Types), std::size_t>(entities.size()...).sum() <= endCond) {
+      this->classicComparaison(h, std::move(entities)...);
       return ;
     }
+    Vect<2u, double> lowCorner(100.0, 100.0);
+    Vect<2u, double> highCorner(0.0, 0.0);
+
+    auto getCorners([&lowCorner, &highCorner](auto &entities)
+		    {
+		      for (auto const &entity : entities)
+			{
+			  Vect<2, double> currentPos(entity->entity.fixture.pos);
+
+			  for (int j = 0 ; j < 2 ; ++j) {
+			    if (currentPos[j] > highCorner[j])
+			      highCorner[j] = currentPos[j];
+			    else if (currentPos[j] < lowCorner[j])
+			      lowCorner[j] = currentPos[j];
+			  }
+			}
+		    });
+    (void)expander{(getCorners(entities), 0)...};
+		    
+    Vect<2, double> middle((lowCorner + highCorner) * 0.5);
+    
     std::array<std::tuple<std::vector<Types *>...>, 4> children;
-    auto op([this](auto &entities,  auto &children)
+    auto op([this, middle](auto &entities, auto &children)
 	    {
-	      Vect<2, double> lowCorner((*entities.begin())->entity.fixture.pos);
-	      Vect<2, double> highCorner((*entities.begin())->entity.fixture.pos);
-
-	      for (auto i = entities.begin() + 1; i != entities.end() ; ++i) {
-		Vect<2, double> currentPos = (*i)->entity.fixture.pos;
-
-		for (int j = 0 ; j < 2 ; ++j) {
-		  if (currentPos[j] > highCorner[j])
-		    highCorner[j] = currentPos[j];
-		  else if (currentPos[j] < lowCorner[j])
-		    lowCorner[j] = currentPos[j];
-		}
-	      }
-	      Vect<2, double> middle((lowCorner + highCorner) * 0.5);
-
-	      for (auto i = entities.begin() + 1; i != entities.end() ; ++i) {
-		using T = std::remove_reference_t<decltype(*i)>;
-		VPosition vertical = getVRelativePosition(middle, (*i)->entity.fixture);
-		HPosition horizontal = getHRelativePosition(middle, (*i)->entity.fixture);
+	      for (auto &entity : entities) {
+		using T = std::remove_reference_t<decltype(entity)>;
+		VPosition vertical = getVRelativePosition(middle, entity->entity.fixture);
+		HPosition horizontal = getHRelativePosition(middle, entity->entity.fixture);
 
 		if (vertical != RIGHT) {
 		  if (horizontal != BOTTOM) {
-		    std::get<std::vector<T>>(children[0]).push_back(*i);
+		    std::get<std::vector<T>>(children[0]).push_back(entity);
 		  }
 		  if (horizontal != TOP) {
-		    std::get<std::vector<T>>(children[1]).push_back(*i);
+		    std::get<std::vector<T>>(children[1]).push_back(entity);
 		  }
 		}
 		if (vertical != LEFT) {
 		  if (horizontal != BOTTOM) {
-		    std::get<std::vector<T>>(children[2]).push_back(*i);
+		    std::get<std::vector<T>>(children[2]).push_back(entity);
 		  }
 		  if (horizontal != TOP) {
-		    std::get<std::vector<T>>(children[3]).push_back(*i);
+		    std::get<std::vector<T>>(children[3]).push_back(entity);
 		  }
 		}
 	      }
 	    });
-    using expander = int[];
     (void)expander{(op(entities, children), 0)...};
-    for (auto i = children.begin() ; i != children.end() ; ++i) {
-      this->quadTreeRec(h, std::get<std::vector<Types *>>(*i)...);
+    for (auto &child : children) {
+      this->quadTreeRec(h, depth - 1, std::move(std::get<std::vector<Types *>>(child))...);
     }
   }
-};
+  };
 
 #endif /* PHYSICS_HPP */
