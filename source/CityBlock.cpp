@@ -3,19 +3,16 @@
 #include "Logic.hpp"
 
 CityBlock::CityBlock()
-  : habMax(0), type(BlockType::NONE), hab(0), x(0), y(0)
+  : habMax(0), cooldown(0), type(BlockType::NONE), hab(0), x(0), y(0)
 {
 }
 
 void CityBlock::update(CityMap const &ref, Logic &logic)
 {
-  /*
-  bool a(hasNeighbors(ref, x, y));
-
-  if (habMax)
-    std::cout << hab << " " << habMax << " " << a << std::endl;
-  if (hab != habMax && a)
+  cooldown -= cooldown ? 1 : 0;
+  if (hab != habMax && hasNeighbors(ref, x, y) && !cooldown)
     {
+      cooldown = REPOP_HAB_CD;
       int newHab(((hab + habMax / 2) % habMax) - hab);
 
       for (int i = 0; i < newHab; i++)
@@ -23,7 +20,7 @@ void CityBlock::update(CityMap const &ref, Logic &logic)
 	      (1 / static_cast<double>(newHab)) * (0.5 + i),
 	      static_cast<double>(y) - 0.2}, *this);
       hab = (hab + newHab) % habMax;
-      }*/
+    }
 }
 
 bool CityBlock::upgrade(Logic &logic)
@@ -32,6 +29,7 @@ bool CityBlock::upgrade(Logic &logic)
     return (false);
   habMax += 2;
   hab = habMax;
+  cooldown = REPOP_HAB_CD;
   logic.getEntityManager().spawnHuman({static_cast<double>(x) +
 	1.0 / 3.0,
 	static_cast<double>(y) - 0.2}, *this);

@@ -14,7 +14,7 @@ Human::Human(Entity entity, CityBlock &home)
 
 Human::~Human()
 {
-  homePtr->hab -= 1;
+  homePtr->hab -= homePtr->hab ? 1 : 0;
 }
 
 void Human::handleJump()
