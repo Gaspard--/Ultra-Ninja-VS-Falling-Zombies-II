@@ -1,15 +1,15 @@
 #include "Zombie.hpp"
 
-Zombie::Zombie(Entity entity)
+Zombie::Zombie(Entity const &entity)
   : Mob(entity, 2),
     lead(false),
-    target(NULL)
+    target(),
+    detectionCooldown(detectionTickBetween())
 {
 }
 
-Zombie::Zombie(Human &villager)
-  : Mob(villager.entity, 2),
-    lead(false)
+Zombie::Zombie(Human const &villager)
+  : Zombie(villager.entity)
 {
 }
 
@@ -32,21 +32,28 @@ void Zombie::infectHuman(Human &villager) const
   villager.setInfected(true);
 }
 
-void Zombie::updateTarget(Human& newTarget)
+void Zombie::updateTarget(Entity& newTarget)
 {
-  if (this->target == &newTarget)
-    return ;
-  if (!this->target || (newTarget.entity.fixture.pos - this->entity.fixture.pos).length2() < (this->target->entity.fixture.pos - this->entity.fixture.pos).length2()) {
-    if (this->target)
-      this->target->removeHunter(*this);
-    this->target = &newTarget;
-    this->target->addHunter(*this);
+  if (!target || (newTarget.fixture.pos - entity.fixture.pos).length2() < (*target - entity.fixture.pos).length2()) {
+    target = newTarget.fixture.pos;
   }
 }
 
-void Zombie::update()
+void Zombie::update(std::vector<ZombieDetectionRange> &detectionRanges)
 {
   anim.animate(entity);
+  if (!--detectionCooldown) {
+    if (detectionRanges.size() > 4)
+      ++detectionCooldown;
+    else
+      {
+	detectionCooldown = detectionTickBetween();
+	detectionRanges.emplace_back(*this);
+	target.reset();
+      }
+  }
+  if (target && (*target - entity.fixture.pos).length2() > 0.1)
+    entity.fixture.speed += (*target - entity.fixture.pos).normalized() * 0.001;
 }
 
 float Zombie::getAnimationFrame() const
