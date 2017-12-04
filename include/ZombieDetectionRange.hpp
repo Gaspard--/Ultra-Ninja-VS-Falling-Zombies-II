@@ -19,7 +19,7 @@ private:
 
   int	cooldown;
 
-  static constexpr double const zombieRange = 10.0;
+  static constexpr double const zombieRange = 5.0;
 };
 
 

@@ -8,16 +8,18 @@
 #include <iostream>
 #include "CityBlock.hpp"
 
+class Logic;
+
 class CityMap
 {
   std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> cityMap;
   int cooldown;
 
 public:
-  CityMap();
+  CityMap(Logic &logic);
   ~CityMap() = default;
 
-  void tick(/*Logic &logic*/);
+  void tick(Logic &logic);
   std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const &getCityMap() const;
   void printMap() const;
 };

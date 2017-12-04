@@ -20,7 +20,7 @@ public:
   void setLead(bool lead);
   bool const& getLead() const;
   void infectHuman(Human &villager) const;
-  void updateTarget(Entity const&);
+  void updateTarget(Entity const&, CityMap const &);
   float getAnimationFrame() const;
 
 private:
@@ -33,7 +33,7 @@ private:
 
   static constexpr int detectionTickBetween()
   {
-    return 40;
+    return 100;
   }
 };
 

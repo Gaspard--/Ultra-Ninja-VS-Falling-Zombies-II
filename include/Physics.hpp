@@ -19,8 +19,16 @@ public:
   Physics() = default;
 
   void move(Fixture&) const;
-  bool haveCollision(Fixture const& a, Fixture const& b) const;
-  bool haveCollision(Vect<2, double> const& a, Fixture const& b) const;
+  static bool haveCollision(const Fixture& a, const Fixture& b)
+  {
+    return (a.pos - b.pos).length2() < CAR(a.radius + b.radius);
+  }
+
+  static bool haveCollision(Vect<2, double> const& a, Fixture const& b)
+  {
+    return (a - b.pos).length2() < CAR(b.radius);
+  }
+
   bool haveCollision(Fixture& a, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
 
   void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
@@ -28,7 +36,7 @@ public:
   template <class H, class... Types>
   void quadTree(H &h, std::vector<Types> &... entities) const
   {
-    constexpr int const maxDepth{20};
+    constexpr int const maxDepth{16};
     using expander = int[];
 
     std::tuple<std::vector<Types *>...> e;
@@ -86,8 +94,20 @@ private:
     VMIDDLE
   };
 
-  HPosition	getHRelativePosition(Vect<2, double> const& middle, Fixture const& f) const;
-  VPosition	getVRelativePosition(Vect<2, double> const& middle, Fixture const& f) const;
+  static int getHRelativePosition(Vect<2, double> const& middle, Fixture const& f)
+  {
+    double diff = f.pos[0] - middle[0];
+
+    return (std::abs(diff) > f.radius) * ((diff > 0) * 2 - 1);
+  }
+
+  static int getVRelativePosition(Vect<2, double> const& middle, Fixture const& f)
+  {
+    double diff = f.pos[1] - middle[1];
+
+    return (std::abs(diff) > f.radius) * ((diff > 0) * 2 - 1);
+  }
+
 
   template <class H, class... Types>
   void quadTreeRec(H &h, int depth, std::vector<Types*> &&... entities) const
@@ -124,28 +144,32 @@ private:
     std::array<std::tuple<std::vector<Types *>...>, 4> children;
     auto op([this, middle](auto &entities, auto &children)
 	    {
-	      for (auto &entity : entities) {
-		using T = std::remove_reference_t<decltype(entity)>;
-		VPosition vertical = getVRelativePosition(middle, entity->entity.fixture);
-		HPosition horizontal = getHRelativePosition(middle, entity->entity.fixture);
+	      using T = std::remove_reference_t<decltype(entities[0])>;
 
-		if (vertical != RIGHT) {
-		  if (horizontal != BOTTOM) {
+	      for (auto &child : children)
+		std::get<std::vector<T>>(child).reserve(entities.size());
+	      for (auto &entity : entities) {
+		int vertical = getVRelativePosition(middle, entity->entity.fixture);
+		int horizontal = getHRelativePosition(middle, entity->entity.fixture);
+
+		if (vertical >= 0) {
+		  if (horizontal <= 0) {
 		    std::get<std::vector<T>>(children[0]).push_back(entity);
 		  }
-		  if (horizontal != TOP) {
+		  if (horizontal >= 0) {
 		    std::get<std::vector<T>>(children[1]).push_back(entity);
 		  }
 		}
-		if (vertical != LEFT) {
-		  if (horizontal != BOTTOM) {
+		if (vertical <= 0) {
+		  if (horizontal <= 0) {
 		    std::get<std::vector<T>>(children[2]).push_back(entity);
 		  }
-		  if (horizontal != TOP) {
+		  if (horizontal >= 0) {
 		    std::get<std::vector<T>>(children[3]).push_back(entity);
 		  }
 		}
 	      }
+	      entities.clear();
 	    });
     (void)expander{(op(entities, children), 0)...};
     for (auto &child : children) {
