@@ -29,7 +29,7 @@ void EntityManager::updateWeapons(Physics const &physics)
   lifetimeCheck(explosions);
   for (auto it = bombs.begin(); it != bombs.end();)
     {
-      if (it->explodes || it->lifetime <= 0)
+      if (it->lifetime <= 0)
 	{
 	  explosions.emplace_back(Vect<2, double>{it->entity.fixture.pos[0],
 				  it->entity.fixture.pos[1] - 0.25 * 2},
@@ -82,7 +82,8 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
   {
     CollisionSolver collisionSolver{};
 
-    physics.quadTree(collisionSolver, players, humans, zombies, tmpDetectionRanges);
+    physics.quadTree(collisionSolver, players, humans, zombies, tmpDetectionRanges,
+		     explosions, slashes);
   }
   mobDeath();
 }

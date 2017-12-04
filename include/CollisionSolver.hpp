@@ -49,4 +49,19 @@ struct CollisionSolver
   {
     b.affiliated->updateTarget(a.entity);
   }
+
+  void operator()(Slash &a, Zombie &b)
+  {
+    a.hit(b);
+  }
+
+  void operator()(Explosion &a, Zombie &b)
+  {
+    a.hit(b);
+  }
+
+  void operator()(Bomb &a, Zombie &)
+  {
+    a.lifetime = 0;
+  }
 };
