@@ -10,7 +10,8 @@ Player::Player(Entity entity)
     nbBombs(0),
     slashCooldown(0),
     shurikenCooldown(0),
-    bombCooldown(0)
+    bombCooldown(0),
+    isJumping(false)
 {
 }
 
@@ -23,9 +24,23 @@ float Player::getAnimationFrame() const
   return anim.getAnimationFrame();
 }
 
+void Player::handleJump()
+{
+  constexpr double const maxHeight = 0.05;
+
+  if (isJumping && offsetY < maxHeight)
+    offsetY += 0.005;
+  if (isJumping && offsetY >= maxHeight)
+    isJumping = false;
+  if (!isJumping && offsetY > 0)
+    offsetY -= 0.005;
+}
+
 void Player::update()
 {
-  anim.animate(entity);
+  handleJump();
+  if (!isJumping)
+    anim.animate(entity);
   static auto updateCd = [](int &cd) { cd -= cd > 0; };
   updateCd(slashCooldown);
   updateCd(shurikenCooldown);
@@ -39,8 +54,8 @@ void Player::highFive(Human &villager)
 
   if (!canHighfive || !villager.canHighFive())
     return ;
-  // villager.setOffset(0.5);
-  // offsetY = 0.03;
+  isJumping = true;
+  villager.isJumping = true;
   choice = rand() % 5;
   if (choice < 4)
     ulti += (ulti < 100.0) ? 20.0 : 0.0;

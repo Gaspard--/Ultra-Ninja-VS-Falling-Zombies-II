@@ -16,6 +16,7 @@ public:
   ~Zombie();
 
   void update(std::vector<ZombieDetectionRange> &);
+  void handleFall();
   void setLead(bool lead);
   bool const& getLead() const;
   void infectHuman(Human &villager) const;
@@ -28,6 +29,7 @@ private:
   bool hasTarget;
   Vect<2u, double> target;
   int detectionCooldown;
+  double landingSpeed;
 
   static constexpr int detectionTickBetween()
   {
