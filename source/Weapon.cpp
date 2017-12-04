@@ -11,10 +11,10 @@ Weapon::Weapon(Vect<2, double> const& pos,
 {
 }
 
-void Weapon::hit(Zombie &zombie)
+void Weapon::hit(Mob &mob)
 {
-  if (zombie.getLife() > 0)
-    zombie.setLife(zombie.getLife() - damage);
+  if (mob.getLife() > 0)
+    mob.setLife(mob.getLife() - damage);
 }
 
 void Weapon::update()

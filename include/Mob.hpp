@@ -14,8 +14,12 @@ public:
   void setLife(int life);
   int const& getLife() const;
 
+  void setOffset(double offsetY);
+  double const& getOffset() const;
+
 protected:
   int life;
+  double offsetY;
 };
 
 #endif //!MOB_HPP_

@@ -5,6 +5,7 @@
 
 Player::Player(Entity entity)
   : entity(entity),
+    canHighfive(false),
     ulti(0.0),
     nbBombs(0),
     slashCooldown(0),
@@ -33,11 +34,13 @@ void Player::update()
 
 void Player::highFive(Human &villager)
 {
-  constexpr int const cd = 10;
+  constexpr int const cd = 1150;
   unsigned int choice;
 
-  if (!villager.canHighFive())
+  if (!canHighfive || !villager.canHighFive())
     return ;
+  // villager.setOffset(0.5);
+  // offsetY = 0.03;
   choice = rand() % 5;
   if (choice < 4)
     ulti += (ulti < 100.0) ? 20.0 : 0.0;
@@ -46,9 +49,19 @@ void Player::highFive(Human &villager)
   villager.setCoolDown(cd);
 }
 
+// void Player::setOffset(double offsetY)
+// {
+//   this->offsetY = offsetY;
+// }
+
+double const& Player::getOffset() const
+{
+  return offsetY;
+}
+
 void Player::slash(std::vector<Slash> &slashes)
 {
-  static constexpr int cd = 20;
+  constexpr int cd = 20;
 
   if (slashCooldown == 0)
     {
@@ -94,16 +107,12 @@ void Player::bomb(std::vector<Bomb> &bombs)
 
 void Player::shuriken(std::vector<Shuriken> &shurikens)
 {
-  Shuriken s(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
-	     entity.fixture.speed.normalized() * 0.08, 1);
+  if (shurikenCooldown > 0)
+    return ;
+  shurikens.emplace_back(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
+			 entity.fixture.speed.normalized() * 0.08, 1);
 
-  shurikens.push_back(s);
-  shurikenCooldown = 15;
-}
-
-bool Player::canShuriken() const
-{
-  return shurikenCooldown == 0;
+  shurikenCooldown = /*0;*/15;
 }
 
 void Player::accelerate(Vect<2, int> const& dir)

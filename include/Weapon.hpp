@@ -12,7 +12,7 @@ struct Weapon
   ~Weapon() = default;
 
   void update();
-  void hit(Zombie &zombie);
+  void hit(Mob &mob);
 
   Entity entity;
   int damage;

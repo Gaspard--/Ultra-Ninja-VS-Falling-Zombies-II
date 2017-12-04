@@ -37,6 +37,9 @@ private:
 
   std::vector<Zombie*>	hunters;
 
+public:
+  bool canHighfive;
+
 };
 
 #endif //!HUMAN_HPP_

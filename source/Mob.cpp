@@ -2,7 +2,8 @@
 
 Mob::Mob(Entity entity, int life)
   : entity(entity),
-    life(life)
+    life(life),
+    offsetY(0)
 {
 }
 
@@ -18,4 +19,14 @@ void Mob::setLife(int life)
 int const& Mob::getLife() const
 {
   return life;
+}
+
+void Mob::setOffset(double offsetY)
+{
+  this->offsetY = offsetY;
+}
+
+double const& Mob::getOffset() const
+{
+  return offsetY;
 }

@@ -4,7 +4,8 @@ Human::Human(Entity entity, CityBlock &home)
   : Mob(entity, 1),
     infected(false),
     homePtr(&home),
-    coolDown(0)
+    coolDown(0),
+    canHighfive(false)
 {
 }
 
@@ -16,6 +17,7 @@ void Human::update()
 {
   anim.animate(entity);
   coolDown -= coolDown > 0;
+  canHighfive = false;
 }
 
 void Human::setInfected(bool infected)
@@ -45,7 +47,7 @@ void Human::setCoolDown(int coolDown)
 
 bool Human::canHighFive() const
 {
-  return coolDown <= 0;
+  return canHighfive && coolDown <= 0;
 }
 
 void Human::addHunter(Zombie& z)
