@@ -48,8 +48,16 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
     physics.fixMapCollision(human.entity.fixture, logic.getCityMap().getCityMap());
   for (auto &zombie : zombies)
     physics.fixMapCollision(zombie.entity.fixture, logic.getCityMap().getCityMap());
-  
-  physics.quadTree([](auto &, auto &){}, humans, zombies, players);
+
+  std::vector<ZombieDetectionRange> tmpDetectionRanges;
+  for (auto &range : detectionRanges)
+    if (range.refreshRange())
+      tmpDetectionRanges.push_back(range);
+  // physics.quadTree([](auto &a, auto &b){
+  //     if constexpr (!std::is_same_v<decltype(a), decltype(b)>)
+  // 		     std::cout << "COLLISION" << std::endl;
+  //     else
+  // 	std::cout << "NOT" << std::endl;}, humans, zombies, players);
   mobDeath();
 }
 
@@ -83,6 +91,7 @@ void EntityManager::spawnZombie(Vect<2, double> const& pos)
   Entity e({pos, {0.0, 0.0}, 0.062, 0.0, 0.0});
 
   zombies.emplace_back(e);
+  detectionRanges.emplace_back(zombies.back());
 }
 
 void EntityManager::spawnPlayer(Vect<2, double> const& pos)

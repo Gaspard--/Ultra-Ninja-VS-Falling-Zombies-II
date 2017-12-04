@@ -38,7 +38,7 @@ public:
 		    for (auto i = entities.begin() ; i != entities.end() ; ++i)
 		      std::get<std::vector<T *>>(e).push_back(&(*i));
 		  });
-//    (addElems(entities, e) , ...);
+    (void)expander{(addElems(entities, e), 0)...};
     this->quadTreeRec(h, std::get<std::vector<Types *>>(e)...);
   }
 
