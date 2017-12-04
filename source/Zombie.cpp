@@ -3,6 +3,7 @@
 Zombie::Zombie(Entity const &entity)
   : Mob(entity, 2),
     lead(false),
+    hasTarget(false),
     target(),
     detectionCooldown(detectionTickBetween())
 {
@@ -34,8 +35,9 @@ void Zombie::infectHuman(Human &villager) const
 
 void Zombie::updateTarget(Entity const& newTarget)
 {
-  if (!target || (newTarget.fixture.pos - entity.fixture.pos).length2() < (*target - entity.fixture.pos).length2()) {
+  if (!hasTarget || (newTarget.fixture.pos - entity.fixture.pos).length2() < (target - entity.fixture.pos).length2()) {
     target = newTarget.fixture.pos;
+    hasTarget = true;
   }
 }
 
@@ -49,11 +51,11 @@ void Zombie::update(std::vector<ZombieDetectionRange> &detectionRanges)
       {
 	detectionCooldown = detectionTickBetween();
 	detectionRanges.emplace_back(*this);
-	target.reset();
+	hasTarget = false;
       }
   }
-  if (target && (*target - entity.fixture.pos).length2() > 0.1)
-    entity.fixture.speed += (*target - entity.fixture.pos).normalized() * 0.001;
+  if (hasTarget && (target - entity.fixture.pos).length2() > 0.1)
+    entity.fixture.speed += (target - entity.fixture.pos).normalized() * 0.001;
 }
 
 float Zombie::getAnimationFrame() const
