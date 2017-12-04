@@ -34,6 +34,7 @@ public:
   EntityManager() = default;
   ~EntityManager() = default;
 
+  void updateSlashes();
   void updateWeapons(Physics const &physics);
   void update(Physics const &physics, Logic const &logic, CityMap const &);
   void updateWeapons(Physics const &physics, Logic const &logic);

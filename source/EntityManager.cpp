@@ -2,6 +2,24 @@
 #include "CollisionSolver.hpp"
 #include "Logic.hpp"
 
+void EntityManager::updateSlashes()
+{
+  static constexpr double posOffset = 0.1;
+  static constexpr double speed = 0.03;
+  for (auto i = 0lu; i < slashes.size(); ++i)
+    {
+      if (slashes[i].lifetime <= 0 && slashes[i].getNbLaunch() > 0)
+	{
+	  auto &pos = slashes[i].entity.fixture.pos;
+	  auto nbLaunch = slashes[i].getNbLaunch() - 1;
+	  slashes.emplace_back(Vect<2, double>(pos[0], pos[1] - posOffset), Vect<2, double>(0.0, -speed), 2, nbLaunch); // UP
+	  slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1]), Vect<2, double>(speed, 0.0), 2, nbLaunch); // RIGHT
+	  slashes.emplace_back(Vect<2, double>(pos[0], pos[1] + posOffset), Vect<2, double>(0.0, speed), 2, nbLaunch); // DOWN
+	  slashes.emplace_back(Vect<2, double>(pos[0] - posOffset, pos[1]), Vect<2, double>(-speed, 0.0), 2, nbLaunch); // LEFT
+	}
+    }
+}
+
 void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
 {
   static constexpr auto lifetimeCheck = [](auto &container)
@@ -26,6 +44,7 @@ void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
   updateWeapon(bombs);
   updateWeapon(explosions);
   updateWeapon(shurikens);
+  updateSlashes();
   lifetimeCheck(slashes);
   lifetimeCheck(explosions);
   for (auto it = bombs.begin(); it != bombs.end();)
