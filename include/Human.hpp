@@ -16,6 +16,7 @@ public:
   ~Human();
 
   void update();
+  void handleJump();
 
   void setInfected(bool infected);
   bool const& getInfected() const;
@@ -24,9 +25,11 @@ public:
   void setCoolDown(int cooldown);
   bool canHighFive() const;
 
-  void addHunter(Zombie&);
-  void removeHunter(Zombie&);
   float getAnimationFrame() const;
+
+  void	beScaredOf(const Vect<2, double>&);
+
+  void	runAway(void);
 
 private:
   EntityAnimation anim;
@@ -35,7 +38,12 @@ private:
   CityBlock *homePtr;
   int coolDown;
 
-  std::vector<Zombie*>	hunters;
+  int			runAwayCooldown;
+  bool			mustRunAway;
+  Vect<2, double>	posToEscape;
+
+public:
+  bool canHighfive;
 
 };
 

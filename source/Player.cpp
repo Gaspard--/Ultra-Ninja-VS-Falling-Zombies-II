@@ -5,11 +5,13 @@
 
 Player::Player(Entity entity)
   : entity(entity),
+    canHighfive(false),
     ulti(0.0),
     nbBombs(0),
     slashCooldown(0),
     shurikenCooldown(0),
-    bombCooldown(0)
+    bombCooldown(0),
+    isJumping(false)
 {
 }
 
@@ -22,9 +24,23 @@ float Player::getAnimationFrame() const
   return anim.getAnimationFrame();
 }
 
+void Player::handleJump()
+{
+  constexpr double const maxHeight = 0.05;
+
+  if (isJumping && offsetY < maxHeight)
+    offsetY += 0.005;
+  if (isJumping && offsetY >= maxHeight)
+    isJumping = false;
+  if (!isJumping && offsetY > 0)
+    offsetY -= 0.005;
+}
+
 void Player::update()
 {
-  anim.animate(entity);
+  handleJump();
+  if (!isJumping)
+    anim.animate(entity);
   static auto updateCd = [](int &cd) { cd -= cd > 0; };
   updateCd(slashCooldown);
   updateCd(shurikenCooldown);
@@ -33,11 +49,13 @@ void Player::update()
 
 void Player::highFive(Human &villager)
 {
-  constexpr int const cd = 10;
+  constexpr int const cd = 1150;
   unsigned int choice;
 
-  if (!villager.canHighFive())
+  if (!canHighfive || !villager.canHighFive())
     return ;
+  isJumping = true;
+  villager.isJumping = true;
   choice = rand() % 5;
   if (choice < 4)
     ulti += (ulti < 100.0) ? 20.0 : 0.0;
@@ -46,9 +64,19 @@ void Player::highFive(Human &villager)
   villager.setCoolDown(cd);
 }
 
+// void Player::setOffset(double offsetY)
+// {
+//   this->offsetY = offsetY;
+// }
+
+double const& Player::getOffset() const
+{
+  return offsetY;
+}
+
 void Player::slash(std::vector<Slash> &slashes)
 {
-  static constexpr int cd = 20;
+  constexpr int cd = 20;
 
   if (slashCooldown == 0)
     {
