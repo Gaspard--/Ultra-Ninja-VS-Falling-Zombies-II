@@ -20,9 +20,7 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  for (int i = 0 ; i < 3; ++i)
-    for (int j = 0 ; j < 3; ++j)
-      entityManager.spawnZombie({i * 1.0 + 40.0, j * 1.0 + 40.0});
+  entityManager.spawnZombie({40.0, 40.0});
   entityManager.spawnHuman({49.0, 50.0}, block);
   entityManager.spawnHuman({49.3, 50.0}, block);
   entityManager.spawnPlayer({99.4, 99.3});
@@ -36,6 +34,8 @@ void Logic::update()
       entityManager.update(physics, *this, cityMap);
       cityMap.tick(*this);
       multiplier += (1.0 / 600.0);
+      if (!(time % 60))
+	score += entityManager.humans.size();
     }
 }
 
@@ -73,7 +73,7 @@ void Logic::resetCombo()
   combo = 0;
 }
 
-unsigned int Logic::getScore(void) const
+long unsigned int Logic::getScore(void) const
 {
   return score;
 }
