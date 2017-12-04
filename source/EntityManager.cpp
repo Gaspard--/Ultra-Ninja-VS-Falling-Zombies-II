@@ -6,11 +6,12 @@ void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
 {
   static constexpr auto lifetimeCheck = [](auto &container)
     {
-      container.erase(container.begin(), std::remove_if(container.begin(), container.end(),
+      container.erase(std::remove_if(container.begin(), container.end(),
 							[](auto const &elem)
 							{
-							  return elem.lifetime > 0;
-							}));
+							  return elem.lifetime <= 0;
+							}),
+		      container.end());
     };
   static auto updateWeapon = [&physics](auto &weaponContainer)
     {
@@ -32,10 +33,10 @@ void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
       if (it->lifetime <= 0)
 	{
 	  explosions.emplace_back(Vect<2, double>{it->entity.fixture.pos[0],
-				  it->entity.fixture.pos[1] - 0.25 * 2},
+				  it->entity.fixture.pos[1]},
 				  0.5, 1);
 	  explosions.emplace_back(Vect<2, double>{it->entity.fixture.pos[0],
-				  it->entity.fixture.pos[1] - 0.125 * 2},
+				  it->entity.fixture.pos[1]},
 				  0.25, 2);
 	  it = bombs.erase(it);
 	}
@@ -114,11 +115,12 @@ void EntityManager::mobDeath()
 			    }));
   static constexpr auto lifeCheck = [](auto &container)
     {
-      container.erase(container.begin(), std::remove_if(container.begin(), container.end(),
+      container.erase(std::remove_if(container.begin(), container.end(),
 							[](auto const &elem)
     {
-      return elem.getLife() > 0;
-    }));
+      return elem.getLife() <= 0;
+    }),
+		      container.end());
     };
 
   lifeCheck(zombies);

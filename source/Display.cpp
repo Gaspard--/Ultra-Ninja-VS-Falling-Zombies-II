@@ -238,7 +238,7 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void Display::render()
+void Display::render(Logic const &logic)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glClearColor(0.3f, 0.5f, 0.2f, 0.0f);
@@ -254,17 +254,59 @@ void Display::render()
 	  std::cout << renderables.second.size() << std::endl;
   }
   glDisable(GL_DEPTH_TEST);
-  displayInterface();
+  displayInterface(logic);
   glDisable(GL_BLEND);
   glfwSwapBuffers(window.get());
   glfwPollEvents();
 }
 
-void Display::displayInterface()
+void Display::displayInterface(Logic const &logic)
 {
   // displayText("Current Population",
   //             256, {0.05f, 0.05f}, {-0.017f * 18, -0.315f}, {sqrt(camera.length2()), 0}, {1.0f, 1.0f, 1.0f});
   // displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  auto const &manager(logic.getEntityManager());
+  for (auto &player : manager.players)
+    {
+      auto pos(camera.apply(player.entity.fixture.pos));
+      double halfWidth = 1.0 / dim[0];
+      double halfHeight = 1.0 / dim[1];
+      for (auto &zombie : manager.zombies)
+	{
+	  auto zombiePos(camera.apply(zombie.entity.fixture.pos));
+	  if ((zombiePos[0] > -halfWidth && zombiePos[0] < halfWidth && zombiePos[1] > -halfHeight && zombiePos[1] < halfHeight) || !(pos[1] - zombiePos[1]))
+	    continue;
+	  Vect<2, double> finalSize = camera.zoom * Vect<2u, float>{0.2f, 0.3f};
+	  Vect<2, double> arrowPos({100.0, 100.0});
+	  double droiteCoef = (pos[0] - zombiePos[0]) / (pos[1] - zombiePos[1]);
+	  double droiteOrd = pos[1] - pos[0] * droiteCoef;
+	  if (zombiePos[0] < -halfWidth && droiteCoef) {
+	    Vect<2, double> newPos = Vect<2, double>(-halfWidth, (-halfWidth - droiteOrd) / droiteCoef);
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	      arrowPos = newPos;
+	  }
+	  else if (zombiePos[0] > halfWidth && droiteCoef) {
+	    Vect<2, double> newPos = Vect<2, double>(halfWidth, (halfWidth - droiteOrd) / droiteCoef) - finalSize[0];
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	      arrowPos = newPos;
+	  }
+	  if (zombiePos[1] < -halfHeight) {
+	    Vect<2, double> newPos = Vect<2, double>(-droiteCoef * halfHeight + droiteOrd, -halfHeight);
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	      arrowPos = newPos;
+	  }
+	  else if (zombiePos[1] > halfHeight) {
+	    Vect<2, double> newPos = Vect<2, double>(droiteCoef * halfHeight + droiteOrd, halfHeight) - finalSize[1];
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	      arrowPos = newPos;
+	  }
+	  displayRenderableAsHUD(Renderable{
+	      {0.0f, 0.0f},
+		{1.0f, 1.0f},
+		  arrowPos,
+		    finalSize}, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ARROW));
+	}
+    }
   displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayRenderableAsHUD(Renderable{
@@ -393,7 +435,7 @@ void Display::copyRenderData(Logic const &logic)
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::EXPLOSION)].push_back(Renderable{
 	    {0.25f * explosion.getAnimationFrame(), 0.0f},
 	    {0.25f, 1.0f},
-	      pos,
+	    pos - Vect<2, double>{0.0, explosion.entity.fixture.radius / 2},
 		camera.zoom * static_cast<float>(explosion.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
