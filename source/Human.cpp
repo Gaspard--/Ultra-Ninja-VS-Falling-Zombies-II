@@ -7,12 +7,14 @@ Human::Human(Entity entity, CityBlock &home)
     coolDown(0),
     mustRunAway(false),
     posToEscape({0.0, 0.0}),
-    canHighfive(false)
+    canHighfive(false),
+    runAwayCooldown(0)
 {
 }
 
 Human::~Human()
 {
+  homePtr->hab -= 1;
 }
 
 void Human::handleJump()

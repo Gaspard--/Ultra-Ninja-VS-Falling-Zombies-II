@@ -17,12 +17,12 @@ enum class BlockType : char
 
 class CityBlock
 {
-  int hab;
   int habMax;
   int cooldown;
 
 public:
   BlockType type;
+  int hab;
   int x;
   int y;
 
@@ -33,5 +33,4 @@ public:
   void tick(CityMap const &, Logic &logic);
   bool upgrade(Logic &logic);
   bool hasNeighbors(CityMap const &, int x, int y);
-  int getHab() const;
 };
