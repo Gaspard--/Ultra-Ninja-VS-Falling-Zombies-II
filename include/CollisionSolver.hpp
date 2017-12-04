@@ -83,6 +83,8 @@ struct CollisionSolver
 
   void operator()(Slash &a, Human &b)
   {
+    for (int i(0); i < 5; ++i)
+      spawnBlood(b.entity.fixture.pos, a.entity.fixture.speed);
     a.hit(b);
   }
 
@@ -95,6 +97,8 @@ struct CollisionSolver
 
   void operator()(Explosion &a, Human &b)
   {
+    for (int i(0); i < 5; ++i)
+      spawnBlood(b.entity.fixture.pos, a.entity.fixture.speed);
     a.hit(b);
   }
 
