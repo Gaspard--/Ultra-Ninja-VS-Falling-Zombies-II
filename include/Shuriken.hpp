@@ -6,11 +6,12 @@ struct Shuriken : public Weapon
 {
 private:
   int animationFrame;
-  int maxFrame;
-  int nbFrames;
   static constexpr int spriteSheetSize = 2;
 
+  int maxFrame;
+  int nbFrames;
 public:
+
   Shuriken(Vect<2, double> const& pos,
 	   Vect<2, double> const& speed,
 	   int damage);
