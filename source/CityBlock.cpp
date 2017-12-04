@@ -3,7 +3,7 @@
 #include "Logic.hpp"
 
 CityBlock::CityBlock()
-  : hab(0), habMax(0), cooldown(0), type(BlockType::NONE), x(0), y(0)
+  : habMax(0), cooldown(0), type(BlockType::NONE), hab(0), x(0), y(0)
 {
 }
 
@@ -42,15 +42,10 @@ bool CityBlock::upgrade(Logic &logic)
 
 bool CityBlock::hasNeighbors(CityMap const &ref, int x, int y)
 {
-  return ((y > 2 && ref.getCityMap()[y - 2][x].getHab()) ||
-	  (y < MAP_SIZE - 3 && ref.getCityMap()[y + 2][x].getHab()) ||
-	  (x > 2 && ref.getCityMap()[y][x - 2].getHab()) ||
-	  (x > 1 && ref.getCityMap()[y][x - 1].getHab()) ||
-	  (x < MAP_SIZE - 3 && ref.getCityMap()[y][x + 2].getHab()) ||
-	  (x < MAP_SIZE - 2 && ref.getCityMap()[y][x + 1].getHab()));
-}
-
-int CityBlock::getHab() const
-{
-  return (hab);
+  return ((y > 2 && ref.getCityMap()[y - 2][x].hab) ||
+	  (y < MAP_SIZE - 3 && ref.getCityMap()[y + 2][x].hab) ||
+	  (x > 2 && ref.getCityMap()[y][x - 2].hab) ||
+	  (x > 1 && ref.getCityMap()[y][x - 1].hab) ||
+	  (x < MAP_SIZE - 3 && ref.getCityMap()[y][x + 2].hab) ||
+	  (x < MAP_SIZE - 2 && ref.getCityMap()[y][x + 1].hab));
 }
