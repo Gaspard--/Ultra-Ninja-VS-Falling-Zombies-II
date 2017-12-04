@@ -70,12 +70,27 @@ struct CollisionSolver
     a.hit(b);
   }
 
+  void operator()(Slash &a, Human &b)
+  {
+    a.hit(b);
+  }
+
   void operator()(Explosion &a, Zombie &b)
   {
     a.hit(b);
   }
 
+  void operator()(Explosion &a, Human &b)
+  {
+    a.hit(b);
+  }
+
   void operator()(Bomb &a, Zombie &)
+  {
+    a.lifetime = 0;
+  }
+
+  void operator()(Bomb &a, Human &)
   {
     a.lifetime = 0;
   }

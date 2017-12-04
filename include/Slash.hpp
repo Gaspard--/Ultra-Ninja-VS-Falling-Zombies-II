@@ -10,6 +10,8 @@ private:
   int maxFrame;
   static constexpr int spriteSheetSize = 5;
   int frameRatio;
+  bool horizontal;
+  bool reversed;
 
 public:
   Slash(Vect<2, double> const& pos,
@@ -20,4 +22,6 @@ public:
   void updateAnimation();
 
   float getAnimationFrame() const;
+  bool isHorizontal() const;
+  bool isReversed() const;
 };

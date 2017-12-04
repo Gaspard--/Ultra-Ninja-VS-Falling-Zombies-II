@@ -100,7 +100,7 @@ void EntityManager::update(Physics const &physics, Logic const &logic, CityMap c
     CollisionSolver collisionSolver{cityMap};
 
     physics.quadTree(collisionSolver, players, humans, zombies, tmpDetectionRanges,
-		     shurikens, explosions, slashes);
+		     shurikens, explosions, slashes, bombs);
   }
   mobDeath();
 }
