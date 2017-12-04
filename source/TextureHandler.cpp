@@ -37,6 +37,8 @@ void TextureHandler::initTextureHandler()
   _instance->addTexture(TextureList::EXPLOSION, "resources/ExplosionSpriteSheet.bmp");
   _instance->addTexture(TextureList::ARROW, "resources/arrow.bmp");
   _instance->addTexture(TextureList::BLOOD, "resources/BloodSplaterSpriteSheet.bmp");
+  _instance->addTexture(TextureList::ZOMBIEHEAD, "resources/ZombieHead.bmp");
+  _instance->addTexture(TextureList::HUMANHEAD, "resources/CitizenHead.bmp");
 }
 
 TextureHandler& TextureHandler::getInstance()

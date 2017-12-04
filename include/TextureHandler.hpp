@@ -37,8 +37,10 @@ public :
       BOMB_SPRITE,
       EXPLOSION,
       ARROW,
-	BLOOD,
-	GRASS
+      BLOOD,
+      GRASS,
+      ZOMBIEHEAD,
+      HUMANHEAD,
     };
 
   static void initTextureHandler();

@@ -263,10 +263,24 @@ void Display::displayInterface()
   for (auto const &renderable : displayInfo.arrows) {
     displayRenderableAsHUD(renderable, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ARROW));
   }
-  displayText("Humans   " + std::to_string(displayInfo.humans), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.40f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  displayText("Zombies   " + std::to_string(displayInfo.zombies), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayText(std::to_string(displayInfo.humans), 256, {0.05f, 0.05f}, {0.68f / dim[0], 0.855f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayText(std::to_string(displayInfo.zombies), 256, {0.05f, 0.05f}, {0.90f / dim[0], 0.855f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+
+  displayRenderableAsHUD(Renderable{
+      {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	  {1.0f / dim[0] - 0.3f, 1.0f / dim[1] - 0.1f},
+	    {0.072f, 0.072f}
+    }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIEHEAD));
+  displayRenderableAsHUD(Renderable{
+      {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	  {1.0f / dim[0] - 0.7f, 1.0f / dim[1] - 0.1f},
+	    {0.072f, 0.072f}
+    }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMANHEAD));
+
   displayRenderableAsHUD(Renderable{
     {0.0f, 0.0f},
 	{1.0f, 1.0f},
