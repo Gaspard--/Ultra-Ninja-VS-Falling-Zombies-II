@@ -76,7 +76,7 @@ void Player::slash(std::vector<Slash> &slashes)
   if (slashCooldown == 0)
     {
       slashes.emplace_back(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
-			   Vect<2, double>{0.0, 0.0}, 2);
+			   entity.fixture.speed * 0.0002, 2);
       slashCooldown = cd;
     }
 }

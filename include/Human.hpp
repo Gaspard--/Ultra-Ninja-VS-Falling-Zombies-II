@@ -29,6 +29,8 @@ public:
 
   void	beScaredOf(const Vect<2, double>&);
 
+  void	runAway(void);
+
 private:
   EntityAnimation anim;
   CityBlock &getHome();
