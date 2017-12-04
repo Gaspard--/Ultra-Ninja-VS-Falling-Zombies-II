@@ -57,11 +57,14 @@ void Physics::fixMapCollision(Fixture& a, std::array<std::array<CityBlock, MAP_S
       }
     return false;
   };
-  handleCollision(1) || handleCollision(2) || handleCollision(0);
+  (handleCollision(1) | handleCollision(2)) || handleCollision(0);
 }
 
 void Physics::move(Fixture& fixture) const
 {
+  // uncomment this if things move too fast.
+  // if (fixture.speed.length2() > fixture.radius * fixture.radius * 0.25)
+  //   fixture.speed = fixture.speed.normalized() * fixture.radius * 0.5;
   fixture.pos += fixture.speed;
   fixture.speed *= 0.96;
 }

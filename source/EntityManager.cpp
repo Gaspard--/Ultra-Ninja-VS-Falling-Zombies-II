@@ -1,4 +1,5 @@
 #include "EntityManager.hpp"
+#include "CollisionSolver.hpp"
 #include "Logic.hpp"
 
 void EntityManager::updateWeapons(Physics const &physics)
@@ -33,8 +34,12 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
     player.update();
   for (auto &human : humans)
     human.update();
-  // for (auto &zombie : zombies)
-  //   zombie.update();
+
+  std::vector<ZombieDetectionRange> tmpDetectionRanges;
+
+  for (auto &zombie : zombies)
+    zombie.update(tmpDetectionRanges);
+
   for (auto &player : players)
     physics.move(player.entity.fixture);
   for (auto &human : humans)
@@ -48,8 +53,15 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
     physics.fixMapCollision(human.entity.fixture, logic.getCityMap().getCityMap());
   for (auto &zombie : zombies)
     physics.fixMapCollision(zombie.entity.fixture, logic.getCityMap().getCityMap());
-  
-  physics.quadTree([](auto &, auto &){}, humans, zombies, players);
+
+  // for (auto &range : detectionRanges)
+  //   if (range.refreshRange())
+  //     tmpDetectionRanges.push_back(range);
+  {
+    CollisionSolver collisionSolver{};
+
+    physics.quadTree(collisionSolver, players, humans, zombies, tmpDetectionRanges);
+  }
   mobDeath();
 }
 
@@ -83,6 +95,7 @@ void EntityManager::spawnZombie(Vect<2, double> const& pos)
   Entity e({pos, {0.0, 0.0}, 0.062, 0.0, 0.0});
 
   zombies.emplace_back(e);
+  detectionRanges.emplace_back(zombies.back());
 }
 
 void EntityManager::spawnPlayer(Vect<2, double> const& pos)
