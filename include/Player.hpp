@@ -17,7 +17,6 @@ public:
 
   void update();
   void accelerate(Vect<2, int> const& dir);
-  void circleAttack(std::vector<Slash> &);
   float getAnimationFrame() const;
 
   void highFive(Human &villager);
@@ -27,8 +26,8 @@ public:
   void setUlti(double ulti);
   double getUlti() const;
 
-  Slash slash();
-  bool canSlash() const;
+  void slash(std::vector<Slash> &slashes);
+  void circleAttack(std::vector<Slash> &);
 
 private:
   EntityAnimation anim;

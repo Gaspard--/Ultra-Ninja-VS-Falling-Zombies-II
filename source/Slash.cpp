@@ -4,13 +4,13 @@ Slash::Slash(Vect<2, double> const& pos,
 	     Vect<2, double> const& speed,
 	     int damage = 2)
   : Weapon(pos, speed, 0.1, damage, 20),
-    animationFrame(0), maxFrame(lifetime)
+    animationFrame(0), maxFrame(lifetime), frameRatio(maxFrame / spriteSheetSize)
 {
 }
 
 void Slash::updateAnimation()
 {
-  animationFrame = (maxFrame - lifetime) / (maxFrame / spriteSheetSize);
+  animationFrame = (maxFrame - lifetime) / frameRatio;
 }
 
 float Slash::getAnimationFrame() const

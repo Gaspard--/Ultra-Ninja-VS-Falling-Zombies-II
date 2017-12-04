@@ -39,17 +39,16 @@ void Player::highFive(Human &villager)
   villager.setCoolDown(cd);
 }
 
-Slash Player::slash()
+void Player::slash(std::vector<Slash> &slashes)
 {
-  Slash sl(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1, {0.0, 0.0}, 2);
+  constexpr int cd = 20;
 
-  slashCooldown = 20;
-  return sl;
-}
-
-bool Player::canSlash() const
-{
-  return slashCooldown == 0;
+  if (slashCooldown == 0)
+    {
+      slashes.emplace_back(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
+			   Vect<2, double>{0.0, 0.0}, 2);
+      slashCooldown = cd;
+    }
 }
 
 void Player::accelerate(Vect<2, int> const& dir)
