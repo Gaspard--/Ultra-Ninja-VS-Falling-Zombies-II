@@ -60,14 +60,20 @@ void Player::slash(std::vector<Slash> &slashes)
 
 void Player::circleAttack(std::vector<Slash> &slashes)
 {
+<<<<<<< HEAD
   constexpr double posOffset = 0.1;
   constexpr double speed = 0.01;
+=======
+  static constexpr double posOffset = 0.1;
+  static constexpr double speed = 0.03;
+>>>>>>> 12ae32e7eb8b9318c6156e4ca77773ac64eee7de
   auto &pos = entity.fixture.pos;
 
   if (ulti < 100.0)
     return ;
   ulti = 0.0;
       slashes.emplace_back(Vect<2, double>(pos[0], pos[1] - posOffset), Vect<2, double>(0.0, -speed), 2); // UP
+      slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] - posOffset), Vect<2, double>(speed, -speed), 2); // UP RIGHT
       slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] - posOffset), Vect<2, double>(speed, -speed), 2); // UP RIGHT
       slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1]), Vect<2, double>(speed, 0.0), 2); // RIGHT
       slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] + posOffset), Vect<2, double>(speed, speed), 2); // DOWN RIGHT
@@ -93,21 +99,27 @@ void Player::bomb(std::vector<Bomb> &bombs)
 
 void Player::shuriken(std::vector<Shuriken> &shurikens)
 {
-  Shuriken s(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
-	     entity.fixture.speed.normalized() * 0.08, 1);
+  if (shurikenCooldown > 0)
+    return ;
+  shurikens.emplace_back(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
+			 entity.fixture.speed.normalized() * 0.08, 1);
 
-  shurikens.push_back(s);
-  shurikenCooldown = 15;
-}
-
-bool Player::canShuriken() const
-{
-  return shurikenCooldown == 0;
+  shurikenCooldown = /*0;*/15;
 }
 
 void Player::accelerate(Vect<2, int> const& dir)
 {
-  this->entity.fixture.speed += Vect<2, double>(0.001, 0.001) * dir;
+  if (((entity.fixture.speed[0] > 0 && dir[0] > 0) ||
+      (entity.fixture.speed[0] <= 0 && dir[0] <= 0)) || dir[0] == 0)
+    entity.fixture.speed[0] += 0.001 * dir[0];
+  else
+    entity.fixture.speed[0] = 0.001 * dir[0];
+
+  if (((entity.fixture.speed[1] > 0 && dir[1] > 0) ||
+      (entity.fixture.speed[1] <= 0 && dir[1] <= 0)) || dir[1] == 0)
+    entity.fixture.speed[1] += 0.001 * dir[1];
+  else
+    entity.fixture.speed[1] = 0.001 * dir[1];
 }
 
 void Player::setNbBombs(int nbBombs)

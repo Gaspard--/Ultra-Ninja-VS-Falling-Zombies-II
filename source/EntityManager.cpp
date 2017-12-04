@@ -2,14 +2,14 @@
 #include "CollisionSolver.hpp"
 #include "Logic.hpp"
 
-void EntityManager::updateWeapons(Physics const &physics)
+void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
 {
   static constexpr auto lifetimeCheck = [](auto &container)
     {
       container.erase(container.begin(), std::remove_if(container.begin(), container.end(),
 							[](auto const &elem)
 							{
-							return elem.lifetime > 0;
+							  return elem.lifetime > 0;
 							}));
     };
   static auto updateWeapon = [&physics](auto &weaponContainer)
@@ -29,7 +29,7 @@ void EntityManager::updateWeapons(Physics const &physics)
   lifetimeCheck(explosions);
   for (auto it = bombs.begin(); it != bombs.end();)
     {
-      if (it->explodes || it->lifetime <= 0)
+      if (it->lifetime <= 0)
 	{
 	  explosions.emplace_back(Vect<2, double>{it->entity.fixture.pos[0],
 				  it->entity.fixture.pos[1] - 0.25 * 2},
@@ -44,12 +44,24 @@ void EntityManager::updateWeapons(Physics const &physics)
     }
   for (auto it = shurikens.begin(); it != shurikens.end();)
     {
-      if (// it->touched ||
-	it->lifetime <= 0)
+      if (it->lifetime <= 0)
 	it = shurikens.erase(it);
       else
 	++it;
     }
+
+  static auto weaponMapCollision = [&physics, &logic] (auto &weaponContainer)
+    {
+      for (auto &weapon : weaponContainer)
+	{
+	  if (physics.haveCollision(weapon.entity.fixture, logic.getCityMap().getCityMap()))
+	    {
+	      weapon.lifetime = 0;
+	    }
+	}
+    };
+  weaponMapCollision(bombs);
+  weaponMapCollision(shurikens);
 }
 
 void EntityManager::update(Physics const &physics, Logic const &logic)
@@ -61,14 +73,20 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
   std::vector<ZombieDetectionRange> tmpDetectionRanges;
 
   for (auto &zombie : zombies)
-    zombie.update(tmpDetectionRanges);
+    {
+      zombie.updateTarget(getPlayer().entity);// TODO delete this
+      zombie.update(tmpDetectionRanges);
+    }
+
   for (auto &player : players)
     physics.move(player.entity.fixture);
   for (auto &human : humans)
     physics.move(human.entity.fixture);
   for (auto &zombie : zombies)
     physics.move(zombie.entity.fixture);
-  updateWeapons(physics);
+
+  updateWeapons(physics, logic);
+
   for (auto &player : players)
     physics.fixMapCollision(player.entity.fixture, logic.getCityMap().getCityMap());
   for (auto &human : humans)
@@ -82,7 +100,8 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
   {
     CollisionSolver collisionSolver{};
 
-    physics.quadTree(collisionSolver, players, humans, zombies, tmpDetectionRanges);
+    physics.quadTree(collisionSolver, players, humans, zombies, tmpDetectionRanges,
+		     shurikens, explosions, slashes);
   }
   mobDeath();
 }
@@ -90,19 +109,25 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
 void EntityManager::mobDeath()
 {
   auto bound(std::partition(humans.begin(), humans.end(), [](auto const &human)
-			 {
-			   return !human.getInfected();
-			 }));
-  zombies.erase(zombies.begin(), std::remove_if(zombies.begin(), zombies.end(),
-						[](auto const &zombie)
-						{
-						  return zombie.getLife() > 0;
-						}));
+			    {
+			      return !human.getInfected();
+			    }));
+  static constexpr auto lifeCheck = [](auto &container)
+    {
+      container.erase(container.begin(), std::remove_if(container.begin(), container.end(),
+							[](auto const &elem)
+    {
+      return elem.getLife() > 0;
+    }));
+    };
+
+  lifeCheck(zombies);
   for (auto it(bound); it != humans.end(); ++it)
     {
       zombies.push_back(*it);
     }
   humans.erase(bound, humans.end());
+  lifeCheck(humans);
 }
 
 void EntityManager::spawnHuman(Vect<2, double> const &pos, CityBlock &home)

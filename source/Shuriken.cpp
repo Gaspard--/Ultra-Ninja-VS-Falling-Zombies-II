@@ -3,9 +3,9 @@
 Shuriken::Shuriken(Vect<2, double> const& pos,
 		   Vect<2, double> const& speed,
 		   int damage = 1)
-  : Weapon(pos, speed, 0.05, damage, 120),
+  : Weapon(pos, speed, 0.05, damage, 80),
     animationFrame(0), maxFrame(lifetime),
-    nbFrames(maxFrame / 20), touched(false)
+    nbFrames(maxFrame / 15)
 {
 }
 

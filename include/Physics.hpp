@@ -21,13 +21,14 @@ public:
   void move(Fixture&) const;
   bool haveCollision(Fixture const& a, Fixture const& b) const;
   bool haveCollision(Vect<2, double> const& a, Fixture const& b) const;
+  bool haveCollision(Fixture& a, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
 
   void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
 
   template <class H, class... Types>
   void quadTree(H &h, std::vector<Types> &... entities) const
   {
-    constexpr int const maxDepth{32};
+    constexpr int const maxDepth{20};
     using expander = int[];
 
     std::tuple<std::vector<Types *>...> e;
@@ -92,7 +93,7 @@ private:
   void quadTreeRec(H &h, int depth, std::vector<Types*> &&... entities) const
   {
     using expander = int[];
-    
+
     if (Vect<sizeof...(Types), bool>(!entities.size()...).all())
       return ;
     if (!depth || Vect<sizeof...(Types), std::size_t>(entities.size()...).sum() <= endCond) {
@@ -117,9 +118,9 @@ private:
 			}
 		    });
     (void)expander{(getCorners(entities), 0)...};
-		    
+
     Vect<2, double> middle((lowCorner + highCorner) * 0.5);
-    
+
     std::array<std::tuple<std::vector<Types *>...>, 4> children;
     auto op([this, middle](auto &entities, auto &children)
 	    {
