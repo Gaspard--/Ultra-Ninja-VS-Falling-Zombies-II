@@ -1,11 +1,15 @@
-#include "Slash.hpp"
 #include "Player.hpp"
+#include "Slash.hpp"
+#include "Shuriken.hpp"
+#include "Bomb.hpp"
 
 Player::Player(Entity entity)
   : entity(entity),
     ulti(0.0),
     nbBombs(0),
-    slashCooldown(0)
+    slashCooldown(0),
+    shurikenCooldown(0),
+    bombCooldown(0)
 {
 }
 
@@ -21,12 +25,15 @@ float Player::getAnimationFrame() const
 void Player::update()
 {
   anim.animate(entity);
-  slashCooldown -= slashCooldown > 0;
+  static auto updateCd = [](int &cd) { cd -= cd > 0; };
+  updateCd(slashCooldown);
+  updateCd(shurikenCooldown);
+  updateCd(bombCooldown);
 }
 
 void Player::highFive(Human &villager)
 {
-  constexpr int const cd = 1150;
+  constexpr int const cd = 10;
   unsigned int choice;
 
   if (!villager.canHighFive())
@@ -39,17 +46,63 @@ void Player::highFive(Human &villager)
   villager.setCoolDown(cd);
 }
 
-Slash Player::slash()
+void Player::slash(std::vector<Slash> &slashes)
 {
-  Slash sl(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1, {0.0, 0.0}, 2);
+  static constexpr int cd = 20;
 
-  slashCooldown = 20;
-  return sl;
+  if (slashCooldown == 0)
+    {
+      slashes.emplace_back(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
+			   Vect<2, double>{0.0, 0.0}, 2);
+      slashCooldown = cd;
+    }
 }
 
-bool Player::canSlash() const
+void Player::circleAttack(std::vector<Slash> &slashes)
 {
-  return slashCooldown == 0;
+  static constexpr double posOffset = 0.1;
+  static constexpr double speed = 0.01;
+  auto &pos = entity.fixture.pos;
+
+  if (ulti < 100.0)
+    return ;
+  ulti = 0.0;
+      slashes.emplace_back(Vect<2, double>(pos[0], pos[1] - posOffset), Vect<2, double>(0.0, -speed), 2); // UP
+      slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] - posOffset), Vect<2, double>(speed, -speed), 2); // UP RIGHT
+      slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1]), Vect<2, double>(speed, 0.0), 2); // RIGHT
+      slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] + posOffset), Vect<2, double>(speed, speed), 2); // DOWN RIGHT
+      slashes.emplace_back(Vect<2, double>(pos[0], pos[1] + posOffset), Vect<2, double>(0.0, speed), 2); // DOWN
+      slashes.emplace_back(Vect<2, double>(pos[0] - posOffset, pos[1] + posOffset), Vect<2, double>(-speed, speed), 2); // DOWN LEFT
+      slashes.emplace_back(Vect<2, double>(pos[0] - posOffset, pos[1]), Vect<2, double>(-speed, 0.0), 2); // LEFT
+      slashes.emplace_back(Vect<2, double>(pos[0] - posOffset, pos[1] - posOffset), Vect<2, double>(-speed, -speed), 2); // UP LEFT
+}
+
+void Player::bomb(std::vector<Bomb> &bombs)
+{
+  static constexpr int cd = 40;
+
+  if (nbBombs == 0)
+    return ;
+  if (bombCooldown == 0)
+    {
+      bombs.emplace_back(entity.fixture.pos, entity.fixture.speed.normalized() * 0.05, 0);
+      nbBombs -= 1;
+      bombCooldown = cd;
+    }
+}
+
+void Player::shuriken(std::vector<Shuriken> &shurikens)
+{
+  Shuriken s(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
+	     entity.fixture.speed.normalized() * 0.08, 1);
+
+  shurikens.push_back(s);
+  shurikenCooldown = 15;
+}
+
+bool Player::canShuriken() const
+{
+  return shurikenCooldown == 0;
 }
 
 void Player::accelerate(Vect<2, int> const& dir)
@@ -59,7 +112,8 @@ void Player::accelerate(Vect<2, int> const& dir)
 
 void Player::setNbBombs(int nbBombs)
 {
-  this->nbBombs = nbBombs;
+  if (this->nbBombs > 0)
+    this->nbBombs = nbBombs;
 }
 
 int Player::getNbBombs() const
@@ -70,20 +124,4 @@ int Player::getNbBombs() const
 double Player::getUlti() const
 {
   return ulti;
-}
-
-void Player::circleAttack(std::vector<Slash> &slashes)
-{
-  static constexpr double posOffset = 0.1;
-  static constexpr double speed = 0.01;
-  auto &pos = entity.fixture.pos;
-
-  slashes.emplace_back(Vect<2, double>(pos[0], pos[1] - posOffset), Vect<2, double>(0.0, -speed), 2); // UP
-  slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] - posOffset), Vect<2, double>(speed, -speed), 2); // UP RIGHT
-  slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1]), Vect<2, double>(speed, 0.0), 2); // RIGHT
-  slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] + posOffset), Vect<2, double>(speed, speed), 2); // DOWN RIGHT
-  slashes.emplace_back(Vect<2, double>(pos[0], pos[1] + posOffset), Vect<2, double>(0.0, speed), 2); // DOWN
-  slashes.emplace_back(Vect<2, double>(pos[0] - posOffset, pos[1] + posOffset), Vect<2, double>(-speed, speed), 2); // DOWN LEFT
-  slashes.emplace_back(Vect<2, double>(pos[0] - posOffset, pos[1]), Vect<2, double>(-speed, 0.0), 2); // LEFT
-  slashes.emplace_back(Vect<2, double>(pos[0] - posOffset, pos[1] - posOffset), Vect<2, double>(-speed, -speed), 2); // UP LEFT
 }

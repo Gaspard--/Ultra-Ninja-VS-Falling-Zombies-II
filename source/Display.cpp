@@ -83,9 +83,9 @@ Display::Display()
   , fontHandler("./resources/ObelixPro-Broken-cyr.ttf")
   , textureContext(contextFromFiles("texture"))
   , textContext(contextFromFiles("text"))
-  , planet(my_opengl::loadTexture("resources/PlanetRed.bmp"))
-  , planetBackground(my_opengl::loadTexture("resources/BackgroundPlanet.bmp"))
-  , background(my_opengl::loadTexture("resources/BackgroundSpace.bmp"))
+    //  , planet(my_opengl::loadTexture("resources/PlanetRed.bmp"))
+    //, planetBackground(my_opengl::loadTexture("resources/BackgroundPlanet.bmp"))
+    //, background(my_opengl::loadTexture("resources/BackgroundSpace.bmp"))
   , bloodSpray{my_opengl::loadTexture("resources/BloodSpray.bmp"), my_opengl::loadTexture("resources/BloodSpray2.bmp"), my_opengl::loadTexture("resources/BloodSpray3.bmp")}
   , mobSpray{my_opengl::loadTexture("resources/MobSpray.bmp"), my_opengl::loadTexture("resources/MobSpray2.bmp"), my_opengl::loadTexture("resources/MobSpray3.bmp")}
   , planetRenderTexture({1024u, 1024u})
@@ -240,7 +240,7 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
 
 void Display::render()
 {
-  glClearColor(0.0f, 0.5f, 0.2f, 0.0f);
+  glClearColor(0.3f, 0.5f, 0.2f, 0.0f);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -356,6 +356,30 @@ void Display::copyRenderData(Logic const &logic)
 	    {0.2f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(slash.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
+		(pos[1] + 1.1f) * 0.4f
+		});
+    }
+  for (auto &shuriken : manager.shurikens)
+    {
+      auto pos(camera.apply(shuriken.entity.fixture.pos));
+
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SHURIKEN)].push_back(Renderable{
+	    {0.5f * shuriken.getAnimationFrame(), 0.0f},
+	    {0.5f, 1.0f},
+	      pos,
+		camera.zoom * static_cast<float>(shuriken.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
+		(pos[1] + 1.1f) * 0.4f
+		 });
+    }
+  for (auto &bomb : manager.bombs)
+    {
+      auto pos(camera.apply(bomb.entity.fixture.pos));
+
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BOMB_SPRITE)].push_back(Renderable{
+	    {0.2f * bomb.getAnimationFrame(), 0.0f},
+	    {0.2f, 1.0f},
+	      pos,
+		camera.zoom * static_cast<float>(bomb.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
     }

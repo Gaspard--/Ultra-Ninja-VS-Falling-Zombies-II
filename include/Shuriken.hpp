@@ -4,6 +4,13 @@
 
 struct Shuriken : public Weapon
 {
+private:
+  int animationFrame;
+  int maxFrame;
+  int nbFrames;
+  static constexpr int spriteSheetSize = 2;
+
+public:
   bool touched;
 
   Shuriken(Vect<2, double> const& pos,
@@ -12,4 +19,6 @@ struct Shuriken : public Weapon
   ~Shuriken() = default;
 
   void updateAnimation();
+
+  float getAnimationFrame() const;
 };

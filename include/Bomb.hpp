@@ -3,8 +3,15 @@
 #include "Weapon.hpp"
 #include "Zombie.hpp"
 
-struct Bomb : public Weapon
+class Bomb : public Weapon
 {
+private:
+  int animationFrame;
+  int maxFrame;
+  static constexpr int spriteSheetSize = 5;
+  int frameRatio;
+
+public:
   bool explodes;
 
   Bomb(Vect<2, double> const& pos,
@@ -13,4 +20,6 @@ struct Bomb : public Weapon
   ~Bomb() = default;
 
   void updateAnimation();
+
+  float getAnimationFrame() const;
 };

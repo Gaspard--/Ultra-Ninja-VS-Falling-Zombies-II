@@ -28,10 +28,12 @@ public :
       ROAD,
       BORDER,
       SLASH,
+      SHURIKEN,
       BARFRONT,
       BARBACK,
       SPIN,
-      SPINHOLLOW
+      SPINHOLLOW,
+      BOMB_SPRITE,
     };
 
   static void initTextureHandler();

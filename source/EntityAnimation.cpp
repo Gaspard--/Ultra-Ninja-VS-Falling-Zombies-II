@@ -41,16 +41,22 @@ void EntityAnimation::animate(Entity const& entity)
       entity.fixture.speed[1] <= 0.001 && entity.fixture.speed[1] >= -0.001)
     {
       switch (animationFrame) {
-      case 0 ... 1:
+      case 0:
+      case 1:
 	animationFrame = 0;
 	break;
-      case 2 ... 4:
+      case 2:
+      case 3:
+      case 4:
 	animationFrame = 2;
 	break;
-      case 5 ... 7:
+      case 5:
+      case 6:
+      case 7:
 	animationFrame = 5;
 	break;
-      case 8 ... 9:
+      case 8:
+      case 9:
 	animationFrame = 8;
 	break;
       default:

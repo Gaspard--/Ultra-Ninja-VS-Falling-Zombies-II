@@ -6,6 +6,8 @@
 #include "EntityAnimation.hpp"
 
 class Slash;
+class Shuriken;
+class Bomb;
 
 class Player
 {
@@ -17,7 +19,6 @@ public:
 
   void update();
   void accelerate(Vect<2, int> const& dir);
-  void circleAttack(std::vector<Slash> &);
   float getAnimationFrame() const;
 
   void highFive(Human &villager);
@@ -27,14 +28,21 @@ public:
   void setUlti(double ulti);
   double getUlti() const;
 
-  Slash slash();
-  bool canSlash() const;
+  void slash(std::vector<Slash> &slashes);
+  void circleAttack(std::vector<Slash> &slashes);
+  void bomb(std::vector<Bomb> &bombs);
+
+  void shuriken(std::vector<Shuriken> &shurikens);
+  bool canShuriken() const;
 
 private:
   EntityAnimation anim;
   double ulti;
   int nbBombs;
+
   int slashCooldown;
+  int shurikenCooldown;
+  int bombCooldown;
 };
 
 #endif //!PLAYER_HPP_
