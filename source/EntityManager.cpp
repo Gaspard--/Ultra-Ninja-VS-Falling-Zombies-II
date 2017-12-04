@@ -189,8 +189,8 @@ void EntityManager::spawnZombies()
       if (!humans.empty())
 	{
 	  Vect<2, double> pos(humans.at(rand() % humans.size()).entity.fixture.pos);
-	  double rnd = getRandom(-getPlayer().entity.fixture.radius * 3.0,
-				 getPlayer().entity.fixture.radius * 3.0);
+	  double rnd = getRandom(-getPlayer().entity.fixture.radius * 10.0,
+				 getPlayer().entity.fixture.radius * 10.0);
 	  spawnZombie({pos[0] + rnd, pos[1]});
 	}
       frame = 0;
