@@ -5,6 +5,7 @@
 #include "Input.hpp"
 #include "Display.hpp"
 #include "SoundHandler.hpp"
+#include "Shuriken.hpp"
 
 Logic::Logic()
   : cityMap(*this),
@@ -19,10 +20,11 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  for (int i = 0 ; i < 8 ; ++i)
-    for (int j = 0 ; j < 8 ; ++j)
-      entityManager.spawnZombie({i * 1.5 + 40.0, j * 1.5 + 40.0});
-  entityManager.spawnHuman({50.0, 50.0}, block);
+  for (int i = 0 ; i < 30; ++i)
+    for (int j = 0 ; j < 30; ++j)
+      entityManager.spawnZombie({i * 1.0 + 40.0, j * 1.0 + 40.0});
+  entityManager.spawnHuman({49.0, 50.0}, block);
+  entityManager.spawnHuman({49.3, 50.0}, block);
   entityManager.spawnPlayer({50.4, 50.3});
 }
 
@@ -41,7 +43,7 @@ void Logic::tick(std::mutex &lock)
 {
   auto const now(Clock::now());
 
-  if (now > lastUpdate + getTickTime() * 3)
+  if (now > lastUpdate + getTickTime() * 2)
     {
       lastUpdate = now;
       return ;
@@ -127,6 +129,9 @@ void Logic::handleKey(GLFWwindow *window, Key key)
     case GLFW_KEY_ESCAPE:
       glfwSetWindowShouldClose(window, true);
       break;
+    case GLFW_KEY_SPACE:
+      entityManager.getPlayer().canHighfive = (key.action == GLFW_PRESS);
+      break;
     default:
       break;
     }
@@ -148,8 +153,6 @@ void Logic::checkEvents(Display const &display)
     player.accelerate({0, 1});
   if (display.isKeyPressed(GLFW_KEY_S))
     player.accelerate({0, -1});
-  if (display.isKeyPressed(GLFW_KEY_SPACE))
-    player.highFive(entityManager.humans[0]);
   if (display.isKeyPressed(GLFW_KEY_K))
     player.shuriken(entityManager.shurikens);
   if (display.isKeyPressed(GLFW_KEY_J))

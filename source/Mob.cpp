@@ -4,7 +4,8 @@
 
 Mob::Mob(Entity entity, int life)
   : entity(entity),
-    life(life)
+    life(life),
+    offsetY(0)
 {
 }
 
@@ -64,4 +65,14 @@ Vect<2, double> Mob::findPath(Entity const &target, CityMap const &cityMap) cons
       targetpos[1] += static_cast<double>(dir[1] < 0) * 0.6 + 0.2;
     }
   return (Vect<2, double>(targetpos[0], targetpos[1]));
+}
+
+void Mob::setOffset(double offsetY)
+{
+  this->offsetY = offsetY;
+}
+
+double const& Mob::getOffset() const
+{
+  return offsetY;
 }

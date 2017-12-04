@@ -13,7 +13,7 @@ struct CollisionSolver
   {
     auto middle((a.entity.fixture.pos + b.entity.fixture.pos) * 0.5);
     auto dist(std::sqrt((a.entity.fixture.pos - b.entity.fixture.pos).length2()));
-    auto avg(dist * 0.5 + (a.entity.fixture.radius + b.entity.fixture.radius) * 0.5);
+    auto avg((a.entity.fixture.radius + b.entity.fixture.radius) * 1.1);
     auto dir((a.entity.fixture.pos - b.entity.fixture.pos).normalized() * avg * 0.5);
 
     a.entity.fixture.pos = middle + dir;
@@ -44,6 +44,12 @@ struct CollisionSolver
   {
     solveCollision(a, b);
     a.entity.fixture.speed += (a.entity.fixture.pos - b.entity.fixture.pos).normalized() * 0.02;
+  }
+
+  void operator()(Player &a, Human &b)
+  {
+    b.canHighfive = true;
+    a.highFive(b);
   }
 
   // Player should trigger zombie ranges
@@ -78,5 +84,4 @@ struct CollisionSolver
     a.hit(b);
     a.lifetime = 0;
   }
-
 };

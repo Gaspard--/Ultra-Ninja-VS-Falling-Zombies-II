@@ -48,8 +48,8 @@ void Zombie::update(std::vector<ZombieDetectionRange> &detectionRanges)
 {
   anim.animate(entity);
   if (!--detectionCooldown) {
-    if (detectionRanges.size() > 4)
-      ++detectionCooldown;
+    if (detectionRanges.size() >= 16)
+      detectionCooldown += 1 + (rand() & 7);
     else
       {
 	detectionCooldown = detectionTickBetween();
@@ -58,7 +58,7 @@ void Zombie::update(std::vector<ZombieDetectionRange> &detectionRanges)
       }
   }
   if (hasTarget && (target - entity.fixture.pos).length2() > 0.1)
-    entity.fixture.speed += (target - entity.fixture.pos).normalized() * 0.001;
+    entity.fixture.speed += (target - entity.fixture.pos).normalized() * 0.0003;
 }
 
 float Zombie::getAnimationFrame() const

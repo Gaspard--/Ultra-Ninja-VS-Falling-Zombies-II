@@ -83,9 +83,6 @@ Display::Display()
   , fontHandler("./resources/ObelixPro-Broken-cyr.ttf")
   , textureContext(contextFromFiles("texture"))
   , textContext(contextFromFiles("text"))
-    //  , planet(my_opengl::loadTexture("resources/PlanetRed.bmp"))
-    //, planetBackground(my_opengl::loadTexture("resources/BackgroundPlanet.bmp"))
-    //, background(my_opengl::loadTexture("resources/BackgroundSpace.bmp"))
   , bloodSpray{my_opengl::loadTexture("resources/BloodSpray.bmp"), my_opengl::loadTexture("resources/BloodSpray2.bmp"), my_opengl::loadTexture("resources/BloodSpray3.bmp")}
   , mobSpray{my_opengl::loadTexture("resources/MobSpray.bmp"), my_opengl::loadTexture("resources/MobSpray2.bmp"), my_opengl::loadTexture("resources/MobSpray3.bmp")}
   , planetRenderTexture({1024u, 1024u})
@@ -240,6 +237,7 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
 
 void Display::render(Logic const &logic)
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glClearColor(0.3f, 0.5f, 0.2f, 0.0f);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
@@ -248,8 +246,9 @@ void Display::render(Logic const &logic)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
   glDepthFunc(GL_LESS);
-  for (auto const &renderables : displayInfo.renderables)
-    displayRenderables(renderables.second.begin(), static_cast<GLuint>(renderables.second.size()), renderables.first);
+  for (auto const &renderables : displayInfo.renderables) {
+	  displayRenderables(renderables.second.begin(), static_cast<GLuint>(renderables.second.size()), renderables.first);
+  }
   glDisable(GL_DEPTH_TEST);
   displayInterface(logic);
   glDisable(GL_BLEND);
@@ -342,7 +341,10 @@ void Display::displayInterface(Logic const &logic)
 
 void Display::copyRenderData(Logic const &logic)
 {
-  camera.offset = (camera.offset * 0.5f - (logic.getPlayerPos() - Vect<2u, float>{(dim[1] - 1.0f / dim[0]), 0.0f})* 0.5f);
+  auto const offset(Vect<2u, float>{// (dim[0] - dim[1]) * 0.25f
+      0.0f, 0.0f});
+
+  camera.offset = (camera.offset + offset) * 0.5f - logic.getPlayerPos() * 0.5f - offset;
   displayInfo.time = logic.getTime();
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
@@ -384,7 +386,7 @@ void Display::copyRenderData(Logic const &logic)
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
 	    {0.1f * player.getAnimationFrame(), 0.0f},
 	    {0.1f, 1.0f},
-	      pos,
+	      Vect<2, double>(pos[0], pos[1] + player.getOffset()),
 		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
