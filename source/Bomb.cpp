@@ -3,7 +3,7 @@
 Bomb::Bomb(Vect<2, double> const& pos,
 	   Vect<2, double> const& speed,
 	   int damage = 0)
-  : Weapon(pos, speed, 0.1, damage, 90),
+  : Weapon(pos, speed, 0.08, damage, 90),
     animationFrame(0), maxFrame(lifetime), frameRatio(maxFrame / spriteSheetSize),
     explodes(false)
 {

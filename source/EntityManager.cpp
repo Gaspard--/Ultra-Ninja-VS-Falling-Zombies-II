@@ -8,9 +8,9 @@ void EntityManager::updateWeapons(Physics const &physics)
     {
       container.erase(container.begin(), std::remove_if(container.begin(), container.end(),
 							[](auto const &elem)
-    {
-      return elem.lifetime > 0;
-    }));
+							{
+							return elem.lifetime > 0;
+							}));
     };
   static auto updateWeapon = [&physics](auto &weaponContainer)
     {
@@ -31,8 +31,12 @@ void EntityManager::updateWeapons(Physics const &physics)
     {
       if (it->explodes || it->lifetime <= 0)
 	{
-	  explosions.emplace_back(it->entity.fixture.pos, 0.5, 1);
-	  explosions.emplace_back(it->entity.fixture.pos, 0.25, 2);
+	  explosions.emplace_back(Vect<2, double>{it->entity.fixture.pos[0],
+				  it->entity.fixture.pos[1] - 0.25 * 2},
+				  0.5, 1);
+	  explosions.emplace_back(Vect<2, double>{it->entity.fixture.pos[0],
+				  it->entity.fixture.pos[1] - 0.125 * 2},
+				  0.25, 2);
 	  it = bombs.erase(it);
 	}
       else
@@ -40,8 +44,8 @@ void EntityManager::updateWeapons(Physics const &physics)
     }
   for (auto it = shurikens.begin(); it != shurikens.end();)
     {
-      if (// it->touched || 
-	  it->lifetime <= 0)
+      if (// it->touched ||
+	it->lifetime <= 0)
 	it = shurikens.erase(it);
       else
 	++it;

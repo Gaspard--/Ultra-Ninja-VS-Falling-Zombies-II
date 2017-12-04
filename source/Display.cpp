@@ -383,6 +383,18 @@ void Display::copyRenderData(Logic const &logic)
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
+  for (auto &explosion : manager.explosions)
+    {
+      auto pos(camera.apply(explosion.entity.fixture.pos));
+
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::EXPLOSION)].push_back(Renderable{
+	    {0.25f * explosion.getAnimationFrame(), 0.0f},
+	    {0.25f, 1.0f},
+	      pos,
+		camera.zoom * static_cast<float>(explosion.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
+		(pos[1] + 1.1f) * 0.4f
+		});
+    }
   auto cityMap(logic.getCityMap().getCityMap());
   for (std::size_t i(0); i != 100ul; ++i)
     for (std::size_t j(0); j != 100ul; ++j)
