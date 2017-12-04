@@ -240,12 +240,8 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
 
 void Display::render()
 {
-<<<<<<< HEAD
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glClearColor(0.0f, 0.5f, 0.2f, 0.0f);
-=======
   glClearColor(0.3f, 0.5f, 0.2f, 0.0f);
->>>>>>> 12ae32e7eb8b9318c6156e4ca77773ac64eee7de
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
