@@ -30,7 +30,7 @@ void Logic::update()
   if (!gameOver)
     {
       ++time;
-      entityManager.update(physics, *this);
+      entityManager.update(physics, *this, cityMap);
       cityMap.tick();
       multiplier += (1.0 / 600.0);
     }

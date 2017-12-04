@@ -12,7 +12,8 @@
 #include "Human.hpp"
 #include "Zombie.hpp"
 #include "Vect.hpp"
-# include "ZombieDetectionRange.hpp"
+#include "ZombieDetectionRange.hpp"
+#include "CityMap.hpp"
 
 struct Logic;
 
@@ -32,7 +33,7 @@ public:
   ~EntityManager() = default;
 
   void updateWeapons(Physics const &physics);
-  void update(Physics const &physics, Logic const &logic);
+  void update(Physics const &physics, Logic const &logic, CityMap const &);
   void mobDeath();
   void spawnHuman(Vect<2, double> const& pos, CityBlock &home);
   void spawnZombie(Vect<2, double> const& pos);

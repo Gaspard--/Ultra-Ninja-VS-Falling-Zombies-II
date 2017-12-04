@@ -52,7 +52,7 @@ void EntityManager::updateWeapons(Physics const &physics)
     }
 }
 
-void EntityManager::update(Physics const &physics, Logic const &logic)
+void EntityManager::update(Physics const &physics, Logic const &logic, CityMap const &cityMap)
 {
   for (auto &player : players)
     player.update();
@@ -62,7 +62,7 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
 
   for (auto &zombie : zombies)
     {
-      zombie.updateTarget(getPlayer().entity);// TODO delete this
+      zombie.updateTarget(getPlayer().entity, cityMap);// TODO delete this
       zombie.update(tmpDetectionRanges);
     }
 
@@ -86,7 +86,7 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
   //   if (range.refreshRange())
   //     tmpDetectionRanges.push_back(range);
   {
-    CollisionSolver collisionSolver{};
+    CollisionSolver collisionSolver{cityMap};
 
     physics.quadTree(collisionSolver, players, humans, zombies, tmpDetectionRanges,
 		     explosions, slashes);
