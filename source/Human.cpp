@@ -5,10 +5,10 @@ Human::Human(Entity entity, CityBlock &home)
     infected(false),
     homePtr(&home),
     coolDown(0),
+    runAwayCooldown(0),
     mustRunAway(false),
     posToEscape({0.0, 0.0}),
-    canHighfive(false),
-    runAwayCooldown(0)
+    canHighfive(false)
 {
 }
 
