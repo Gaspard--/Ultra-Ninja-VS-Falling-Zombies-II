@@ -303,10 +303,12 @@ void Display::copyRenderData(Logic const &logic)
   auto const offset(Vect<2u, float>{// (dim[0] - dim[1]) * 0.25f
       0.0f, 0.0f});
   auto const gamePos(logic.getPlayerPos());
-  camera.offset = (camera.offset + offset) * 0.5f - gamePos * 0.5f - offset;  
+  camera.offset = (camera.offset + offset) * 0.5f - gamePos * 0.5f - offset;
 
-  camera.offset[0] = std::clamp(camera.offset[0], -100.0 + 1.0 / (dim[0] * camera.zoom[0]), -1.0 / (dim[0] * camera.zoom[0]));
-  camera.offset[1] = std::clamp(camera.offset[1], -100.0 + 1.0 / (dim[1] * camera.zoom[1]), -1.0 / (dim[1] * camera.zoom[1]));
+  camera.offset[0] = std::max(std::min(camera.offset[0], -100.0 + 1.0 / (dim[0] * camera.zoom[0])),
+			      -1.0 / (dim[0] * camera.zoom[0]));
+  camera.offset[1] = std::max(std::min(camera.offset[1], -100.0 + 1.0 / (dim[1] * camera.zoom[1])),
+			      -1.0 / (dim[1] * camera.zoom[1]));
   displayInfo.time = logic.getTime();
   displayInfo.score = logic.getScore();
   displayInfo.gameOver = logic.getGameOver();
