@@ -4,6 +4,7 @@
 
 Mob::Mob(Entity entity, int life)
   : entity(entity),
+    isJumping(false),
     life(life),
     offsetY(0)
 {
@@ -56,7 +57,7 @@ Vect<2, double> Mob::findPath(Entity const &target, CityMap const &cityMap) cons
     }
   /*if (static_cast<int>(tmppos[0]) == static_cast<int>(target.fixture.pos[0]) &&
     static_cast<int>(tmppos[1]) == static_cast<int>(target.fixture.pos[1]))*/
-    return (target.fixture.pos + Vect<2, double>(dir[0], dir[1]));
+  return (target.fixture.pos + Vect<2, double>(dir[0], dir[1]));
   /*selfpos = {static_cast<int>(tmppos[0]), static_cast<int>(tmppos[1])};
   targetpos = {static_cast<int>(tmppos[0]), static_cast<int>(tmppos[1])};
   dist = {static_cast<int>(target.fixture.pos[0]) - selfpos[0],
