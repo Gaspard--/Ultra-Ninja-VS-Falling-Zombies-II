@@ -18,9 +18,9 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  for (int i = 0 ; i < 10 ; ++i)
+  /*for (int i = 0 ; i < 10 ; ++i)
     for (int j = 0 ; j < 10 ; ++j)
-      entityManager.spawnZombie({i * 3.0 + 40.0, j * 3.0 + 40.0});
+      entityManager.spawnZombie({i * 3.0 + 40.0, j * 3.0 + 40.0});*/
   entityManager.spawnHuman({50.0, 50.0}, block);
   entityManager.spawnPlayer({50.4, 50.3});
 }

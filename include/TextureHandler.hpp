@@ -34,6 +34,7 @@ public :
       SPIN,
       SPINHOLLOW,
       BOMB_SPRITE,
+      EXPLOSION,
     };
 
   static void initTextureHandler();
