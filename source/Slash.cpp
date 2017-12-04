@@ -3,7 +3,7 @@
 Slash::Slash(Vect<2, double> const& pos,
 	     Vect<2, double> const& speed,
 	     int damage = 2)
-  : Weapon(pos, speed, 0.1, damage, 40),
+  : Weapon(pos, speed, 0.1, damage, 20),
     animationFrame(0), maxFrame(lifetime)
 {
 }

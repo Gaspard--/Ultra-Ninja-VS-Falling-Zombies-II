@@ -27,11 +27,14 @@ public:
   void setUlti(double ulti);
   double getUlti() const;
 
+  Slash slash();
+  bool canSlash() const;
+
 private:
   EntityAnimation anim;
   double ulti;
   int nbBombs;
-
+  int slashCooldown;
 };
 
 #endif //!PLAYER_HPP_

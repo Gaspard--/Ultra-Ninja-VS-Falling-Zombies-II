@@ -4,7 +4,8 @@
 Player::Player(Entity entity)
   : entity(entity),
     ulti(0.0),
-    nbBombs(0)
+    nbBombs(0),
+    slashCooldown(0)
 {
 }
 
@@ -20,6 +21,7 @@ float Player::getAnimationFrame() const
 void Player::update()
 {
   anim.animate(entity);
+  slashCooldown -= slashCooldown > 0;
 }
 
 void Player::highFive(Human &villager)
@@ -35,6 +37,19 @@ void Player::highFive(Human &villager)
   else if (nbBombs < 5)
     nbBombs += 1;
   villager.setCoolDown(cd);
+}
+
+Slash Player::slash()
+{
+  Slash sl(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1, {0.0, 0.0}, 2);
+
+  slashCooldown = 20;
+  return sl;
+}
+
+bool Player::canSlash() const
+{
+  return slashCooldown == 0;
 }
 
 void Player::accelerate(Vect<2, int> const& dir)

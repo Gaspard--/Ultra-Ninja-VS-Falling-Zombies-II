@@ -11,12 +11,13 @@ void EntityManager::updateWeapons(Physics const &physics)
       return elem.lifetime > 0;
     }));
     };
-  static auto updateWeapon = [](auto &weaponContainer)
+  static auto updateWeapon = [&physics](auto &weaponContainer)
     {
       for (auto &elem : weaponContainer)
 	{
 	  elem.update();
 	  elem.updateAnimation();
+	  physics.move(elem.entity.fixture);
 	}
     };
   updateWeapon(slashes);
