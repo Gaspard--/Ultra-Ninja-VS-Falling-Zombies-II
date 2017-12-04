@@ -376,7 +376,7 @@ void Display::copyRenderData(Logic const &logic)
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIE)].emplace_back(Renderable{
 	  {0.1f * zombie.getAnimationFrame(), 0.0f},
 	    {0.1f, 1.0f},
-	      pos,
+	      Vect<2, double>(pos[0], pos[1] + zombie.getOffset()),
 		camera.zoom * static_cast<float>(zombie.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
@@ -388,7 +388,7 @@ void Display::copyRenderData(Logic const &logic)
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMAN)].push_back(Renderable{
 	  {0.1f * human.getAnimationFrame(), 0.0f},
 	    {0.1f, 1.0f},
-	      pos,
+	      Vect<2, double>(pos[0], pos[1] + human.getOffset()),
 		camera.zoom * static_cast<float>(human.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});

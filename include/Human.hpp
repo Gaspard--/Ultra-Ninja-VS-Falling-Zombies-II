@@ -16,6 +16,7 @@ public:
   ~Human();
 
   void update();
+  void handleJump();
 
   void setInfected(bool infected);
   bool const& getInfected() const;

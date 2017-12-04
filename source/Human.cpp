@@ -15,9 +15,23 @@ Human::~Human()
 {
 }
 
+void Human::handleJump()
+{
+  constexpr double const maxHeight = 0.05;
+
+  if (isJumping && offsetY < maxHeight)
+    offsetY += 0.005;
+  if (isJumping && offsetY >= maxHeight)
+    isJumping = false;
+  if (!isJumping && offsetY > 0.0)
+    offsetY -= 0.005;
+}
+
 void Human::update()
 {
-  anim.animate(entity);
+  handleJump();
+  if (!isJumping)
+    anim.animate(entity);
   coolDown -= coolDown > 0;
   canHighfive = false;
   runAwayCooldown -= runAwayCooldown > 0;

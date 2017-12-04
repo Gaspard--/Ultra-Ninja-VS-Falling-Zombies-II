@@ -19,6 +19,8 @@ public:
   void setOffset(double offsetY);
   double const& getOffset() const;
 
+  bool isJumping;
+
 protected:
   int life;
   double offsetY;
