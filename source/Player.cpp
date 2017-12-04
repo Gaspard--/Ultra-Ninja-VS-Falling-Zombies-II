@@ -48,7 +48,7 @@ void Player::highFive(Human &villager)
 
 void Player::slash(std::vector<Slash> &slashes)
 {
-  static constexpr int cd = 20;
+  constexpr int cd = 20;
 
   if (slashCooldown == 0)
     {
@@ -60,8 +60,8 @@ void Player::slash(std::vector<Slash> &slashes)
 
 void Player::circleAttack(std::vector<Slash> &slashes)
 {
-  static constexpr double posOffset = 0.1;
-  static constexpr double speed = 0.01;
+  constexpr double posOffset = 0.1;
+  constexpr double speed = 0.01;
   auto &pos = entity.fixture.pos;
 
   if (ulti < 100.0)

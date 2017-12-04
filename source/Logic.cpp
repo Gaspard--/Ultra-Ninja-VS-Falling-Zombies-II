@@ -5,6 +5,7 @@
 #include "Input.hpp"
 #include "Display.hpp"
 #include "SoundHandler.hpp"
+#include "Shuriken.hpp"
 
 Logic::Logic()
   : running(true),

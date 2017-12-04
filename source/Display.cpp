@@ -240,6 +240,7 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
 
 void Display::render()
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glClearColor(0.0f, 0.5f, 0.2f, 0.0f);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
@@ -248,8 +249,10 @@ void Display::render()
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
   glDepthFunc(GL_LESS);
-  for (auto const &renderables : displayInfo.renderables)
-    displayRenderables(renderables.second.begin(), static_cast<GLuint>(renderables.second.size()), renderables.first);
+  for (auto const &renderables : displayInfo.renderables) {
+	  displayRenderables(renderables.second.begin(), static_cast<GLuint>(renderables.second.size()), renderables.first);
+	  std::cout << renderables.second.size() << std::endl;
+  }
   glDisable(GL_DEPTH_TEST);
   displayInterface();
   glDisable(GL_BLEND);

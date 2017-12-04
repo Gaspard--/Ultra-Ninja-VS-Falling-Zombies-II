@@ -4,9 +4,9 @@
 #include "Zombie.hpp"
 #include "Human.hpp"
 #include "EntityAnimation.hpp"
+#include "Shuriken.hpp"
+#include "Slash.hpp"
 
-class Slash;
-class Shuriken;
 class Bomb;
 
 class Player
