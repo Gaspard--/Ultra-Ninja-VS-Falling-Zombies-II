@@ -352,7 +352,7 @@ void Display::copyRenderData(Logic const &logic)
       auto pos(camera.apply(slash.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SLASH)].push_back(Renderable{
-	    {0.2 * slash.getAnimationFrame(), 0.0f},
+	    {0.2f * slash.getAnimationFrame(), 0.0f},
 	    {0.2f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(slash.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
@@ -368,6 +368,18 @@ void Display::copyRenderData(Logic const &logic)
 	    {0.5f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(shuriken.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
+		(pos[1] + 1.1f) * 0.4f
+		 });
+    }
+  for (auto &bomb : manager.bombs)
+    {
+      auto pos(camera.apply(bomb.entity.fixture.pos));
+
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BOMB_SPRITE)].push_back(Renderable{
+	    {0.2f * bomb.getAnimationFrame(), 0.0f},
+	    {0.2f, 1.0f},
+	      pos,
+		camera.zoom * static_cast<float>(bomb.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
     }

@@ -27,7 +27,7 @@ void EntityManager::updateWeapons(Physics const &physics)
   updateWeapon(shurikens);
   lifetimeCheck(slashes);
   lifetimeCheck(explosions);
-  for (auto it = bombs.begin(); it != bombs.end(); ++it)
+  for (auto it = bombs.begin(); it != bombs.end();)
     {
       if (it->explodes || it->lifetime <= 0)
 	{
@@ -35,6 +35,8 @@ void EntityManager::updateWeapons(Physics const &physics)
 	  explosions.emplace_back(it->entity.fixture.pos, 0.25, 2);
 	  it = bombs.erase(it);
 	}
+      else
+	++it;
     }
   for (auto it = shurikens.begin(); it != shurikens.end();)
     {

@@ -32,7 +32,8 @@ public :
       BARFRONT,
       BARBACK,
       SPIN,
-      SPINHOLLOW
+      SPINHOLLOW,
+      BOMB_SPRITE,
     };
 
   static void initTextureHandler();
