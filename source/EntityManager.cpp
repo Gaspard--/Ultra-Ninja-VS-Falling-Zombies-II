@@ -1,6 +1,7 @@
 #include "EntityManager.hpp"
 #include "CollisionSolver.hpp"
 #include "Logic.hpp"
+#include <random>
 
 EntityManager::EntityManager()
   : frame(360)
@@ -175,6 +176,10 @@ void EntityManager::spawnZombie(Vect<2, double> const& pos)
   detectionRanges.emplace_back(zombies.back());
 }
 
+static double getRandom(double min, double max) {
+  return (max - min) * (static_cast<double>(rand()) / static_cast<double>(RAND_MAX)) + min;
+}
+
 void EntityManager::spawnZombies()
 {
   constexpr int const rateOfSpawn = 500;
@@ -183,9 +188,10 @@ void EntityManager::spawnZombies()
     {
       if (!humans.empty())
 	{
-	  auto pos(humans.at(humans.size() / 2).entity.fixture.pos);
-
-	  spawnZombie(humans.at(humans.size() / 2).entity.fixture.pos);
+	  Vect<2, double> pos(humans.at(rand() % humans.size()).entity.fixture.pos);
+	  double rnd = getRandom(-getPlayer().entity.fixture.radius * 3.0,
+				 getPlayer().entity.fixture.radius * 3.0);
+	  spawnZombie({pos[0] + rnd, pos[1]});
 	}
       frame = 0;
     }
