@@ -153,6 +153,8 @@ void Logic::checkEvents(Display const &display)
     player.slash(entityManager.slashes);
   if (display.isKeyPressed(GLFW_KEY_L))
     player.circleAttack(entityManager.slashes);
+  if (display.isKeyPressed(GLFW_KEY_I))
+    player.bomb(entityManager.bombs);
 }
 
 void Logic::handleMouse(Display const &display, GLFWwindow *, Mouse mouse)

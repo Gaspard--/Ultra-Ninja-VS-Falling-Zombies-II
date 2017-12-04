@@ -31,6 +31,7 @@ void TextureHandler::initTextureHandler()
   _instance->addTexture(TextureList::BARBACK, "resources/BarBack.bmp");
   _instance->addTexture(TextureList::SPIN, "resources/Spin.bmp");
   _instance->addTexture(TextureList::SPINHOLLOW, "resources/SpinHollow.bmp");
+  _instance->addTexture(TextureList::BOMB_SPRITE, "resources/BombSpriteSheet.bmp");
 }
 
 TextureHandler& TextureHandler::getInstance()

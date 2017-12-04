@@ -15,5 +15,5 @@ void Slash::updateAnimation()
 
 float Slash::getAnimationFrame() const
 {
-  return static_cast<float>(animationFrame);
+  return static_cast<float>(animationFrame < spriteSheetSize ? animationFrame : spriteSheetSize - 1);
 }
