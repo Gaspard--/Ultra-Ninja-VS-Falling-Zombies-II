@@ -15,6 +15,7 @@ Logic::Logic()
 {
   time = 0;
   score = 0;
+  restart = false;
   gameOver = false;
   combo = 0;
   multiplier = 0;
@@ -32,6 +33,7 @@ void Logic::update()
       multiplier += (1.0 / 600.0);
       if (!(time % 60))
 	score += entityManager.humans.size();
+      gameOver = (entityManager.humans.size() == 0);
     }
 }
 
@@ -138,6 +140,7 @@ void Logic::checkEvents(Display const &display)
   Player& player = entityManager.getPlayer();
   if (display.isKeyPressed(GLFW_KEY_ENTER) && gameOver)
     {
+      restart = true;
       // TODO: restart
     }
 
@@ -193,6 +196,12 @@ void Logic::handleButton(GLFWwindow *, Button button)
 Vect<2, double> Logic::getPlayerPos(void) const
 {
   return entityManager.getPlayer().entity.fixture.pos;
+}
+
+
+bool Logic::getRestart(void) const
+{
+  return restart;
 }
 
 bool Logic::getGameOver(void) const

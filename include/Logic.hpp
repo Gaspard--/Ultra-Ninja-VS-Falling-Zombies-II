@@ -29,6 +29,7 @@ private:
   Physics physics;
   EntityManager entityManager;
   CityMap cityMap;
+  bool restart;
   bool gameOver;
   bool running;
 
@@ -67,6 +68,8 @@ public:
   std::string   getTime(void) const;
   std::string   getCombo(void) const;
   bool          getGameOver(void) const;
+  bool          getRestart(void) const;
+
 
   bool		isRunning() const
   {
