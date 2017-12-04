@@ -274,31 +274,45 @@ void Display::displayInterface(Logic const &logic)
 	    continue;
 	  Vect<2, double> finalSize = camera.zoom * Vect<2u, float>{0.2f, 0.3f};
 	  Vect<2, double> arrowPos({100.0, 100.0});
+	  Vect<2, double> initialPos({0.0, 0.0});
+	  Vect<2, double> initialSize({0.0, 0.0});
 	  double droiteCoef = (pos[0] - zombiePos[0]) / (pos[1] - zombiePos[1]);
 	  double droiteOrd = pos[1] - pos[0] * droiteCoef;
 	  if (zombiePos[0] < -halfWidth && droiteCoef) {
 	    Vect<2, double> newPos = Vect<2, double>(-halfWidth, (-halfWidth - droiteOrd) / droiteCoef);
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
 	      arrowPos = newPos;
+	      initialSize = {-0.5f, 1.0f};
+	      initialPos = {1.0f, 0.0f};
+	    }
 	  }
 	  else if (zombiePos[0] > halfWidth && droiteCoef) {
 	    Vect<2, double> newPos = Vect<2, double>(halfWidth, (halfWidth - droiteOrd) / droiteCoef) - finalSize[0];
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
 	      arrowPos = newPos;
+	      initialSize = {0.5f, 1.0f};
+	      initialPos = {0.5f, 0.0f};
+	    }
 	  }
 	  if (zombiePos[1] < -halfHeight) {
 	    Vect<2, double> newPos = Vect<2, double>(-droiteCoef * halfHeight + droiteOrd, -halfHeight);
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
 	      arrowPos = newPos;
+	      initialSize = {0.5f, -1.0f};
+	      initialPos = {0.0f, 1.0f};
+	    }
 	  }
 	  else if (zombiePos[1] > halfHeight) {
 	    Vect<2, double> newPos = Vect<2, double>(droiteCoef * halfHeight + droiteOrd, halfHeight) - finalSize[1];
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2())
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
 	      arrowPos = newPos;
+	      initialSize = {0.5f, 1.0f};
+	      initialPos = {0.0f, 0.0f};
+	    }
 	  }
 	  displayRenderableAsHUD(Renderable{
-	      {0.0f, 0.0f},
-		{1.0f, 1.0f},
+	      initialPos,
+		initialSize,
 		  arrowPos,
 		    finalSize}, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ARROW));
 	}
