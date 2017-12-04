@@ -44,6 +44,12 @@ struct CollisionSolver
     a.entity.fixture.speed += (a.entity.fixture.pos - b.entity.fixture.pos).normalized() * 0.02;
   }
 
+  void operator()(Player &a, Human &b)
+  {
+    b.canHighfive = true;
+    a.highFive(b);
+  }
+
   // Player should trigger zombie ranges
   void operator()(Player &a, ZombieDetectionRange &b)
   {
@@ -76,5 +82,4 @@ struct CollisionSolver
     a.hit(b);
     a.lifetime = 0;
   }
-
 };

@@ -387,7 +387,7 @@ void Display::copyRenderData(Logic const &logic)
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
 	    {0.1f * player.getAnimationFrame(), 0.0f},
 	    {0.1f, 1.0f},
-	      pos,
+	      Vect<2, double>(pos[0], pos[1] + player.getOffset()),
 		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
