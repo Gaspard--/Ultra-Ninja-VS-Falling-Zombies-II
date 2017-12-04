@@ -390,7 +390,7 @@ void Display::copyRenderData(Logic const &logic)
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::EXPLOSION)].push_back(Renderable{
 	    {0.25f * explosion.getAnimationFrame(), 0.0f},
 	    {0.25f, 1.0f},
-	      pos,
+	    pos - Vect<2, double>{0.0, explosion.entity.fixture.radius / 2},
 		camera.zoom * static_cast<float>(explosion.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});

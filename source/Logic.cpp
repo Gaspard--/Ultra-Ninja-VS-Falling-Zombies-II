@@ -18,8 +18,8 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  for (int i = 0 ; i < 4 ; ++i)
-    for (int j = 0 ; j < 4 ; ++j)
+  for (int i = 0 ; i < 8 ; ++i)
+    for (int j = 0 ; j < 8 ; ++j)
       entityManager.spawnZombie({i * 1.5 + 40.0, j * 1.5 + 40.0});
   entityManager.spawnHuman({50.0, 50.0}, block);
   entityManager.spawnPlayer({50.4, 50.3});
