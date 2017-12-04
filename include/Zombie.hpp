@@ -19,7 +19,7 @@ public:
   void setLead(bool lead);
   bool const& getLead() const;
   void infectHuman(Human &villager) const;
-  void updateTarget(Entity const&, CityMap const &);
+  bool updateTarget(Entity const&, CityMap const &);
   float getAnimationFrame() const;
 
 private:

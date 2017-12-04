@@ -58,6 +58,13 @@ struct CollisionSolver
     b.affiliated->updateTarget(a.entity, cityMap);
   }
 
+  // Human should trigger zombie ranges
+  void operator()(Human &a, ZombieDetectionRange &b)
+  {
+    if (b.affiliated->updateTarget(a.entity, cityMap))
+      a.beScaredOf(b.entity.fixture.pos);
+  }
+
   void operator()(Slash &a, Zombie &b)
   {
     a.hit(b);

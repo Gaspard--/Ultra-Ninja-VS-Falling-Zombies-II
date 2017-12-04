@@ -33,7 +33,7 @@ void Zombie::infectHuman(Human &villager) const
   villager.setInfected(true);
 }
 
-void Zombie::updateTarget(Entity const& newTarget, CityMap const &cityMap)
+bool Zombie::updateTarget(Entity const& newTarget, CityMap const &cityMap)
 {
   if (!hasTarget)
     if ((newTarget.fixture.pos - entity.fixture.pos).length2() <
@@ -41,7 +41,9 @@ void Zombie::updateTarget(Entity const& newTarget, CityMap const &cityMap)
       {
 	target = findPath(newTarget, cityMap);
 	hasTarget = true;
+	return (true);
       }
+  return (false);
 }
 
 void Zombie::update(std::vector<ZombieDetectionRange> &detectionRanges)
