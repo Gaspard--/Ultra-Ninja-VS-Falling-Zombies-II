@@ -31,7 +31,7 @@ private:
 
   static constexpr int detectionTickBetween()
   {
-    return 40;
+    return 100;
   }
 };
 

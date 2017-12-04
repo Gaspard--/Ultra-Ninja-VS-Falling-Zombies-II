@@ -18,8 +18,8 @@ Logic::Logic()
   gameOver = false;
   combo = 0;
   multiplier = 0;
-  for (int i = 0 ; i < 20 ; ++i)
-    for (int j = 0 ; j < 20 ; ++j)
+  for (int i = 0 ; i < 25 ; ++i)
+    for (int j = 0 ; j < 25 ; ++j)
       entityManager.spawnZombie({i * 1.5 + 40.0, j * 1.5 + 40.0});
   entityManager.spawnHuman({50.0, 50.0}, block);
   entityManager.spawnPlayer({50.4, 50.3});
@@ -40,7 +40,7 @@ void Logic::tick(std::mutex &lock)
 {
   auto const now(Clock::now());
 
-  if (now > lastUpdate + getTickTime() * 3)
+  if (now > lastUpdate + getTickTime() * 2)
     {
       lastUpdate = now;
       return ;
