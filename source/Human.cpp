@@ -5,12 +5,12 @@ Human::Human(Entity entity, CityBlock &home)
     infected(false),
     homePtr(&home),
     coolDown(0),
+    basicWalkCooldown(0),
+    dir(-1.0),
     runAwayCooldown(0),
     mustRunAway(false),
     posToEscape({0.0, 0.0}),
-    canHighfive(false),
-    basicWalkCooldown(0),
-    dir(-1.0)
+    canHighfive(false)
 {
   entity.fixture.speed = {0.01, 0.0};
 }
