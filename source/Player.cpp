@@ -11,6 +11,7 @@ Player::Player(Entity entity)
     slashCooldown(0),
     shurikenCooldown(0),
     bombCooldown(0),
+    offsetY(0),
     isJumping(false)
 {
 }
