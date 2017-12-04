@@ -19,8 +19,16 @@ public:
   Physics() = default;
 
   void move(Fixture&) const;
-  bool haveCollision(Fixture const& a, Fixture const& b) const;
-  bool haveCollision(Vect<2, double> const& a, Fixture const& b) const;
+  static bool haveCollision(const Fixture& a, const Fixture& b)
+  {
+    return (a.pos - b.pos).length2() < CAR(a.radius + b.radius);
+  }
+
+  static bool haveCollision(Vect<2, double> const& a, Fixture const& b)
+  {
+    return (a - b.pos).length2() < CAR(b.radius);
+  }
+
   bool haveCollision(Fixture& a, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
 
   void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
