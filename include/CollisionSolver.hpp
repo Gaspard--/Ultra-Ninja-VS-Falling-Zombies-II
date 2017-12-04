@@ -40,6 +40,10 @@ struct CollisionSolver
     solveCollision(a, b);
   }
 
+  void operator()(Zombie &a, Human &b)
+  {
+    a.infectHuman(b);
+  }
   // Player should suffer knoback from zombies
   void operator()(Player &a, Zombie &b)
   {
@@ -83,6 +87,8 @@ struct CollisionSolver
 
   void operator()(Slash &a, Human &b)
   {
+    for (int i(0); i < 5; ++i)
+      spawnBlood(b.entity.fixture.pos, a.entity.fixture.speed);
     a.hit(b);
   }
 
@@ -95,6 +101,8 @@ struct CollisionSolver
 
   void operator()(Explosion &a, Human &b)
   {
+    for (int i(0); i < 5; ++i)
+      spawnBlood(b.entity.fixture.pos, a.entity.fixture.speed);
     a.hit(b);
   }
 

@@ -22,7 +22,7 @@ private:
                                  std::chrono::steady_clock>::type;
 
   unsigned int time;
-  unsigned int score;
+  long unsigned int score;
   unsigned int combo;
   double multiplier;
 
@@ -63,7 +63,7 @@ public:
   CityMap const& getCityMap() const;
   EntityManager const& getEntityManager() const;
   EntityManager &getEntityManager();
-  unsigned int  getScore(void) const;
+  long unsigned int  getScore(void) const;
   std::string   getTime(void) const;
   std::string   getCombo(void) const;
   bool          getGameOver(void) const;

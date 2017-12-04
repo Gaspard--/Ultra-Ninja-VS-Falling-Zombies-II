@@ -36,6 +36,8 @@ void Logic::update()
       entityManager.update(physics, *this, cityMap);
       cityMap.tick(*this);
       multiplier += (1.0 / 600.0);
+      if (!(time % 60))
+	score += entityManager.humans.size();
     }
 }
 
@@ -73,7 +75,7 @@ void Logic::resetCombo()
   combo = 0;
 }
 
-unsigned int Logic::getScore(void) const
+long unsigned int Logic::getScore(void) const
 {
   return score;
 }
