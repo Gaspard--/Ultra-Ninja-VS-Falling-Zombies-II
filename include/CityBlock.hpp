@@ -1,5 +1,7 @@
 #pragma once
 
+#define REPOP_HAB_CD 2
+
 class CityMap;
 class Logic;
 
@@ -16,6 +18,7 @@ enum class BlockType : char
 class CityBlock
 {
   int habMax;
+  int cooldown;
 
 public:
   BlockType type;
