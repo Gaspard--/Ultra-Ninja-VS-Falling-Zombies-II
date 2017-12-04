@@ -79,7 +79,7 @@ void Zombie::update(std::vector<ZombieDetectionRange> &detectionRanges)
       }
   }
   if (hasTarget && (target - entity.fixture.pos).length2() > 0.1)
-    entity.fixture.speed += (target - entity.fixture.pos).normalized() * 0.0003;
+    entity.fixture.speed += (target - entity.fixture.pos).normalized() * 0.0005;
 }
 
 float Zombie::getAnimationFrame() const

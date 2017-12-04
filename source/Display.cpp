@@ -310,7 +310,7 @@ void Display::copyRenderData(Logic const &logic)
   camera.offset[1] = std::min(std::max(camera.offset[1], -100.0 + 1.0 / (dim[1] * camera.zoom[1])),
 			      -1.0 / (dim[1] * camera.zoom[1]));
   displayInfo.time = logic.getTime();
-  displayInfo.score = logic.getScore();
+  displayInfo.score = static_cast<unsigned int>(logic.getScore());
   displayInfo.gameOver = logic.getGameOver();
   displayInfo.combo = logic.getCombo();
   displayInfo.bomb = logic.getEntityManager().players[0].getNbBombs();

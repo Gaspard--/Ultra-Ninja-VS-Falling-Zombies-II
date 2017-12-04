@@ -1,7 +1,5 @@
 #pragma once
 
-#define REPOP_HAB_CD 500
-
 class CityMap;
 class Logic;
 
@@ -18,7 +16,6 @@ enum class BlockType : char
 class CityBlock
 {
   int habMax;
-  int cooldown;
 
 public:
   BlockType type;
@@ -30,7 +27,7 @@ public:
   ~CityBlock() = default;
 
 public:
-  void tick(CityMap const &, Logic &logic);
+  void update(CityMap const &, Logic &logic);
   bool upgrade(Logic &logic);
   bool hasNeighbors(CityMap const &, int x, int y);
 };
