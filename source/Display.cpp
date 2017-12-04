@@ -251,7 +251,6 @@ void Display::render(Logic const &logic)
   glDepthFunc(GL_LESS);
   for (auto const &renderables : displayInfo.renderables) {
 	  displayRenderables(renderables.second.begin(), static_cast<GLuint>(renderables.second.size()), renderables.first);
-	  std::cout << renderables.second.size() << std::endl;
   }
   glDisable(GL_DEPTH_TEST);
   displayInterface(logic);

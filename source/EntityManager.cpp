@@ -74,10 +74,7 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
   std::vector<ZombieDetectionRange> tmpDetectionRanges;
 
   for (auto &zombie : zombies)
-    {
-      zombie.updateTarget(getPlayer().entity);// TODO delete this
-      zombie.update(tmpDetectionRanges);
-    }
+    zombie.update(tmpDetectionRanges);
 
   for (auto &player : players)
     physics.move(player.entity.fixture);
@@ -95,9 +92,10 @@ void EntityManager::update(Physics const &physics, Logic const &logic)
   for (auto &zombie : zombies)
     physics.fixMapCollision(zombie.entity.fixture, logic.getCityMap().getCityMap());
 
-  // for (auto &range : detectionRanges)
-  //   if (range.refreshRange())
-  //     tmpDetectionRanges.push_back(range);
+  // for (auto const &tmpDetectionRange : tmpDetectionRanges)
+  //   {
+  //     std::cout << tmpDetectionRange.entity.fixture.radius << std::endl;
+  //   }    
   {
     CollisionSolver collisionSolver{};
 
