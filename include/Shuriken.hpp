@@ -11,8 +11,6 @@ private:
   static constexpr int spriteSheetSize = 2;
 
 public:
-  bool touched;
-
   Shuriken(Vect<2, double> const& pos,
 	   Vect<2, double> const& speed,
 	   int damage);

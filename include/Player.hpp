@@ -31,9 +31,7 @@ public:
   void slash(std::vector<Slash> &slashes);
   void circleAttack(std::vector<Slash> &slashes);
   void bomb(std::vector<Bomb> &bombs);
-
   void shuriken(std::vector<Shuriken> &shurikens);
-  bool canShuriken() const;
 
 private:
   EntityAnimation anim;

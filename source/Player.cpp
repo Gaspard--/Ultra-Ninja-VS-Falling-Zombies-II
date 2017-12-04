@@ -94,16 +94,12 @@ void Player::bomb(std::vector<Bomb> &bombs)
 
 void Player::shuriken(std::vector<Shuriken> &shurikens)
 {
-  Shuriken s(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
-	     entity.fixture.speed.normalized() * 0.08, 1);
+  if (shurikenCooldown > 0)
+    return ;
+  shurikens.emplace_back(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
+			 entity.fixture.speed.normalized() * 0.08, 1);
 
-  shurikens.push_back(s);
-  shurikenCooldown = 15;
-}
-
-bool Player::canShuriken() const
-{
-  return shurikenCooldown == 0;
+  shurikenCooldown = /*0;*/15;
 }
 
 void Player::accelerate(Vect<2, int> const& dir)
