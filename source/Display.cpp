@@ -83,8 +83,6 @@ Display::Display()
   , fontHandler("./resources/ObelixPro-Broken-cyr.ttf")
   , textureContext(contextFromFiles("texture"))
   , textContext(contextFromFiles("text"))
-  , bloodSpray{my_opengl::loadTexture("resources/BloodSpray.bmp"), my_opengl::loadTexture("resources/BloodSpray2.bmp"), my_opengl::loadTexture("resources/BloodSpray3.bmp")}
-  , mobSpray{my_opengl::loadTexture("resources/MobSpray.bmp"), my_opengl::loadTexture("resources/MobSpray2.bmp"), my_opengl::loadTexture("resources/MobSpray3.bmp")}
   , planetRenderTexture({1024u, 1024u})
   , size{0.0f, 0.0f}
   , dim{0.0f, 0.0f}
@@ -235,10 +233,10 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-void Display::render(Logic const &logic)
+void Display::render()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glClearColor(0.3f, 0.5f, 0.2f, 0.0f);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  // glClearColor(0.3f, 0.5f, 0.2f, 0.0f);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -250,73 +248,20 @@ void Display::render(Logic const &logic)
 	  displayRenderables(renderables.second.begin(), static_cast<GLuint>(renderables.second.size()), renderables.first);
   }
   glDisable(GL_DEPTH_TEST);
-  displayInterface(logic);
+  displayInterface();
   glDisable(GL_BLEND);
   glfwSwapBuffers(window.get());
   glfwPollEvents();
 }
 
-void Display::displayInterface(Logic const &logic)
+void Display::displayInterface()
 {
   // displayText("Current Population",
   //             256, {0.05f, 0.05f}, {-0.017f * 18, -0.315f}, {sqrt(camera.length2()), 0}, {1.0f, 1.0f, 1.0f});
   // displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  auto const &manager(logic.getEntityManager());
-  for (auto &player : manager.players)
-    {
-      auto pos(camera.apply(player.entity.fixture.pos));
-      double halfWidth = 1.0 / dim[0];
-      double halfHeight = 1.0 / dim[1];
-      for (auto &zombie : manager.zombies)
-	{
-	  auto zombiePos(camera.apply(zombie.entity.fixture.pos));
-	  if ((zombiePos[0] > -halfWidth && zombiePos[0] < halfWidth && zombiePos[1] > -halfHeight && zombiePos[1] < halfHeight) || !(pos[1] - zombiePos[1]))
-	    continue;
-	  Vect<2, double> finalSize = camera.zoom * Vect<2u, float>{0.2f, 0.3f};
-	  Vect<2, double> arrowPos({100.0, 100.0});
-	  Vect<2, double> initialPos({0.0, 0.0});
-	  Vect<2, double> initialSize({0.0, 0.0});
-	  double droiteCoef = (pos[0] - zombiePos[0]) / (pos[1] - zombiePos[1]);
-	  double droiteOrd = pos[1] - pos[0] * droiteCoef;
-	  if (zombiePos[0] < -halfWidth && droiteCoef) {
-	    Vect<2, double> newPos = Vect<2, double>(-halfWidth, (-halfWidth - droiteOrd) / droiteCoef);
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
-	      arrowPos = newPos;
-	      initialSize = {-0.5f, 1.0f};
-	      initialPos = {1.0f, 0.0f};
-	    }
-	  }
-	  else if (zombiePos[0] > halfWidth && droiteCoef) {
-	    Vect<2, double> newPos = Vect<2, double>(halfWidth, (halfWidth - droiteOrd) / droiteCoef) - finalSize[0];
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
-	      arrowPos = newPos;
-	      initialSize = {0.5f, 1.0f};
-	      initialPos = {0.5f, 0.0f};
-	    }
-	  }
-	  if (zombiePos[1] < -halfHeight) {
-	    Vect<2, double> newPos = Vect<2, double>(-droiteCoef * halfHeight + droiteOrd, -halfHeight);
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
-	      arrowPos = newPos;
-	      initialSize = {0.5f, -1.0f};
-	      initialPos = {0.0f, 1.0f};
-	    }
-	  }
-	  else if (zombiePos[1] > halfHeight) {
-	    Vect<2, double> newPos = Vect<2, double>(droiteCoef * halfHeight + droiteOrd, halfHeight) - finalSize[1];
-	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
-	      arrowPos = newPos;
-	      initialSize = {0.5f, 1.0f};
-	      initialPos = {0.0f, 0.0f};
-	    }
-	  }
-	  displayRenderableAsHUD(Renderable{
-	      initialPos,
-		initialSize,
-		  arrowPos,
-		    finalSize}, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ARROW));
-	}
-    }
+  for (auto const &renderable : displayInfo.arrows) {
+    displayRenderableAsHUD(renderable, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ARROW));
+  }
   displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayRenderableAsHUD(Renderable{
@@ -367,6 +312,7 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.ulti = logic.getEntityManager().players[0].getUlti();
 
   displayInfo.renderables.clear();
+  displayInfo.arrows.clear();
   auto const &manager(logic.getEntityManager());
 
   for (auto &zombie : manager.zombies)
@@ -397,13 +343,65 @@ void Display::copyRenderData(Logic const &logic)
     {
       auto pos(camera.apply(player.entity.fixture.pos));
 
+      double halfWidth = 1.0 / dim[0];
+      double halfHeight = 1.0 / dim[1];
+      for (auto &zombie : manager.zombies)
+	{
+	  auto zombiePos(camera.apply(zombie.entity.fixture.pos));
+	  if ((zombiePos[0] > -halfWidth && zombiePos[0] < halfWidth && zombiePos[1] > -halfHeight && zombiePos[1] < halfHeight) || !(pos[1] - zombiePos[1]))
+	    continue;
+	  Vect<2, double> finalSize = camera.zoom * Vect<2u, float>{0.2f, 0.3f};
+	  Vect<2, double> arrowPos({100.0, 100.0});
+	  Vect<2, double> initialPos({0.0, 0.0});
+	  Vect<2, double> initialSize({0.0, 0.0});
+	  double droiteCoef = (pos[0] - zombiePos[0]) / (pos[1] - zombiePos[1]);
+	  double droiteOrd = pos[1] - pos[0] * droiteCoef;
+	  if (zombiePos[0] < -halfWidth && droiteCoef) {
+	    Vect<2, double> newPos = Vect<2, double>(-halfWidth, (-halfWidth - droiteOrd) / droiteCoef);
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
+	      arrowPos = newPos;
+	      initialSize = {-0.5f, 1.0f};
+	      initialPos = {1.0f, 0.0f};
+	    }
+	  }
+	  else if (zombiePos[0] > halfWidth && droiteCoef) {
+	    Vect<2, double> newPos = Vect<2, double>(halfWidth, (halfWidth - droiteOrd) / droiteCoef) - finalSize[0];
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
+	      arrowPos = newPos;
+	      initialSize = {0.5f, 1.0f};
+	      initialPos = {0.5f, 0.0f};
+	    }
+	  }
+	  if (zombiePos[1] < -halfHeight) {
+	    Vect<2, double> newPos = Vect<2, double>(-droiteCoef * halfHeight + droiteOrd, -halfHeight);
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
+	      arrowPos = newPos;
+	      initialSize = {0.5f, -1.0f};
+	      initialPos = {0.0f, 1.0f};
+	    }
+	  }
+	  else if (zombiePos[1] > halfHeight) {
+	    Vect<2, double> newPos = Vect<2, double>(droiteCoef * halfHeight + droiteOrd, halfHeight) - finalSize[1];
+	    if ((newPos - pos).length2() < (arrowPos - pos).length2()) {
+	      arrowPos = newPos;
+	      initialSize = {0.5f, 1.0f};
+	      initialPos = {0.0f, 0.0f};
+	    }
+	  }
+	  displayInfo.arrows.push_back(Renderable{
+	      initialPos,
+		initialSize,
+		arrowPos,
+		finalSize});
+	}
+
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::PLAYER)].push_back(Renderable{
-	    {0.1f * player.getAnimationFrame(), 0.0f},
+	  {0.1f * player.getAnimationFrame(), 0.0f},
 	    {0.1f, 1.0f},
 	      Vect<2, double>(pos[0], pos[1] + player.getOffset()),
 		camera.zoom * static_cast<float>(player.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
-		});
+		  });
     }
   for (auto &slash : manager.slashes)
     {
@@ -473,6 +471,19 @@ void Display::copyRenderData(Logic const &logic)
 		(pos[1] + 1.1f) * 0.4f
 		});
     }
+  for (auto &blood : manager.bloods)
+    if (blood.intensity < 1.0 - (blood.delay) * 0.05)
+      {
+	auto pos(camera.apply(blood.pos));
+
+	displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BLOOD)].push_back(Renderable{
+	    {static_cast<double>(blood.type) / 3.0f, 0.0f},
+	      {1.0f / 3.0f, 1.0f},
+		pos,
+		  camera.zoom * 0.5f,
+		  0.90f
+		    });
+      }
   auto cityMap(logic.getCityMap().getCityMap());
   for (std::size_t i(0); i != 100ul; ++i)
     for (std::size_t j(0); j != 100ul; ++j)
@@ -496,9 +507,15 @@ void Display::copyRenderData(Logic const &logic)
 										       (house.type == BlockType::MANSION) ? 1.55f :
 										       (house.type == BlockType::NONE) ? 1.0f :
 										       (house.type == BlockType::ROAD) ? 1.0f :
-										       1.0f},
+										       0.95f},
 										       (pos[1] + 1.1f) * 0.4f});
       }
+  displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::GRASS)].push_back(Renderable{
+      {0.0f, 0.0f},
+	{100.0f, 100.0f},
+	  camera.apply(Vect<2u, double>{50.0, 0.0f}),
+	    camera.zoom * Vect<2u, float>{100.0f, 100.0f},
+	      0.99f});
 }
 
 bool Display::isRunning() const
