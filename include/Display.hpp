@@ -53,7 +53,7 @@ public:
 
   void displayRect(Rect const &);
 
-  void displayInterface();
+  void displayInterface(Logic const &logic);
 
   void displayRenderableAsHUD(Renderable const& renderable, GLuint texture);
 
@@ -63,7 +63,7 @@ public:
 
   Camera const &getCamera() const;
 
-  void render();
+  void render(Logic const &);
   bool isRunning() const;
   bool isKeyPressed(int key) const;
 
