@@ -60,13 +60,8 @@ void Player::slash(std::vector<Slash> &slashes)
 
 void Player::circleAttack(std::vector<Slash> &slashes)
 {
-<<<<<<< HEAD
-  constexpr double posOffset = 0.1;
-  constexpr double speed = 0.01;
-=======
   static constexpr double posOffset = 0.1;
   static constexpr double speed = 0.03;
->>>>>>> 12ae32e7eb8b9318c6156e4ca77773ac64eee7de
   auto &pos = entity.fixture.pos;
 
   if (ulti < 100.0)
