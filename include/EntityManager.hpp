@@ -14,6 +14,7 @@
 #include "Vect.hpp"
 #include "ZombieDetectionRange.hpp"
 #include "CityMap.hpp"
+#include "Flesh.hpp"
 #include "Blood.hpp"
 
 class Logic;
@@ -30,6 +31,7 @@ public:
   std::vector<Explosion> explosions;
   std::vector<Shuriken> shurikens;
   std::vector<Blood> bloods;
+  std::vector<Flesh> fleshs;
 
   EntityManager();
   ~EntityManager() = default;

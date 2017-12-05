@@ -234,6 +234,17 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
+void Display::displayTutoPage()
+{
+  displayText("Press enter to start", 256, {0.15f, 0.15f}, {-1.0f, 0.54f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
+  displayRenderableAsHUD(Renderable{
+    {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	{-0.90f, -0.95f},
+	{1.9f, 1.0f}
+  }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::TUTO));
+}
+
 void Display::render()
 {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -260,11 +271,34 @@ void Display::displayInterface()
   // displayText("Current Population",
   //             256, {0.05f, 0.05f}, {-0.017f * 18, -0.315f}, {sqrt(camera.length2()), 0}, {1.0f, 1.0f, 1.0f});
   // displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  for (auto const &renderable : displayInfo.arrows) {
-    displayRenderableAsHUD(renderable, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ARROW));
+  if (displayInfo.tutoPage)
+  {
+    displayTutoPage();
   }
+  else
+  {
+    for (auto const &renderable : displayInfo.arrows) {
+      displayRenderableAsHUD(renderable, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ARROW));
+    }
+  }
+  displayText(std::to_string(displayInfo.humans), 256, {0.05f, 0.05f}, {0.68f / dim[0], 0.855f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayText(std::to_string(displayInfo.zombies), 256, {0.05f, 0.05f}, {0.90f / dim[0], 0.855f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Score   " + std::to_string(displayInfo.score), 256, {0.075f, 0.075f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText("Time   " + displayInfo.time, 256, {0.075f, 0.075f}, {-0.95f / dim[0], -0.98f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+
+  displayRenderableAsHUD(Renderable{
+      {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	  {1.0f / dim[0] - 0.3f, 1.0f / dim[1] - 0.1f},
+	    {0.072f, 0.072f}
+    }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ZOMBIEHEAD));
+  displayRenderableAsHUD(Renderable{
+      {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	  {1.0f / dim[0] - 0.7f, 1.0f / dim[1] - 0.1f},
+	    {0.072f, 0.072f}
+    }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HUMANHEAD));
+
   displayRenderableAsHUD(Renderable{
     {0.0f, 0.0f},
 	{1.0f, 1.0f},
@@ -322,10 +356,13 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.time = logic.getTime();
   displayInfo.score = static_cast<unsigned int>(logic.getScore());
   displayInfo.gameOver = logic.getGameOver();
+  displayInfo.tutoPage = logic.getTutoPage();
   displayInfo.combo = logic.getCombo();
   displayInfo.bomb = logic.getEntityManager().players[0].getNbBombs();
   displayInfo.nbUlti = logic.getEntityManager().players[0].getNbUlti();
   displayInfo.ulti = logic.getEntityManager().players[0].getUlti();
+  displayInfo.humans = logic.getEntityManager().humans.size();
+  displayInfo.zombies = logic.getEntityManager().zombies.size();
 
   displayInfo.renderables.clear();
   displayInfo.arrows.clear();
@@ -486,6 +523,18 @@ void Display::copyRenderData(Logic const &logic)
 		camera.zoom * static_cast<float>(explosion.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		});
+    }
+  for (auto &flesh : manager.fleshs)
+    {
+      auto pos(camera.apply(flesh.entity.fixture.pos));
+
+      displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::FLESH_SPRITE)].push_back(Renderable{
+	  {static_cast<float>(flesh.type) / 3.0f, 0.0f},
+	    {1.0f / 3.0f, 1.0f},
+	      pos + Vect<2u, float>{0.0f, static_cast<float>(flesh.yOffset)},
+		camera.zoom * static_cast<float>(flesh.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
+		(pos[1] + 1.1f) * 0.4f
+		  });
     }
   for (auto &blood : manager.bloods)
     if (blood.intensity < 1.0 - (blood.delay) * 0.05)
