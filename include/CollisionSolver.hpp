@@ -13,7 +13,6 @@ struct CollisionSolver
   static void solveCollision(T &a, U &b)
   {
     auto middle((a.entity.fixture.pos + b.entity.fixture.pos) * 0.5);
-    auto dist(std::sqrt((a.entity.fixture.pos - b.entity.fixture.pos).length2()));
     auto avg((a.entity.fixture.radius + b.entity.fixture.radius) * 1.1);
     auto dir((a.entity.fixture.pos - b.entity.fixture.pos).normalized() * avg * 0.5);
 
