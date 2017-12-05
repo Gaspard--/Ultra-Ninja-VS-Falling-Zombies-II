@@ -1,4 +1,3 @@
-#define NOMINMAX
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
