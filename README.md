@@ -43,7 +43,11 @@ The New Hope of humanity starts now...
 ## Arts
 * Richard Yiv
 
+## Ultra-ninja VS Falling Zombies
+
+You can play to the first opus just [here](https://ldjam.com/events/ludum-dare/38/ultra-ninja-vs-falling-zombies) !
+
 ## Ludum Dare Page
 
 This game was developed during the LD40.
-You can visit our LD40 game page [here](https://ldjam.com/events/ludum-dare/40/ultra-ninja-vs-falling-zombies-II).
+You can visit our LD40 game page [here](https://ldjam.com/events/ludum-dare/40/ultra-ninja-vs-falling-zombies-ii-new-hope).
