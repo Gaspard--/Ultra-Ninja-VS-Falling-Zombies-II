@@ -7,7 +7,7 @@
 1. Clone the project `git clone https://github.com/Gaspard--/Ultra-Ninja-VS-Falling-Zombies-II` or [download as zip](https://github.com/Gaspard--/Ultra-Ninja-VS-Falling-Zombies-II/archive/master.zip)
 2. Install the [GLFW](http://www.glfw.org/) and the [SFML](https://www.sfml-dev.org/) libraries
 3. `cd` into the project directory
-4. Make the release : `mkdir release && cd release && cmake .. -DCMAKE_BUILD_TYPE=Release && cd .. && make -C release.`
+4. Make the release : `mkdir release && cd release && cmake .. -DCMAKE_BUILD_TYPE=Release && cd .. && make -C release`
 5. Launch the game: `./Ultra-Ninja-VS-Falling-Zombies-II`
 6. Enjoy!
 
