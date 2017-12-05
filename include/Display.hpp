@@ -58,6 +58,7 @@ public:
 
   void displayRenderableAsHUD(Renderable const& renderable, GLuint texture);
 
+  void displayStartPage();
   void displayTutoPage();
 
   Vect<2u, float> getDim() const;

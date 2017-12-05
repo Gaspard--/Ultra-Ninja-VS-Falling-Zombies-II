@@ -191,12 +191,18 @@ void EntityManager::spawnHuman(Vect<2, double> const &pos, CityBlock &home)
 {
   Entity e({pos, {0.0, 0.0}, 0.062, 0.0, 0.0});
 
+  if (humans.size() + zombies.size() >= MaxEntities)
+    return ;
+
   humans.emplace_back(e, home);
 }
 
 void EntityManager::spawnZombie(Vect<2, double> const& pos)
 {
   Entity e({pos, {0.0, 0.0}, 0.062, 0.0, 0.0});
+
+  // if (humans.size() + zombies.size() >= MaxEntities)
+  //   return ;
 
   zombies.emplace_back(e);
   detectionRanges.emplace_back(zombies.back());
