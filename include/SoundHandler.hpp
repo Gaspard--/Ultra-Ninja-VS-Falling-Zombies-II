@@ -12,10 +12,11 @@ public:
 
   enum SoundList
     {
-      DASH,
+      SLASH,
       CIRCLE_ATTACK,
       EXPLOSION,
       SHURIKEN,
+      FESSES,
     };
 
   static void initSoundHandler();

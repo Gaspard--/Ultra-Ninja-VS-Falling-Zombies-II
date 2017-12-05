@@ -13,10 +13,11 @@ void SoundHandler::initSoundHandler()
   _instance.reset(new SoundHandler());
   if (!_instance->mainMusic.openFromFile("resources/Ken_new_Hope_(loop).wav"))
     throw ("Music not charged");
-  _instance->addSoundBuffer(DASH, "resources/dash.wav");
+  _instance->addSoundBuffer(SLASH, "resources/dash.wav");
   _instance->addSoundBuffer(CIRCLE_ATTACK, "resources/circle_attack.wav");
   _instance->addSoundBuffer(SHURIKEN, "resources/shuriken.wav");
   _instance->addSoundBuffer(EXPLOSION, "resources/explosion.wav");
+  _instance->addSoundBuffer(FESSES, "resources/fesses.wav");
 }
 
 SoundHandler& SoundHandler::getInstance()

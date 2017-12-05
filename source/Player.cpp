@@ -60,6 +60,7 @@ void Player::highFive(Human &villager)
   if (// !canHighfive ||
       !villager.canHighFive())
     return ;
+  SoundHandler::getInstance().playSound(SoundHandler::SoundList::FESSES, 60);
   isJumping = true;
   villager.isJumping = true;
   choice = rand() % 4;
@@ -86,7 +87,7 @@ void Player::slash(std::vector<Slash> &slashes)
 
   if (slashCooldown == 0)
     {
-      SoundHandler::getInstance().playSound(SoundHandler::SoundList::DASH, 50);
+      SoundHandler::getInstance().playSound(SoundHandler::SoundList::SLASH, 40);
       slashes.emplace_back(entity.fixture.pos + entity.fixture.speed.normalized() * 0.15,
 			   entity.fixture.speed * 0.2, 2);
       slashCooldown = cd;
@@ -135,7 +136,7 @@ void Player::shuriken(std::vector<Shuriken> &shurikens)
 {
   if (shurikenCooldown > 0)
     return ;
-  SoundHandler::getInstance().playSound(SoundHandler::SoundList::SHURIKEN, 30);
+  SoundHandler::getInstance().playSound(SoundHandler::SoundList::SHURIKEN, 25);
   shurikens.emplace_back(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
 			 entity.fixture.speed.normalized() * 0.08, 1);
 
