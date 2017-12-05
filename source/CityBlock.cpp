@@ -10,16 +10,15 @@ CityBlock::CityBlock()
 void CityBlock::update(CityMap const &ref, Logic &logic)
 {
   cooldown -= cooldown ? 1 : 0;
-  if (hab != habMax && hasNeighbors(ref, x, y) && !cooldown)
+  if (hab < habMax && hasNeighbors(ref, x, y) && !cooldown)
     {
       cooldown = REPOP_HAB_CD;
-      int newHab(((hab + habMax / 2) % habMax) - hab);
+      int newHab(std::min((hab + habMax / 2), habMax) - hab);
 
       for (int i = 0; i < newHab; i++)
 	logic.getEntityManager().spawnHuman({static_cast<double>(x) +
 	      (1 / static_cast<double>(newHab)) * (0.5 + i),
 	      static_cast<double>(y) - 0.2}, *this);
-      hab = (hab + newHab) % habMax;
     }
 }
 
@@ -27,8 +26,8 @@ bool CityBlock::upgrade(Logic &logic)
 {
   if (static_cast<int>(type) > static_cast<int>(BlockType::HOUSE) || hab != habMax)
     return (false);
-  habMax += 2;
-  hab = habMax;
+  type = static_cast<BlockType>(static_cast<int>(type) + 1);
+  habMax = static_cast<int>(type) * 2;
   cooldown = REPOP_HAB_CD;
   logic.getEntityManager().spawnHuman({static_cast<double>(x) +
 	1.0 / 3.0,
@@ -36,7 +35,6 @@ bool CityBlock::upgrade(Logic &logic)
   logic.getEntityManager().spawnHuman({static_cast<double>(x) +
 	2.0 / 3.0,
 	static_cast<double>(y) - 0.2}, *this);
-  type = static_cast<BlockType>(static_cast<int>(type) + 1);
   return (true);
 }
 

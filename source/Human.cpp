@@ -13,11 +13,28 @@ Human::Human(Entity entity, CityBlock &home)
     canHighfive(false)
 {
   entity.fixture.speed = {0.01, 0.0};
+  homePtr->hab += 1;
+}
+
+Human::Human(Human const &ref)
+    : Mob(ref.entity, 1),
+    infected(ref.infected),
+    homePtr(ref.homePtr),
+    coolDown(ref.coolDown),
+    basicWalkCooldown(ref.basicWalkCooldown),
+    dir(ref.dir),
+    runAwayCooldown(ref.runAwayCooldown),
+    mustRunAway(ref.mustRunAway),
+    posToEscape(ref.posToEscape),
+    canHighfive(ref.canHighfive)
+{
+  entity.fixture.speed = ref.entity.fixture.speed;
+  homePtr->hab += 1;
 }
 
 Human::~Human()
 {
-  homePtr->hab -= homePtr->hab ? 1 : 0;
+  homePtr->hab -= 1;
 }
 
 void Human::handleJump()
@@ -72,12 +89,7 @@ bool const& Human::getInfected() const
   return infected;
 }
 
-CityBlock const &Human::getHome() const
-{
-  return *homePtr;
-}
-
-CityBlock &Human::getHome()
+CityBlock &Human::getHome() const
 {
   return *homePtr;
 }
