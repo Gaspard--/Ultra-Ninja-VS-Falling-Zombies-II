@@ -1,6 +1,7 @@
 #pragma once
 
 #define REPOP_HAB_CD 3
+#define NOMINMAX
 
 class CityMap;
 class Logic;
