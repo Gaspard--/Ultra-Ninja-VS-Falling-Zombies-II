@@ -24,6 +24,8 @@ public:
   float getAnimationFrame() const;
   bool getIsFalling() const;
 
+  bool isHunting(void) const;
+
 private:
   EntityAnimation anim;
   bool lead;

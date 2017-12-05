@@ -31,6 +31,8 @@ public:
 
   void	runAway(void);
 
+  bool isRunningAway(void) const;
+
 private:
   EntityAnimation anim;
   CityBlock &getHome();

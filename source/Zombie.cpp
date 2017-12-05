@@ -91,3 +91,8 @@ bool Zombie::getIsFalling() const
 {
   return isFalling;
 }
+
+bool	Zombie::isHunting(void) const
+{
+  return (hasTarget);
+}
