@@ -258,9 +258,13 @@ void Display::displayTutoPage()
 void Display::render()
 {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  // glClearColor(0.3f, 0.5f, 0.2f, 0.0f);
+  float scale(static_cast<float>(displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SLASH)].size()
+				 + displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SLASH2)].size()
+				 + displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::EXPLOSION)].size() * 5) * 0.01f);
+  glClearColor(scale, scale, scale, scale);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
+  
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
