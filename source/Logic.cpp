@@ -4,8 +4,8 @@
 #include "Logic.hpp"
 #include "Input.hpp"
 #include "Display.hpp"
-#include "SoundHandler.hpp"
 #include "Shuriken.hpp"
+#include "SoundHandler.hpp"
 
 Logic::Logic()
   : cityMap(*this),
@@ -55,6 +55,7 @@ void Logic::tick(std::mutex &lock)
     std::lock_guard<std::mutex> scopedLock(lock);
     update();
   }
+  SoundHandler::getInstance().deleteSounds();
 }
 
 void Logic::addToScore(int add)

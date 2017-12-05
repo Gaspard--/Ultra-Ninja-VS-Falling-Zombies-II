@@ -1,6 +1,7 @@
 #include "EntityManager.hpp"
 #include "CollisionSolver.hpp"
 #include "Logic.hpp"
+#include "SoundHandler.hpp"
 #include <random>
 
 EntityManager::EntityManager()
@@ -58,6 +59,7 @@ void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
     {
       if (it->lifetime <= 0)
 	{
+	  SoundHandler::getInstance().playSound(SoundHandler::SoundList::EXPLOSION);
 	  explosions.emplace_back(Vect<2, double>{it->entity.fixture.pos[0],
 		it->entity.fixture.pos[1]},
 	    0.5, 1);
