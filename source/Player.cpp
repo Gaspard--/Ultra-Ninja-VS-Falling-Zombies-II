@@ -2,6 +2,7 @@
 #include "Slash.hpp"
 #include "Shuriken.hpp"
 #include "Bomb.hpp"
+#include "SoundHandler.hpp"
 
 Player::Player(Entity entity)
   : entity(entity),
@@ -56,7 +57,7 @@ void Player::highFive(Human &villager)
   constexpr int const cd = 1150;
   unsigned int choice;
 
-  if (// !canHighfive || 
+  if (// !canHighfive ||
       !villager.canHighFive())
     return ;
   isJumping = true;
@@ -85,6 +86,7 @@ void Player::slash(std::vector<Slash> &slashes)
 
   if (slashCooldown == 0)
     {
+      SoundHandler::getInstance().playSound(SoundHandler::SoundList::DASH, 50);
       slashes.emplace_back(entity.fixture.pos + entity.fixture.speed.normalized() * 0.15,
 			   entity.fixture.speed * 0.2, 2);
       slashCooldown = cd;
@@ -103,6 +105,7 @@ void Player::circleAttack(std::vector<Slash> &slashes)
     return ;
   nbUlti -= 1;
   circleCooldown = cd;
+  SoundHandler::getInstance().playSound(SoundHandler::SoundList::CIRCLE_ATTACK, 60);
   slashes.emplace_back(Vect<2, double>(pos[0], pos[1] - posOffset), Vect<2, double>(0.0, -speed), 2, iteration); // UP
   slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] - posOffset), Vect<2, double>(speed, -speed), 2, iteration); // UP RIGHT
   slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] - posOffset), Vect<2, double>(speed, -speed), 2, iteration); // UP RIGHT
@@ -132,6 +135,7 @@ void Player::shuriken(std::vector<Shuriken> &shurikens)
 {
   if (shurikenCooldown > 0)
     return ;
+  SoundHandler::getInstance().playSound(SoundHandler::SoundList::SHURIKEN, 35);
   shurikens.emplace_back(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
 			 entity.fixture.speed.normalized() * 0.08, 1);
 

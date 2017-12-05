@@ -51,7 +51,7 @@ private:
   void handleButton(GLFWwindow *window, Button button);
 
 public:
-  Logic();
+  Logic(bool animation = true);
 
   void handleEvent(Display const &, Event const& event);
   void checkEvents(Display const &);

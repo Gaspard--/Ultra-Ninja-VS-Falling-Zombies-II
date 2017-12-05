@@ -336,7 +336,7 @@ void Display::displayInterface()
       displayRenderableAsHUD(Renderable{
 	    {0.0f, 0.0f},
 	    {1.0f, 1.0f},
-	    {1.0f / dim[0] - (static_cast<float>(i + 1) * 0.07f + 0.05f), -1.0f / dim[1] + 0.25f},
+	    {1.0f / dim[0] - (static_cast<float>(i + 1) * 0.071f + 0.060f), -1.0f / dim[1] + 0.25f},
 		{0.09f, 0.09f}
 	}, TextureHandler::getInstance().getTexture((i >= 5 - displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW));
     }
@@ -345,7 +345,7 @@ void Display::displayInterface()
       displayRenderableAsHUD(Renderable{
 	    {0.0f, 0.0f},
 	    {1.0f, 1.0f},
-	      {1.0f / dim[0] - (static_cast<float>(i + 1) * 0.07f + 0.05f), -1.0f / dim[1] + 0.15f},
+	      {1.0f / dim[0] - (static_cast<float>(i + 1) * 0.071f + 0.05f), -1.0f / dim[1] + 0.15f},
 		{0.065f, 0.065f}
 	}, TextureHandler::getInstance().getTexture((i >= 5 - displayInfo.nbUlti) ? TextureHandler::TextureList::SPIN : TextureHandler::TextureList::SPINHOLLOW));
     }

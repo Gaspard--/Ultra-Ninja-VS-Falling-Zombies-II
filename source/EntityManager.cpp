@@ -1,6 +1,7 @@
 #include "EntityManager.hpp"
 #include "CollisionSolver.hpp"
 #include "Logic.hpp"
+#include "SoundHandler.hpp"
 #include <random>
 
 EntityManager::EntityManager()
@@ -58,6 +59,7 @@ void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
     {
       if (it->lifetime <= 0)
 	{
+	  SoundHandler::getInstance().playSound(SoundHandler::SoundList::EXPLOSION);
 	  explosions.emplace_back(Vect<2, double>{it->entity.fixture.pos[0],
 		it->entity.fixture.pos[1]},
 	    0.5, 1);
@@ -189,12 +191,18 @@ void EntityManager::spawnHuman(Vect<2, double> const &pos, CityBlock &home)
 {
   Entity e({pos, {0.0, 0.0}, 0.062, 0.0, 0.0});
 
+  if (humans.size() + zombies.size() >= MaxEntities)
+    return ;
+
   humans.emplace_back(e, home);
 }
 
 void EntityManager::spawnZombie(Vect<2, double> const& pos)
 {
   Entity e({pos, {0.0, 0.0}, 0.062, 0.0, 0.0});
+
+  // if (humans.size() + zombies.size() >= MaxEntities)
+  //   return ;
 
   zombies.emplace_back(e);
   detectionRanges.emplace_back(zombies.back());
@@ -216,7 +224,6 @@ void EntityManager::spawnZombies()
 	  spawnZombie({pos[0] + rnd, pos[1]});
 	}
       frame = 0;
-      rateOfSpawn += 20;
     }
 }
 

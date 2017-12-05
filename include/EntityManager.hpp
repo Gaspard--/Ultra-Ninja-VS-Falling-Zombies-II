@@ -50,6 +50,7 @@ public:
 
 private:
   // for spawn zombie
+  static constexpr const int MaxEntities = 600;
   int rateOfSpawn;
   int frame;
 };

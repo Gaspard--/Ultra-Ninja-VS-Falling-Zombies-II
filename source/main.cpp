@@ -72,7 +72,7 @@ int main()
 	  }
 	  display.render();
 	  if (logic.getRestart())
-	    logic = Logic();
+	    logic = Logic(false);
 	}
     } catch (std::runtime_error const &e) {
       std::cerr << "Display thread encoutered runtime error:" << std::endl

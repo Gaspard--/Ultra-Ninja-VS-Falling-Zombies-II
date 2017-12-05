@@ -4,10 +4,10 @@
 #include "Logic.hpp"
 #include "Input.hpp"
 #include "Display.hpp"
-#include "SoundHandler.hpp"
 #include "Shuriken.hpp"
+#include "SoundHandler.hpp"
 
-Logic::Logic()
+Logic::Logic(bool animation)
   : cityMap(*this),
     running(true),
     mousePos{0.0, 0.0},
@@ -17,7 +17,7 @@ Logic::Logic()
   score = 0;
   restart = false;
   gameOver = false;
-  startPage = true;
+  startPage = animation;
   tutoPage = false;
   combo = 0;
   multiplier = 0;
@@ -56,6 +56,7 @@ void Logic::tick(std::mutex &lock)
     std::lock_guard<std::mutex> scopedLock(lock);
     update();
   }
+  SoundHandler::getInstance().deleteSounds();
 }
 
 void Logic::addToScore(int add)
