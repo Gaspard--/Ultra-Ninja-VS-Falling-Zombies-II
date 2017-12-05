@@ -4,7 +4,7 @@
 #include <random>
 
 EntityManager::EntityManager()
-  : frame(360)
+  : rateOfSpawn(500), frame(360)
 {
 
 }
@@ -206,8 +206,6 @@ static double getRandom(double min, double max) {
 
 void EntityManager::spawnZombies()
 {
-  constexpr int const rateOfSpawn = 500;
-
   if (++frame > rateOfSpawn)
     {
       if (!humans.empty())
@@ -218,6 +216,7 @@ void EntityManager::spawnZombies()
 	  spawnZombie({pos[0] + rnd, pos[1]});
 	}
       frame = 0;
+      rateOfSpawn += 20;
     }
 }
 
