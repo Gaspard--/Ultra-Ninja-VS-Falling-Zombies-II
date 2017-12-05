@@ -1,5 +1,6 @@
 #pragma once
 
+#define NOMINMAX
 #include <memory>
 #include <cmath>
 #include "Vect.hpp"
