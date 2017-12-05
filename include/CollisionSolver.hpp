@@ -54,7 +54,7 @@ struct CollisionSolver
 
   void operator()(Player &a, Human &b)
   {
-    b.canHighfive = true;
+    // b.canHighfive = true;
     a.highFive(b);
   }
 

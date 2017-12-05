@@ -8,9 +8,11 @@ Player::Player(Entity entity)
     canHighfive(false),
     ulti(0.0),
     nbBombs(0),
+    nbUlti(0),
     slashCooldown(0),
     shurikenCooldown(0),
     bombCooldown(0),
+    circleCooldown(0),
     offsetY(0),
     isJumping(false)
 {
@@ -46,6 +48,7 @@ void Player::update()
   updateCd(slashCooldown);
   updateCd(shurikenCooldown);
   updateCd(bombCooldown);
+  updateCd(circleCooldown);
 }
 
 void Player::highFive(Human &villager)
@@ -53,15 +56,21 @@ void Player::highFive(Human &villager)
   constexpr int const cd = 1150;
   unsigned int choice;
 
-  if (!canHighfive || !villager.canHighFive())
+  if (// !canHighfive || 
+      !villager.canHighFive())
     return ;
   isJumping = true;
   villager.isJumping = true;
-  choice = rand() % 5;
-  if (ulti < 100.0 && choice < 4)
-    ulti += 20.0;
+  choice = rand() % 4;
+  if (choice < 3)
+    ulti += (ulti < 100.0) ? 20.0 : 0.0;
   else if (nbBombs < 5)
     nbBombs += 1;
+  if (ulti >= 100.0 && nbUlti < 5)
+    {
+      ulti = 0.0;
+      nbUlti += 1;
+    }
   villager.setCoolDown(cd);
 }
 
@@ -87,11 +96,13 @@ void Player::circleAttack(std::vector<Slash> &slashes)
   static constexpr double posOffset = 0.1;
   static constexpr double speed = 0.03;
   static constexpr int iteration = 1;
+  constexpr int cd = 20;
   auto &pos = entity.fixture.pos;
 
-  if (ulti < 100.0)
+  if (circleCooldown > 0 || nbUlti == 0)
     return ;
-  ulti = 0.0;
+  nbUlti -= 1;
+  circleCooldown = cd;
   slashes.emplace_back(Vect<2, double>(pos[0], pos[1] - posOffset), Vect<2, double>(0.0, -speed), 2, iteration); // UP
   slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] - posOffset), Vect<2, double>(speed, -speed), 2, iteration); // UP RIGHT
   slashes.emplace_back(Vect<2, double>(pos[0] + posOffset, pos[1] - posOffset), Vect<2, double>(speed, -speed), 2, iteration); // UP RIGHT
@@ -151,6 +162,17 @@ void Player::setNbBombs(int nbBombs)
 int Player::getNbBombs() const
 {
   return nbBombs;
+}
+
+void Player::setNbUlti(int nbUlti)
+{
+  if (this->nbUlti > 0)
+    this->nbUlti = nbUlti;
+}
+
+int Player::getNbUlti() const
+{
+  return nbUlti;
 }
 
 double Player::getUlti() const

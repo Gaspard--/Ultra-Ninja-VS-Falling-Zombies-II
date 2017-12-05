@@ -10,6 +10,7 @@ struct DisplayInfo
   long unsigned int score;
   std::string combo;
   unsigned int bomb;
+  unsigned int nbUlti;
   double ulti;
   bool gameOver;
 };

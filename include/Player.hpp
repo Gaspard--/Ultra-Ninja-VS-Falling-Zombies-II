@@ -27,6 +27,8 @@ public:
   // dir[0] = x axis , dir[1] = y axis
   void setNbBombs(int nbBombs);
   int getNbBombs() const;
+  void setNbUlti(int nbUlti);
+  int getNbUlti() const;
   // void setOffset(double offsetY);
   double const& getOffset() const;
   void setUlti(double ulti);
@@ -41,10 +43,12 @@ private:
   EntityAnimation anim;
   double ulti;
   int nbBombs;
+  int nbUlti;
 
   int slashCooldown;
   int shurikenCooldown;
   int bombCooldown;
+  int circleCooldown;
   double offsetY;
   bool isJumping;
 };

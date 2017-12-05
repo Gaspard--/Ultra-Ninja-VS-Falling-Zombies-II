@@ -75,7 +75,8 @@ void Human::setCoolDown(int coolDown)
 
 bool Human::canHighFive() const
 {
-  return canHighfive && coolDown <= 0;
+  return // canHighfive && 
+    coolDown <= 0;
 }
 
 float Human::getAnimationFrame() const

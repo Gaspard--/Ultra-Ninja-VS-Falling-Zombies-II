@@ -127,9 +127,9 @@ void Logic::handleKey(GLFWwindow *window, Key key)
     case GLFW_KEY_ESCAPE:
       glfwSetWindowShouldClose(window, true);
       break;
-    case GLFW_KEY_SPACE:
-      entityManager.getPlayer().canHighfive = (key.action == GLFW_PRESS);
-      break;
+    // case GLFW_KEY_SPACE:
+    //   entityManager.getPlayer().canHighfive = (key.action == GLFW_PRESS);
+    //   break;
     default:
       break;
     }
