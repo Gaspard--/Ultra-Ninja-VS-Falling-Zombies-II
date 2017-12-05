@@ -46,12 +46,15 @@ void Human::update()
   canHighfive = false;
   if (mustRunAway)
     runAway();
+  else if ((entity.fixture.pos - Vect<2, double>(homePtr->x, homePtr->y)).length2() > 1.0) {
+    entity.fixture.speed += (Vect<2, double>(homePtr->x, homePtr->y) - entity.fixture.pos).normalized() * 0.0005;
+  }
   else {
-    basicWalkCooldown -= basicWalkCooldown > 0;
-    if (!basicWalkCooldown) {
-      basicWalkCooldown = 100;
-      dir *= -1.0;
-    }
+      basicWalkCooldown -= basicWalkCooldown > 0;
+      if (!basicWalkCooldown) {
+	basicWalkCooldown = 100;
+	dir *= -1.0;
+      }
     entity.fixture.speed[0] += 0.0001 * dir;
   }
   runAwayCooldown -= runAwayCooldown > 0;

@@ -99,6 +99,12 @@ void EntityManager::updateWeapons(Physics const &physics, Logic const &logic)
 				return elem.intensity < 0.0;
 			      }),
 	       bloods.end());
+  fleshs.erase(std::remove_if(fleshs.begin(), fleshs.end(),
+			      [](auto const &elem)
+			      {
+				return elem.entity.isUseless;
+			      }),
+	       fleshs.end());
 }
 
 void EntityManager::update(Physics const &physics, Logic const &logic, CityMap const &cityMap)
@@ -107,6 +113,8 @@ void EntityManager::update(Physics const &physics, Logic const &logic, CityMap c
     player.update();
   for (auto &human : humans)
     human.update();
+  for (auto &flesh : fleshs)
+    flesh.update(bloods);
   std::vector<ZombieDetectionRange> tmpDetectionRanges;
 
   for (auto &zombie : zombies)
@@ -118,6 +126,8 @@ void EntityManager::update(Physics const &physics, Logic const &logic, CityMap c
     physics.move(human.entity.fixture);
   for (auto &zombie : zombies)
     physics.move(zombie.entity.fixture);
+  for (auto &flesh : fleshs)
+    physics.move(flesh.entity.fixture);
 
   updateWeapons(physics, logic);
 
@@ -142,10 +152,24 @@ void EntityManager::mobDeath()
 			    {
 			      return !human.getInfected();
 			    }));
-  static constexpr auto lifeCheck = [](auto &container)
+  auto lifeCheck = [this](auto &container)
     {
+      for (auto const &contained : container)
+	{
+	  if (contained.getLife() <= 0)
+	    for (int i(0); i < 5; ++i)
+	      {
+		Vect<2u, float> randOffset(Vect<2u, float>(static_cast<float>(rand() & 255), static_cast<float>(rand() & 255)) - Vect<2u, float>(128.0f, 128.0f));
+
+		fleshs.push_back(Entity({
+		      contained.entity.fixture.pos,
+			randOffset * 0.0004,
+			0.1 * static_cast<double>(rand() % 100) * 0.01,
+			0.0}));
+	      }
+	}
       container.erase(std::remove_if(container.begin(), container.end(),
-							[](auto const &elem)
+				     [](auto const &elem)
     {
       return elem.getLife() <= 0;
     }),

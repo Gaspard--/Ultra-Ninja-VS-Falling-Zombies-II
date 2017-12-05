@@ -13,4 +13,6 @@ struct DisplayInfo
   double ulti;
   bool gameOver;
   bool tutoPage;
+  long unsigned humans;
+  long unsigned zombies;
 };
