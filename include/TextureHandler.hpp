@@ -45,6 +45,7 @@ public :
       ZOMBIEHEAD,
       HUMANHEAD,
       SAVE_ME,
+      HIGH_FIVE
     };
 
   static void initTextureHandler();
