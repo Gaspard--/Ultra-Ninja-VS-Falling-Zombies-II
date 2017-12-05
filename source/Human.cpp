@@ -105,3 +105,8 @@ void	Human::beScaredOf(const Vect<2, double>& pos)
     posToEscape = pos;
   }
 }
+
+bool Human::isRunningAway(void) const
+{
+  return (mustRunAway);
+}
