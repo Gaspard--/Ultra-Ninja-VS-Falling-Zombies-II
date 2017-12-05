@@ -293,12 +293,13 @@ void Display::displayInterface()
   else
   {
     for (auto const &renderable : displayInfo.arrows) {
-    displayRenderableAsHUD(renderable, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ARROW));
+      displayRenderableAsHUD(renderable, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ARROW));
+    }
   }
   displayText(std::to_string(displayInfo.humans), 256, {0.05f, 0.05f}, {0.68f / dim[0], 0.855f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
   displayText(std::to_string(displayInfo.zombies), 256, {0.05f, 0.05f}, {0.90f / dim[0], 0.855f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  displayText("Score   " + std::to_string(displayInfo.score), 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  displayText("Time   " + displayInfo.time, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -1.00f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayText("Score   " + std::to_string(displayInfo.score), 256, {0.075f, 0.075f}, {-0.95f / dim[0], -0.80f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
+  displayText("Time   " + displayInfo.time, 256, {0.075f, 0.075f}, {-0.95f / dim[0], -0.98f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
 
   displayRenderableAsHUD(Renderable{
       {0.0f, 0.0f},
@@ -325,21 +326,29 @@ void Display::displayInterface()
 	{1.0f / dim[0] - 0.71f, -1.0f / dim[1] + 0.055f},
 	{0.0066f * static_cast<float>(displayInfo.ulti), 0.07f}
   }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BARFRONT));
-  displayRenderableAsHUD(Renderable{
-    {0.0f, 0.0f},
-	{1.0f, 1.0f},
-	{1.0f / dim[0] - 0.82f, -1.0f / dim[1] + 0.054f},
-	{0.072f, 0.072f}
-  }, TextureHandler::getInstance().getTexture((displayInfo.ulti == 100) ? TextureHandler::TextureList::SPIN : TextureHandler::TextureList::SPINHOLLOW));
+  // displayRenderableAsHUD(Renderable{
+  //   {0.0f, 0.0f},
+  // 	{1.0f, 1.0f},
+  // 	{1.0f / dim[0] - 0.82f, -1.0f / dim[1] + 0.054f},
+  // 	{0.072f, 0.072f}
+  // }, TextureHandler::getInstance().getTexture((displayInfo.ulti == 100) ? TextureHandler::TextureList::SPIN : TextureHandler::TextureList::SPINHOLLOW));
   for (unsigned int i = 0; i < 5; i++)
     {
       displayRenderableAsHUD(Renderable{
 	    {0.0f, 0.0f},
 	    {1.0f, 1.0f},
-	    {1.0f / dim[0] - (static_cast<float>(i + 1) * 0.07f + 0.05f), -1.0f / dim[1] + 0.15f},
+	    {1.0f / dim[0] - (static_cast<float>(i + 1) * 0.07f + 0.05f), -1.0f / dim[1] + 0.25f},
 		{0.09f, 0.09f}
 	}, TextureHandler::getInstance().getTexture((i >= 5 - displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW));
     }
+  for (unsigned int i = 0; i < 5; i++)
+    {
+      displayRenderableAsHUD(Renderable{
+	    {0.0f, 0.0f},
+	    {1.0f, 1.0f},
+	      {1.0f / dim[0] - (static_cast<float>(i + 1) * 0.07f + 0.05f), -1.0f / dim[1] + 0.15f},
+		{0.065f, 0.065f}
+	}, TextureHandler::getInstance().getTexture((i >= 5 - displayInfo.nbUlti) ? TextureHandler::TextureList::SPIN : TextureHandler::TextureList::SPINHOLLOW));
     }
   if (displayInfo.gameOver)
     {
@@ -366,6 +375,7 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.tutoPage = logic.getTutoPage();
   displayInfo.combo = logic.getCombo();
   displayInfo.bomb = logic.getEntityManager().players[0].getNbBombs();
+  displayInfo.nbUlti = logic.getEntityManager().players[0].getNbUlti();
   displayInfo.ulti = logic.getEntityManager().players[0].getUlti();
   displayInfo.humans = logic.getEntityManager().humans.size();
   displayInfo.zombies = logic.getEntityManager().zombies.size();
@@ -390,7 +400,8 @@ void Display::copyRenderData(Logic const &logic)
 	      Vect<2, double>(pos[0], pos[1] + zombie.getOffset()),
 		camera.zoom * static_cast<float>(zombie.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
-		});
+		  });
+
     }
   for (auto &human : manager.humans)
     {
@@ -402,7 +413,15 @@ void Display::copyRenderData(Logic const &logic)
 	      Vect<2, double>(pos[0], pos[1] + human.getOffset()),
 		camera.zoom * static_cast<float>(human.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
-		});
+		  });
+      if (human.isRunningAway())
+	displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SAVE_ME)].push_back(Renderable{
+	    {0.0f, 0.0f},
+	      {1.0f, 1.0f},
+		Vect<2, double>(pos[0], pos[1] + human.getOffset() + 0.1),
+		  camera.zoom * Vect<2u, float>(0.3f, 0.15f),
+		  (pos[1] + 1.1f) * 0.4f
+		    });
     }
   for (auto &player : manager.players)
     {
@@ -497,44 +516,44 @@ void Display::copyRenderData(Logic const &logic)
 	    {x_in, y_in},
 	      pos - Vect<2, double>{0.0, 0.02},
 		camera.zoom * static_cast<float>(slash.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
-		(pos[1] + 1.1f) * 0.4f
-		});
+		  (pos[1] + 1.1f) * 0.4f
+		    });
     }
   for (auto &shuriken : manager.shurikens)
     {
       auto pos(camera.apply(shuriken.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SHURIKEN)].push_back(Renderable{
-	    {0.5f * shuriken.getAnimationFrame(), 0.0f},
+	  {0.5f * shuriken.getAnimationFrame(), 0.0f},
 	    {0.5f, 1.0f},
 	      pos + Vect<2u, float>(0.0f, 0.025f * ((static_cast<float>(shuriken.lifetime) / 80.0f) * (static_cast<float>(shuriken.lifetime) / 80.0f))),
 		camera.zoom * static_cast<float>(shuriken.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
-		 });
+		  });
     }
   for (auto &bomb : manager.bombs)
     {
       auto pos(camera.apply(bomb.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BOMB_SPRITE)].push_back(Renderable{
-	    {0.2f * bomb.getAnimationFrame(), 0.0f},
+	  {0.2f * bomb.getAnimationFrame(), 0.0f},
 	    {0.2f, 1.0f},
 	      pos,
 		camera.zoom * static_cast<float>(bomb.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
-		});
+		  });
     }
   for (auto &explosion : manager.explosions)
     {
       auto pos(camera.apply(explosion.entity.fixture.pos));
 
       displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::EXPLOSION)].push_back(Renderable{
-	    {0.25f * explosion.getAnimationFrame(), 0.0f},
+	  {0.25f * explosion.getAnimationFrame(), 0.0f},
 	    {0.25f, 1.0f},
-	    pos - Vect<2, double>{0.0, explosion.entity.fixture.radius / 2},
+	      pos - Vect<2, double>{0.0, explosion.entity.fixture.radius / 2},
 		camera.zoom * static_cast<float>(explosion.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
-		(pos[1] + 1.1f) * 0.4f
-		});
+		  (pos[1] + 1.1f) * 0.4f
+		    });
     }
   for (auto &flesh : manager.fleshs)
     {
@@ -545,8 +564,8 @@ void Display::copyRenderData(Logic const &logic)
 	    {1.0f / 3.0f, 1.0f},
 	      pos + Vect<2u, float>{0.0f, static_cast<float>(flesh.yOffset)},
 		camera.zoom * static_cast<float>(flesh.entity.fixture.radius * 2.0f) * Vect<2u, float>{1.0f, 1.5f},
-		(pos[1] + 1.1f) * 0.4f
-		  });
+		  (pos[1] + 1.1f) * 0.4f
+		    });
     }
   for (auto &blood : manager.bloods)
     if (blood.intensity < 1.0 - (blood.delay) * 0.05)
@@ -585,14 +604,14 @@ void Display::copyRenderData(Logic const &logic)
 										       (house.type == BlockType::NONE) ? 1.0f :
 										       (house.type == BlockType::ROAD) ? 1.0f :
 										       0.95f},
-										       (pos[1] + 1.1f) * 0.4f});
+										     (pos[1] + 1.1f) * 0.4f});
       }
   displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::GRASS)].push_back(Renderable{
       {0.0f, 0.0f},
 	{100.0f, 100.0f},
 	  camera.apply(Vect<2u, double>{50.0, 0.0f}),
 	    camera.zoom * Vect<2u, float>{100.0f, 100.0f},
-	      0.99f});
+	    0.99f});
 }
 
 bool Display::isRunning() const

@@ -1,6 +1,6 @@
 #pragma once
 
-#define REPOP_HAB_CD 2
+#define REPOP_HAB_CD 3
 
 class CityMap;
 class Logic;

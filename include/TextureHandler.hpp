@@ -43,7 +43,8 @@ public :
       FLESH_SPRITE,
       GRASS,
       ZOMBIEHEAD,
-      HUMANHEAD
+      HUMANHEAD,
+      SAVE_ME,
     };
 
   static void initTextureHandler();

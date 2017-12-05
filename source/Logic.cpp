@@ -146,6 +146,9 @@ void Logic::handleKey(GLFWwindow *window, Key key)
           tutoPage = false;
       }
       break;
+    // case GLFW_KEY_SPACE:
+    //   entityManager.getPlayer().canHighfive = (key.action == GLFW_PRESS);
+    //   break;
     default:
       break;
     }

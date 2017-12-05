@@ -12,6 +12,8 @@ class Zombie;
 class Human : public Mob
 {
 public:
+  Human() = delete;
+  Human(Human const &);
   Human(Entity entity, CityBlock &home);
   ~Human();
 
@@ -20,7 +22,7 @@ public:
 
   void setInfected(bool infected);
   bool const& getInfected() const;
-  CityBlock const &getHome() const;
+  CityBlock &getHome() const;
 
   void setCoolDown(int cooldown);
   bool canHighFive() const;
@@ -35,7 +37,6 @@ public:
 
 private:
   EntityAnimation anim;
-  CityBlock &getHome();
   bool infected;
   CityBlock *homePtr;
   int coolDown;
