@@ -224,7 +224,6 @@ void EntityManager::spawnZombies()
 	  spawnZombie({pos[0] + rnd, pos[1]});
 	}
       frame = 0;
-      rateOfSpawn += 20;
     }
 }
 
