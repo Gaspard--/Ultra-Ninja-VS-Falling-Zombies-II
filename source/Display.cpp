@@ -1,4 +1,3 @@
-#define NOMINMAX
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
@@ -390,6 +389,9 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.arrows.clear();
   auto const &manager(logic.getEntityManager());
 
+  if (manager.explosions.size())
+    camera.offset += Vect<2u, float>{static_cast<float>(rand() & 1) * 2.0f - 1.0f,
+	static_cast<float>(rand() & 1) * 2.0f - 1.0f} * 0.01;
   for (auto &zombie : manager.zombies)
     {
       auto pos(camera.apply(zombie.entity.fixture.pos));
