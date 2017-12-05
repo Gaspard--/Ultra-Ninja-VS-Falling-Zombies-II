@@ -38,7 +38,8 @@ public :
       EXPLOSION,
       ARROW,
 	BLOOD,
-	GRASS
+	GRASS,
+  TUTO
     };
 
   static void initTextureHandler();

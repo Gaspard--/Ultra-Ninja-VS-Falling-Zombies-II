@@ -12,4 +12,5 @@ struct DisplayInfo
   unsigned int bomb;
   double ulti;
   bool gameOver;
+  bool tutoPage;
 };

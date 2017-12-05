@@ -17,6 +17,7 @@ Logic::Logic()
   score = 0;
   restart = false;
   gameOver = false;
+  tutoPage = true;
   combo = 0;
   multiplier = 0;
   entityManager.spawnPlayer({51.5, 49.5});
@@ -24,7 +25,7 @@ Logic::Logic()
 
 void Logic::update()
 {
-  if (!gameOver)
+  if (!gameOver && !tutoPage)
     {
       ++time;
       entityManager.update(physics, *this, cityMap);
@@ -138,10 +139,12 @@ void Logic::handleKey(GLFWwindow *window, Key key)
 void Logic::checkEvents(Display const &display)
 {
   Player& player = entityManager.getPlayer();
-  if (display.isKeyPressed(GLFW_KEY_ENTER) && gameOver)
+  if (display.isKeyPressed(GLFW_KEY_ENTER))
     {
-      restart = true;
-      // TODO: restart
+      if (gameOver)
+        restart = true;
+      else if (tutoPage)
+        tutoPage = false;
     }
 
   if (display.isKeyPressed(GLFW_KEY_D))
@@ -207,6 +210,11 @@ bool Logic::getRestart(void) const
 bool Logic::getGameOver(void) const
 {
   return gameOver;
+}
+
+bool Logic::getTutoPage(void) const
+{
+  return tutoPage;
 }
 
 CityMap const &Logic::getCityMap() const

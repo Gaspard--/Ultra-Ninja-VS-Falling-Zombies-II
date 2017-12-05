@@ -31,6 +31,7 @@ private:
   CityMap cityMap;
   bool restart;
   bool gameOver;
+  bool tutoPage;
   bool running;
 
   Vect<2u, double> mousePos;
@@ -69,7 +70,7 @@ public:
   std::string   getCombo(void) const;
   bool          getGameOver(void) const;
   bool          getRestart(void) const;
-
+  bool          getTutoPage(void) const;
 
   bool		isRunning() const
   {
