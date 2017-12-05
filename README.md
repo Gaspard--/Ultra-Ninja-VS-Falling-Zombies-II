@@ -1,4 +1,4 @@
-![img](https://raw.githubusercontent.com/Gaspard--/ultra-ninja_VS_falling_zombies/master/resources/Title.png)
+![img](https://raw.githubusercontent.com/Gaspard--/Ultra-Ninja-VS-Falling-Zombies-II/master/resources/Jacket.png)
 
 ## Usage
 
