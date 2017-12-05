@@ -234,6 +234,17 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
+void Display::displayTutoPage()
+{
+  displayText("Press enter to start", 256, {0.15f, 0.15f}, {-1.0f, 0.54f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
+  displayRenderableAsHUD(Renderable{
+    {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	{-0.90f, -0.95f},
+	{1.9f, 1.0f}
+  }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::TUTO));
+}
+
 void Display::render()
 {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -260,7 +271,13 @@ void Display::displayInterface()
   // displayText("Current Population",
   //             256, {0.05f, 0.05f}, {-0.017f * 18, -0.315f}, {sqrt(camera.length2()), 0}, {1.0f, 1.0f, 1.0f});
   // displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  for (auto const &renderable : displayInfo.arrows) {
+  if (displayInfo.tutoPage)
+  {
+    displayTutoPage();
+  }
+  else
+  {
+    for (auto const &renderable : displayInfo.arrows) {
     displayRenderableAsHUD(renderable, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::ARROW));
   }
   displayText(std::to_string(displayInfo.humans), 256, {0.05f, 0.05f}, {0.68f / dim[0], 0.855f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
@@ -308,6 +325,7 @@ void Display::displayInterface()
 		{0.09f, 0.09f}
 	}, TextureHandler::getInstance().getTexture((i >= 5 - displayInfo.bomb) ? TextureHandler::TextureList::BOMB : TextureHandler::TextureList::BOMBHOLLOW));
     }
+    }
   if (displayInfo.gameOver)
     {
       displayText("Game Over", 256, {0.2f, 0.2f}, {-0.65f, 0.42f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
@@ -329,6 +347,7 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.time = logic.getTime();
   displayInfo.score = static_cast<unsigned int>(logic.getScore());
   displayInfo.gameOver = logic.getGameOver();
+  displayInfo.tutoPage = logic.getTutoPage();
   displayInfo.combo = logic.getCombo();
   displayInfo.bomb = logic.getEntityManager().players[0].getNbBombs();
   displayInfo.ulti = logic.getEntityManager().players[0].getUlti();

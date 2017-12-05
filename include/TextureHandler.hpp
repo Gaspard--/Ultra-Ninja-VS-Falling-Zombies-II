@@ -37,6 +37,7 @@ public :
       BOMB_SPRITE,
       EXPLOSION,
       ARROW,
+      TUTO,
       BLOOD,
       FLESH_SPRITE,
       GRASS,
