@@ -15,7 +15,7 @@
 
 Get the [installer](https://github.com/Gaspard--/Ultra-Ninja-VS-Falling-Zombies-II/releases/download/v1.0.0/Ultra-Ninja-VS-Falling-Zombies-II.msi) or the [zip archive](https://github.com/Gaspard--/Ultra-Ninja-VS-Falling-Zombies-II/releases/download/v1.0.0/Ultra-Ninja-VS-Falling-Zombies-II.zip)
 
-**Actually, it doesn’t work with Intel Graphics Chipsets !**
+*It seems that under Windows it currently doesn't work with Intel Graphic Chipsets*
 
 ## Story
 
