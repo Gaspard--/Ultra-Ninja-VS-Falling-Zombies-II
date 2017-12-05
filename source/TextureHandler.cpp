@@ -41,6 +41,7 @@ void TextureHandler::initTextureHandler()
   _instance->addTexture(TextureList::FLESH_SPRITE, "resources/GutsSpriteSheet.bmp");
   _instance->addTexture(TextureList::ZOMBIEHEAD, "resources/ZombieHead.bmp");
   _instance->addTexture(TextureList::HUMANHEAD, "resources/CitizenHead.bmp");
+  _instance->addTexture(TextureList::SAVE_ME, "resources/SaveMe.bmp");
 }
 
 TextureHandler& TextureHandler::getInstance()
