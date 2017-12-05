@@ -46,8 +46,8 @@ void Human::update()
   canHighfive = false;
   if (mustRunAway)
     runAway();
-  else if ((entity.fixture.pos - Vect<2, double>(homePtr->x, homePtr->y)).length2() > 1.0) {
-    entity.fixture.speed += (Vect<2, double>(homePtr->x, homePtr->y) - entity.fixture.pos).normalized() * 0.0005;
+  else if ((entity.fixture.pos - Vect<2, double>(static_cast<double>(homePtr->x), static_cast<double>(homePtr->y))).length2() > 1.0) {
+    entity.fixture.speed += (Vect<2, double>(static_cast<double>(homePtr->x), static_cast<double>(homePtr->y)) - entity.fixture.pos).normalized() * 0.0005;
   }
   else {
       basicWalkCooldown -= basicWalkCooldown > 0;
@@ -105,4 +105,9 @@ void	Human::beScaredOf(const Vect<2, double>& pos)
     mustRunAway = true;
     posToEscape = pos;
   }
+}
+
+bool Human::isRunningAway(void) const
+{
+  return (mustRunAway);
 }
