@@ -9,7 +9,7 @@
 3. `cd` into the project directory
 4. Make the release : `mkdir release && cd release && cmake .. -DCMAKE_BUILD_TYPE=Release && cd .. && make -C release.`
 5. Launch the game: `./Ultra-Ninja-VS-Falling-Zombies-II`
-6. Enjoy !
+6. Enjoy!
 
 *Windows*
 
@@ -17,16 +17,16 @@ Get the [installer](https://github.com/Gaspard--/Ultra-Ninja-VS-Falling-Zombies-
 
 ## Story
 
-After some long years of meditation under the Space Waterfall of Knowledge, your favorite Ultra-Ninja is back and ready for action !
+After some long years of meditation under the Space Waterfall of Knowledge, your favorite Ultra-Ninja is back and ready for action!
 Ken leads the Resistance against the Zombie invasion and will protect his fellow villagers with everything he got.
-The New Hope of humanity starts now ...
+The New Hope of humanity starts now...
 
 ## Gameplay
 
 * Tutorial in-game for the controls
-* You have to protect your ever growing village from the falling zombies : don't let the plague spread !
+* You have to protect your ever growing village from the falling zombies, don't let the plague spread!
 * Pay attention to the villagers, they aren't insensitive to your hits.
-* High-five your buddies for bombs and ultimates !
+* High-five your buddies for bombs and ultimates!
 
 ## Developers
 * [David Zeng](https://github.com/Arcsz)
