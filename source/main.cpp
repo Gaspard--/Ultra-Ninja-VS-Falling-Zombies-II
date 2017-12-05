@@ -72,7 +72,10 @@ int main()
 	  }
 	  display.render();
 	  if (logic.getRestart())
-	    logic = Logic(false);
+	    {
+	      logic = Logic(false);
+	      SoundHandler::getInstance().playMainMusic();
+	    }
 	}
     } catch (std::runtime_error const &e) {
       std::cerr << "Display thread encoutered runtime error:" << std::endl
