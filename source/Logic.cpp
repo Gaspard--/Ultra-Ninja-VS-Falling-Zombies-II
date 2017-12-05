@@ -7,7 +7,7 @@
 #include "SoundHandler.hpp"
 #include "Shuriken.hpp"
 
-Logic::Logic()
+Logic::Logic(bool animation)
   : cityMap(*this),
     running(true),
     mousePos{0.0, 0.0},
@@ -17,7 +17,7 @@ Logic::Logic()
   score = 0;
   restart = false;
   gameOver = false;
-  startPage = true;
+  startPage = animation;
   tutoPage = false;
   combo = 0;
   multiplier = 0;
