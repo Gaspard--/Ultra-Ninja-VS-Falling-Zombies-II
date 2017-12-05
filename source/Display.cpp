@@ -234,6 +234,17 @@ void Display::displayRenderableAsHUD(Renderable const& renderable, GLuint textur
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
+void Display::displayStartPage()
+{
+  displayText("Press enter to start", 256, {0.15f, 0.15f}, {-1.0f, 0.54f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
+  displayRenderableAsHUD(Renderable{
+    {0.0f, 0.0f},
+	{1.0f, 1.0f},
+	{-1.15f, -0.60f},
+	{2.2f, 1.0f}
+  }, TextureHandler::getInstance().getTexture(TextureHandler::TextureList::STARTPAGE));
+}
+
 void Display::displayTutoPage()
 {
   displayText("Press enter to start", 256, {0.15f, 0.15f}, {-1.0f, 0.54f}, {1.0f, 0.0f}, {1.0f, 0.25f, 0.0f});
@@ -271,7 +282,11 @@ void Display::displayInterface()
   // displayText("Current Population",
   //             256, {0.05f, 0.05f}, {-0.017f * 18, -0.315f}, {sqrt(camera.length2()), 0}, {1.0f, 1.0f, 1.0f});
   // displayText("Combo   " + displayInfo.combo, 256, {0.1f, 0.1f}, {-0.95f / dim[0], -0.60f}, {1.0f, 0.0f}, {1.0f, 1.0f, 1.0f});
-  if (displayInfo.tutoPage)
+  if (displayInfo.startPage)
+  {
+    displayStartPage();
+  }
+  else if (displayInfo.tutoPage)
   {
     displayTutoPage();
   }
@@ -347,12 +362,19 @@ void Display::copyRenderData(Logic const &logic)
   displayInfo.time = logic.getTime();
   displayInfo.score = static_cast<unsigned int>(logic.getScore());
   displayInfo.gameOver = logic.getGameOver();
+  displayInfo.startPage = logic.getStartPage();
   displayInfo.tutoPage = logic.getTutoPage();
   displayInfo.combo = logic.getCombo();
   displayInfo.bomb = logic.getEntityManager().players[0].getNbBombs();
   displayInfo.ulti = logic.getEntityManager().players[0].getUlti();
   displayInfo.humans = logic.getEntityManager().humans.size();
   displayInfo.zombies = logic.getEntityManager().zombies.size();
+
+  if (displayInfo.startPage)
+  {
+    camera.offset = -gamePos;
+    camera.offset[1] = -30.0f;
+  }
 
   displayInfo.renderables.clear();
   displayInfo.arrows.clear();

@@ -38,6 +38,7 @@ public :
       EXPLOSION,
       ARROW,
       TUTO,
+      STARTPAGE,
       BLOOD,
       FLESH_SPRITE,
       GRASS,

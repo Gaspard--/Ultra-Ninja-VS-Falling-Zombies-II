@@ -32,6 +32,7 @@ private:
   bool restart;
   bool gameOver;
   bool tutoPage;
+  bool startPage;
   bool running;
 
   Vect<2u, double> mousePos;
@@ -70,6 +71,7 @@ public:
   std::string   getCombo(void) const;
   bool          getGameOver(void) const;
   bool          getRestart(void) const;
+  bool          getStartPage(void) const;
   bool          getTutoPage(void) const;
 
   bool		isRunning() const

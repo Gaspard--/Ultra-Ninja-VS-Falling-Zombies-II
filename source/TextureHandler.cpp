@@ -38,6 +38,7 @@ void TextureHandler::initTextureHandler()
   _instance->addTexture(TextureList::ARROW, "resources/arrow.bmp");
   _instance->addTexture(TextureList::BLOOD, "resources/BloodSplaterSpriteSheet.bmp");
   _instance->addTexture(TextureList::TUTO, "resources/Tuto.bmp");
+  _instance->addTexture(TextureList::STARTPAGE, "resources/StartPage.bmp");
   _instance->addTexture(TextureList::FLESH_SPRITE, "resources/GutsSpriteSheet.bmp");
   _instance->addTexture(TextureList::ZOMBIEHEAD, "resources/ZombieHead.bmp");
   _instance->addTexture(TextureList::HUMANHEAD, "resources/CitizenHead.bmp");

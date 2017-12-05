@@ -17,7 +17,8 @@ Logic::Logic()
   score = 0;
   restart = false;
   gameOver = false;
-  tutoPage = true;
+  startPage = true;
+  tutoPage = false;
   combo = 0;
   multiplier = 0;
   entityManager.spawnPlayer({51.5, 49.5});
@@ -25,7 +26,7 @@ Logic::Logic()
 
 void Logic::update()
 {
-  if (!gameOver && !tutoPage)
+  if (!gameOver && !startPage && !tutoPage)
     {
       ++time;
       entityManager.update(physics, *this, cityMap);
@@ -131,6 +132,20 @@ void Logic::handleKey(GLFWwindow *window, Key key)
     case GLFW_KEY_SPACE:
       entityManager.getPlayer().canHighfive = (key.action == GLFW_PRESS);
       break;
+    case GLFW_KEY_ENTER:
+      if (key.action == GLFW_PRESS)
+      {
+        if (gameOver)
+          restart = true;
+        else if (startPage)
+        {
+          startPage = false;
+          tutoPage = true;
+        }
+        else if (tutoPage)
+          tutoPage = false;
+      }
+      break;
     default:
       break;
     }
@@ -139,13 +154,6 @@ void Logic::handleKey(GLFWwindow *window, Key key)
 void Logic::checkEvents(Display const &display)
 {
   Player& player = entityManager.getPlayer();
-  if (display.isKeyPressed(GLFW_KEY_ENTER))
-    {
-      if (gameOver)
-        restart = true;
-      else if (tutoPage)
-        tutoPage = false;
-    }
 
   if (display.isKeyPressed(GLFW_KEY_D))
     player.accelerate({1, 0});
@@ -210,6 +218,11 @@ bool Logic::getRestart(void) const
 bool Logic::getGameOver(void) const
 {
   return gameOver;
+}
+
+bool Logic::getStartPage(void) const
+{
+  return startPage;
 }
 
 bool Logic::getTutoPage(void) const
