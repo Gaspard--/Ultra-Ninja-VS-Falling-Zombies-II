@@ -15,6 +15,8 @@
 
 Get the [installer](https://github.com/Gaspard--/Ultra-Ninja-VS-Falling-Zombies-II/releases/download/v1.0.0/Ultra-Ninja-VS-Falling-Zombies-II.msi) or the [zip archive](https://github.com/Gaspard--/Ultra-Ninja-VS-Falling-Zombies-II/releases/download/v1.0.0/Ultra-Ninja-VS-Falling-Zombies-II.zip)
 
+**Actually, it doesn’t work with Intel Graphics Chipsets !**
+
 ## Story
 
 After some long years of meditation under the Space Waterfall of Knowledge, your favorite Ultra-Ninja is back and ready for action!
