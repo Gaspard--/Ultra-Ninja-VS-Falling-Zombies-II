@@ -416,7 +416,15 @@ void Display::copyRenderData(Logic const &logic)
 		camera.zoom * static_cast<float>(human.entity.fixture.radius * 2.0) * Vect<2u, float>{1.0f, 1.5f},
 		(pos[1] + 1.1f) * 0.4f
 		  });
-      if (human.isRunningAway())
+      if (human.isJumping)
+	displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::HIGH_FIVE)].push_back(Renderable{
+	    {0.0f, 0.0f},
+	      {1.0f, 1.0f},
+		Vect<2, double>(pos[0], pos[1] + human.getOffset() + 0.1),
+		  camera.zoom * Vect<2u, float>(0.3f, 0.15f),
+		  (pos[1] + 1.1f) * 0.4f
+		  });
+      else if (human.isRunningAway())
 	displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::SAVE_ME)].push_back(Renderable{
 	    {0.0f, 0.0f},
 	      {1.0f, 1.0f},
