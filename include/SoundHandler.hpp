@@ -5,6 +5,7 @@
 # include <array>
 # include <memory>
 # include <SFML/Audio.hpp>
+# include <memory>
 
 class SoundHandler
 {
@@ -37,7 +38,7 @@ private:
 
   sf::Music mainMusic;
   std::map<SoundList, sf::SoundBuffer*> _sound;
-  std::vector<sf::Sound *> _soundsPlaying;
+  std::vector<std::unique_ptr<sf::Sound>> _soundsPlaying;
 };
 
 #endif /* !SOUNDHANDLER_HPP_ */

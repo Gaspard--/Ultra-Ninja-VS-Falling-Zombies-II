@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <memory>
 #include "SoundHandler.hpp"
 
 std::unique_ptr<SoundHandler> SoundHandler::_instance(nullptr);
@@ -39,27 +40,22 @@ void SoundHandler::playMainMusic()
 
 void SoundHandler::playSound(SoundList id, float volume)
 {
-  sf::Sound* sound = new sf::Sound();
+  auto sound = std::make_unique<sf::Sound>();
   sound->setBuffer(*_instance->getSoundBuffer(id));
   sound->setLoop(false);
   sound->setVolume(volume);
   sound->play();
-  _instance->_soundsPlaying.push_back(sound);
+  _instance->_soundsPlaying.push_back(std::move(sound));
 }
 
 void SoundHandler::deleteSounds()
 {
-  std::vector<sf::Sound *>::iterator it(_instance->_soundsPlaying.begin());
-  while (it != _instance->_soundsPlaying.end())
-    {
-      if ((*it)->getStatus() != sf::SoundSource::Status::Playing)
-	{
-	  delete *it;
-          it = _instance->_soundsPlaying.erase(it);
-	}
-      else
-        ++it;
-    }
+  _soundsPlaying.erase(std::remove_if(_soundsPlaying.begin(), _soundsPlaying.end(),
+			      [](auto const &elem)
+			      {
+				return elem->getStatus() != sf::SoundSource::Status::Playing;
+			      }),
+	       _soundsPlaying.end());
 }
 
 void SoundHandler::addSoundBuffer(SoundList id, std::string const& path)
