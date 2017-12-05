@@ -50,5 +50,6 @@ public:
 
 private:
   // for spawn zombie
+  int rateOfSpawn;
   int frame;
 };
