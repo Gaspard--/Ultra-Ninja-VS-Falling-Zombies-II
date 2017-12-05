@@ -135,7 +135,7 @@ void Player::shuriken(std::vector<Shuriken> &shurikens)
 {
   if (shurikenCooldown > 0)
     return ;
-  SoundHandler::getInstance().playSound(SoundHandler::SoundList::SHURIKEN, 35);
+  SoundHandler::getInstance().playSound(SoundHandler::SoundList::SHURIKEN, 30);
   shurikens.emplace_back(entity.fixture.pos + entity.fixture.speed.normalized() * 0.1,
 			 entity.fixture.speed.normalized() * 0.08, 1);
 
