@@ -51,7 +51,7 @@ int main()
 			     {
 			       if (!logic.isRunning())
 				 break;
-			       logic.tick(lock);
+			       logic.tick(lock, display.getCamera());
 			     }
 			 } catch (std::runtime_error const &e) {
 			   std::cerr << "Logic thread encoutered runtime error:" << std::endl

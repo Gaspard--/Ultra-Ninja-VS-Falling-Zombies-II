@@ -13,6 +13,7 @@
 # include "CityMap.hpp"
 
 class Display;
+class Camera;
 
 class Logic
 {
@@ -55,8 +56,8 @@ public:
 
   void handleEvent(Display const &, Event const& event);
   void checkEvents(Display const &);
-  void update();
-  void tick(std::mutex &lock);
+  void update(Camera const &);
+  void tick(std::mutex &lock, Camera const &);
   void addToScore(int);
   void resetCombo();
   void incCombo();

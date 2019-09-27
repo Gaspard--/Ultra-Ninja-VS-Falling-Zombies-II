@@ -13,6 +13,34 @@ struct Entity;
 
 # define CAR(x) ((x) * (x))
 
+template<class T>
+struct VectorItPair : public std::pair<typename std::vector<T>::iterator, typename std::vector<T>::iterator>
+{
+  using this_type = std::pair<typename std::vector<T>::iterator, typename std::vector<T>::iterator>;
+  using this_type::pair;
+
+  VectorItPair(std::vector<T> &vector)
+    : this_type(vector.begin(), vector.end())
+  {
+  }
+    
+  auto begin()
+  {
+    return this_type::first;
+  }
+
+  auto end()
+  {
+    return this_type::second;
+  }
+
+  auto size()
+  {
+    return begin() - end();
+  }
+};
+
+
 class Physics
 {
 public:
@@ -31,8 +59,7 @@ public:
 
   bool haveCollision(Fixture& a, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
 
-  void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;
-
+  void fixMapCollision(Fixture&, std::array<std::array<CityBlock, MAP_SIZE>, MAP_SIZE> const& cityMap) const;  
   template <class H, class... Types>
   void quadTree(H &h, std::vector<Types> &... entities) const
   {
@@ -49,7 +76,7 @@ public:
 		      std::get<std::vector<T *>>(e).push_back(&(*i));
 		  });
     (void)expander{(addElems(entities, e), 0)...};
-    this->quadTreeRec(h, maxDepth, std::move(std::get<std::vector<Types *>>(e))...);
+    this->quadTreeRec(h, maxDepth, VectorItPair(std::get<std::vector<Types *>>(e))...);
   }
 
   template <class T>
@@ -64,7 +91,7 @@ private:
   static constexpr int const endCond{20};
 
   template <class H, class... Types>
-  void classicComparaison(H &h, std::vector<Types*> &&... entities) const
+  void classicComparaison(H &h, VectorItPair<Types*>... entities) const
   {
     using expander = int[];
 
@@ -110,14 +137,14 @@ private:
 
 
   template <class H, class... Types>
-  void quadTreeRec(H &h, int depth, std::vector<Types*> &&... entities) const
+  void quadTreeRec(H &h, int depth, VectorItPair<Types*>... entities) const
   {
     using expander = int[];
-
-    if (Vect<sizeof...(Types), bool>(!entities.size()...).all())
+    
+    if (Vect<sizeof...(Types), bool>((!entities.size())...).all())
       return ;
-    if (!depth || Vect<sizeof...(Types), std::size_t>(entities.size()...).sum() <= endCond) {
-      this->classicComparaison(h, std::move(entities)...);
+    if (!depth || Vect<sizeof...(Types), std::size_t>((entities.second - entities.first)...).sum() <= endCond) {
+      this->classicComparaison(h, entities...);
       return ;
     }
     Vect<2u, double> lowCorner(100.0, 100.0);
@@ -144,7 +171,7 @@ private:
     std::array<std::tuple<std::vector<Types *>...>, 4> children;
     auto op([this, middle](auto &entities, auto &children)
 	    {
-	      using T = std::remove_reference_t<decltype(entities[0])>;
+	      using T = std::remove_reference_t<decltype(*entities.first)>;
 
 	      for (auto &child : children)
 		std::get<std::vector<T>>(child).reserve(entities.size());
@@ -169,11 +196,10 @@ private:
 		  }
 		}
 	      }
-	      entities.clear();
 	    });
     (void)expander{(op(entities, children), 0)...};
     for (auto &child : children) {
-      this->quadTreeRec(h, depth - 1, std::move(std::get<std::vector<Types *>>(child))...);
+      this->quadTreeRec(h, depth - 1, VectorItPair<Types *>(std::get<std::vector<Types *>>(child))...);
     }
   }
   };

@@ -569,6 +569,7 @@ void Display::copyRenderData(Logic const &logic)
 		  (pos[1] + 1.1f) * 0.4f
 		    });
     }
+  displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::FLESH_SPRITE)].reserve(manager.fleshs.size());
   for (auto &flesh : manager.fleshs)
     {
       auto pos(camera.apply(flesh.entity.fixture.pos));
@@ -581,6 +582,7 @@ void Display::copyRenderData(Logic const &logic)
 		  (pos[1] + 1.1f) * 0.4f
 		    });
     }
+  displayInfo.renderables[TextureHandler::getInstance().getTexture(TextureHandler::TextureList::BLOOD)].reserve(manager.bloods.size());
   for (auto &blood : manager.bloods)
     if (blood.intensity < 1.0 - (blood.delay) * 0.05)
       {

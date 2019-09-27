@@ -24,7 +24,7 @@ Logic::Logic(bool animation)
   entityManager.spawnPlayer({51.5, 49.5});
 }
 
-void Logic::update()
+void Logic::update(Camera const &camera)
 {
   if (!gameOver && !startPage && !tutoPage)
     {
@@ -39,7 +39,7 @@ void Logic::update()
     }
 }
 
-void Logic::tick(std::mutex &lock)
+void Logic::tick(std::mutex &lock, Camera const &camera)
 {
   auto const now(Clock::now());
 
@@ -54,7 +54,7 @@ void Logic::tick(std::mutex &lock)
 
   {
     std::lock_guard<std::mutex> scopedLock(lock);
-    update();
+    update(camera);
   }
   SoundHandler::getInstance().deleteSounds();
 }

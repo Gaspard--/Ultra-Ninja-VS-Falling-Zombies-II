@@ -113,6 +113,7 @@ void EntityManager::update(Physics const &physics, Logic const &logic, CityMap c
 {
   players.reserve(600);
   zombies.reserve(600);
+  fleshs.reserve(600);
   for (auto &player : players)
     player.update();
   for (auto &human : humans)
