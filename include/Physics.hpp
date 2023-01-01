@@ -14,13 +14,13 @@ struct Entity;
 # define CAR(x) ((x) * (x))
 
 template<class T>
-struct VectorItPair : public std::pair<typename std::vector<T>::iterator, typename std::vector<T>::iterator>
+struct VectorItPair : public std::pair<typename std::vector<T>::pointer, typename std::vector<T>::pointer>
 {
-  using this_type = std::pair<typename std::vector<T>::iterator, typename std::vector<T>::iterator>;
+  using this_type = std::pair<typename std::vector<T>::pointer, typename std::vector<T>::pointer>;
   using this_type::pair;
 
   VectorItPair(std::vector<T> &vector)
-    : this_type(vector.begin(), vector.end())
+    : this_type(vector.data(), vector.data() + vector.size())
   {
   }
     
@@ -36,7 +36,7 @@ struct VectorItPair : public std::pair<typename std::vector<T>::iterator, typena
 
   auto size()
   {
-    return begin() - end();
+    return end() - begin();
   }
 };
 
